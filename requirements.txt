@@ -1,0 +1,14 @@
+# Core scientific stack (runs anywhere, incl. laptop CPU).
+numpy>=1.24
+scipy>=1.10
+scikit-learn>=1.3
+torch>=2.1
+matplotlib>=3.7
+pandas>=2.0
+pytest>=7.4
+
+# DGX-only (model extraction, Phase 0). Not needed for geometry/probe/eval code.
+transformers>=4.44
+accelerate>=0.30
+# geoopt is intentionally NOT required: the Poincare geometry is implemented from
+# scratch in hypprobe/geometry/poincare.py so the core has no extra dependency.

@@ -54,8 +54,12 @@ python -m hypprobe.data.prepare --datasets ailuminate aegis wos wordnet_control 
 
 ## What each phase saves
 
-- `results/geometry/delta_rel.csv` — hyperbolicity (delta_rel, whitened) per layer & token source.
-- `results/determinants/attribution.csv` — which edit (identity/order/meaning) drives hyperbolicity.
+- `results/geometry/delta_rel.csv` — hyperbolicity (delta_rel, whitened) per layer & token source,
+  PLUS label-alignment (`align_euc`, `align_hyp`, `norm_depth_corr`) and a `joint_score` implementing
+  the plan's joint selection (low delta_rel AND the taxonomy embeds as a tree).
+- `results/determinants/attribution.csv` — which edit drives hyperbolicity: `token_identity`,
+  `order_shuffle`, and the MEANING control (`meaning_nonce`/`meaning_paraphrase` when variants were
+  extracted, else the `meaning_topPC` fallback). Prepare with `--variants` to enable the real control.
 - `results/geometry/structural_probe.csv` — Euclidean vs hyperbolic distance fit (reproduces Raj).
 - `results/eval/summary.md` — matched hyperbolic-vs-flat verdict (+ significance.json).
 - `results/security/attack.csv` — attacker budget flat vs hyperbolic, and transfer rate.

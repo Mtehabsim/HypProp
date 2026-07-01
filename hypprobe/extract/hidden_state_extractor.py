@@ -54,7 +54,9 @@ def extract_model_dataset(model_name, dataset, samples, out_dir, logfile,
             continue
         rec.update(model=model_name, dataset=dataset,
                    sample_id=s["sample_id"], label=s.get("label", 0),
-                   label_path=s.get("label_path", []))
+                   label_path=s.get("label_path", []),
+                   variant=s.get("variant", "original"),
+                   orig_id=s.get("orig_id", s["sample_id"]))
         torch.save(rec, sample_path(out_dir, model_name, dataset, s["sample_id"]))
         written += 1
         if written % 25 == 0:

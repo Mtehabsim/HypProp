@@ -110,6 +110,8 @@ def main(argv=None):
     ap.add_argument("--datasets", nargs="+", required=True)
     ap.add_argument("--out", default="./results/data_cache")
     ap.add_argument("--raw", default="./raw_data", help="dir with real corpora (DGX)")
+    ap.add_argument("--variants", action="store_true",
+                    help="also emit nonce/paraphrase variants (meaning control)")
     args = ap.parse_args(argv)
 
     ensure_dir(args.out)
@@ -126,6 +128,10 @@ def main(argv=None):
         _write_jsonl(out_path, rows)
         n_classes = len({r["label"] for r in rows})
         log_line(logfile, f"prepared {ds}: {len(rows)} samples, {n_classes} classes -> {out_path}")
+        if args.variants:
+            from .variants import augment_jsonl
+            n = augment_jsonl(out_path, out_path)  # in place: original + variants
+            log_line(logfile, f"  + variants: {ds} now {n} rows (original+nonce+paraphrase)")
 
 
 if __name__ == "__main__":

@@ -107,12 +107,31 @@ def hierarchy_features(
         paths = [p + (b,) for p in paths for b in range(branching)]
     n_leaves = len(paths)
 
-    # Prototype per leaf: place deeper nodes nearer the boundary along a
-    # direction determined by their path -> mimics a Poincare tree embedding.
-    directions = rng.standard_normal((n_leaves, dim))
-    directions /= np.linalg.norm(directions, axis=1, keepdims=True)
-    radius = 0.9  # leaves near the boundary
-    prototypes = radius * directions
+    # Faithful hierarchical embedding: give every tree node (identified by its
+    # path prefix) its own random edge vector, and set a leaf's prototype to the
+    # sum of edge vectors along its root->leaf path. Then two leaves sharing a
+    # longer prefix share more components and sit closer -- so Euclidean/geodesic
+    # prototype distance tracks the tree distance (siblings < cousins). Deeper
+    # edges get smaller weight so the embedding stays bounded near the boundary.
+    edge_vecs: dict[tuple, np.ndarray] = {}
+
+    def _edge(prefix: tuple) -> np.ndarray:
+        if prefix not in edge_vecs:
+            v = rng.standard_normal(dim)
+            v /= np.linalg.norm(v)
+            weight = 0.6 ** len(prefix)  # shallower edges dominate
+            edge_vecs[prefix] = weight * v
+        return edge_vecs[prefix]
+
+    prototypes = np.zeros((n_leaves, dim))
+    for li, path in enumerate(paths):
+        acc = np.zeros(dim)
+        for d in range(1, len(path) + 1):
+            acc = acc + _edge(path[:d])
+        prototypes[li] = acc
+    # Scale so the deepest leaves sit near (but inside) a unit-ball radius.
+    max_norm = np.linalg.norm(prototypes, axis=1).max() + 1e-9
+    prototypes = 0.9 * prototypes / max_norm
 
     feats = []
     labels = []

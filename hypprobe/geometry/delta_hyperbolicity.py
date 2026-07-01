@@ -1,8 +1,14 @@
-"""Phase 1 CLI: map delta_rel across (model, layer, token-source).
+"""Phase 1 CLI: map delta_rel + label alignment across (model, layer, token-source).
 
 Reads the activation store, pools features for every (layer, token-source), and
-computes delta_rel (whitened, normalised, with variance) plus tree/sphere sanity
-references. Writes ``geometry/delta_rel.csv`` and a per-layer plot.
+computes:
+  - delta_rel (whitened, normalised, with variance) -- is the point cloud tree-like?
+  - label alignment -- does the TAXONOMY embed as a tree here (Euclidean vs
+    hyperbolic prototype-distance correlation) and does norm encode depth?
+
+Together these implement the plan's JOINT selection criterion: the best setting
+has BOTH low delta_rel AND high hyperbolic label alignment. Writes
+``geometry/delta_rel.csv`` and a per-layer plot, and logs the joint winner.
 """
 
 from __future__ import annotations
@@ -15,6 +21,7 @@ import numpy as np
 from ..io import (TOKEN_SOURCES, build_feature_matrix, ensure_dir, iter_samples,
                   log_line, save_csv)
 from .delta import delta_hyperbolicity
+from .label_alignment import label_alignment
 
 
 def _models_datasets(activations_dir):
@@ -37,24 +44,44 @@ def run(activations_dir, out_dir, whiten=True, n_layers_hint=None, seed=0):
         layers = range(n_layers) if n_layers_hint is None else n_layers_hint
         for layer in layers:
             for src in TOKEN_SOURCES:
-                X, y, _ = build_feature_matrix(activations_dir, model, dataset, layer, src)
+                X, y, paths = build_feature_matrix(activations_dir, model, dataset, layer, src)
                 if X.shape[0] < 8:
                     continue
                 res = delta_hyperbolicity(X, n_quadruples=1500, n_repeats=5,
                                           do_whiten=whiten, seed=seed)
+                # Label alignment: does the taxonomy embed as a tree here?
+                align = label_alignment(X, paths, curvature=1.0, do_whiten=whiten)
+                # Joint score: low delta_rel AND high hyperbolic alignment. We
+                # combine as (1 - delta_rel) + hyperbolic prototype correlation,
+                # so higher = better on both axes (used only for logging/ranking).
+                joint = round((1.0 - res.delta_rel) + align.proto_corr_hyperbolic, 4)
                 rows.append(dict(model=model, dataset=dataset, layer=layer,
                                  token_source=src, delta_rel=round(res.delta_rel, 4),
                                  std_rel=round(res.std_rel, 4), diam=round(res.diam, 3),
-                                 n_points=res.n_points))
+                                 n_points=res.n_points,
+                                 align_euc=round(align.proto_corr_euclidean, 4),
+                                 align_hyp=round(align.proto_corr_hyperbolic, 4),
+                                 norm_depth_corr=round(align.norm_depth_corr, 4),
+                                 joint_score=joint))
         log_line(logfile, f"{model}/{dataset}: mapped {n_layers} layers x {len(TOKEN_SOURCES)} sources")
 
     csv_path = os.path.join(out_dir, "delta_rel.csv")
     save_csv(csv_path, rows, columns=["model", "dataset", "layer", "token_source",
-                                      "delta_rel", "std_rel", "diam", "n_points"])
+                                      "delta_rel", "std_rel", "diam", "n_points",
+                                      "align_euc", "align_hyp", "norm_depth_corr",
+                                      "joint_score"])
     if rows:
-        best = min(rows, key=lambda r: r["delta_rel"])
-        log_line(logfile, f"most hyperbolic setting: {best['model']} L{best['layer']} "
-                          f"{best['token_source']} delta_rel={best['delta_rel']}")
+        best_delta = min(rows, key=lambda r: r["delta_rel"])
+        log_line(logfile, f"most hyperbolic (delta_rel) setting: {best_delta['model']} "
+                          f"L{best_delta['layer']} {best_delta['token_source']} "
+                          f"delta_rel={best_delta['delta_rel']}")
+        best_joint = max(rows, key=lambda r: r["joint_score"])
+        log_line(logfile, f"best JOINT setting (low delta_rel + taxonomy fit): "
+                          f"{best_joint['model']} L{best_joint['layer']} "
+                          f"{best_joint['token_source']} "
+                          f"(delta_rel={best_joint['delta_rel']}, "
+                          f"align_hyp={best_joint['align_hyp']}, "
+                          f"align_euc={best_joint['align_euc']})")
     _maybe_plot(rows, out_dir)
     return rows
 

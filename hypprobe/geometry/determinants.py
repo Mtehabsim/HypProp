@@ -76,13 +76,40 @@ def _edit_order_shuffle(raw_tokens, rng):
 
 
 def _edit_project_out_top_pc(X):
-    """Coarse 'meaning' control: remove the leading principal component."""
+    """Coarse 'meaning' control (fallback when no variant activations exist).
+
+    Removes the leading principal component as a rough proxy for a 'content'
+    direction. Used only if the activation store has no nonce/paraphrase
+    variants; otherwise we use the real re-run control in :func:`_variant_matrix`.
+    """
     if X.shape[0] < 3:
         return X
     Xc = X - X.mean(0, keepdims=True)
     _, _, vt = np.linalg.svd(Xc, full_matrices=False)
     top = vt[0]
     return Xc - np.outer(Xc @ top, top)
+
+
+def _variant_matrix(activations_dir, model, dataset, layer, source, variant):
+    """Pool features for samples whose ``variant`` field matches (real control)."""
+    from ..io import pool_features
+
+    xs = []
+    for s in iter_samples(activations_dir, model, dataset):
+        if s.get("variant", "original") != variant:
+            continue
+        vec = pool_features(s, layer, source)
+        if vec is not None:
+            xs.append(vec)
+    return np.stack(xs) if xs else np.empty((0, 0))
+
+
+def _available_variants(activations_dir, model, dataset):
+    """Which variant tags are present in this store (e.g. nonce, paraphrase)."""
+    vs = set()
+    for s in iter_samples(activations_dir, model, dataset):
+        vs.add(s.get("variant", "original"))
+    return vs
 
 
 def run(activations_dir, out_dir, whiten=True, seed=0, layer=None, source="thinking"):
@@ -98,7 +125,14 @@ def run(activations_dir, out_dir, whiten=True, seed=0, layer=None, source="think
         n_layers = int(np.asarray(sample["hidden"]).shape[0])
         use_layer = (n_layers - 1) if layer is None else layer
 
-        base_X, _, _ = build_feature_matrix(activations_dir, model, dataset, use_layer, source)
+        variants = _available_variants(activations_dir, model, dataset)
+        has_real_variants = {"nonce", "paraphrase"} & variants
+
+        if has_real_variants:
+            # Base = ORIGINAL variant only, so comparisons are apples-to-apples.
+            base_X = _variant_matrix(activations_dir, model, dataset, use_layer, source, "original")
+        else:
+            base_X, _, _ = build_feature_matrix(activations_dir, model, dataset, use_layer, source)
         if base_X.shape[0] < 8:
             log_line(logfile, f"{model}/{dataset}: too few '{source}' samples; skipping")
             continue
@@ -108,8 +142,17 @@ def run(activations_dir, out_dir, whiten=True, seed=0, layer=None, source="think
         edits = {
             "token_identity": _edit_token_identity(raw_tokens, rng),
             "order_shuffle": _edit_order_shuffle(raw_tokens, rng),
-            "meaning_topPC": _edit_project_out_top_pc(base_X),
         }
+        # Meaning control: prefer REAL re-run variants (nonce destroys meaning,
+        # keeps structure; paraphrase keeps meaning). Fall back to top-PC proxy.
+        if "nonce" in variants:
+            edits["meaning_nonce"] = _variant_matrix(
+                activations_dir, model, dataset, use_layer, source, "nonce")
+        if "paraphrase" in variants:
+            edits["meaning_paraphrase"] = _variant_matrix(
+                activations_dir, model, dataset, use_layer, source, "paraphrase")
+        if not has_real_variants:
+            edits["meaning_topPC"] = _edit_project_out_top_pc(base_X)
         for edit_name, X_edit in edits.items():
             if X_edit.shape[0] < 8:
                 continue

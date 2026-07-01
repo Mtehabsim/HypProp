@@ -26,8 +26,8 @@ run_stage() { [ "$STAGE" = "all" ] || [ "$STAGE" = "$1" ]; }
 
 # Phase 0 — data + extraction
 if run_stage extract; then
-  log "Phase 0: caching datasets"
-  python -m hypprobe.data.prepare --datasets "${DATASETS[@]}" --out "$RESULTS_DIR/data_cache"
+  log "Phase 0: caching datasets (with nonce/paraphrase variants for the meaning control)"
+  python -m hypprobe.data.prepare --datasets "${DATASETS[@]}" --variants --out "$RESULTS_DIR/data_cache"
   log "Phase 0: extracting hidden states (needs GPU + transformers)"
   for m in "${MODELS[@]}"; do
     [ -z "$m" ] && continue

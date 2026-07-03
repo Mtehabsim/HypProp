@@ -50,10 +50,18 @@ if run_stage geometry; then
   log "Phase 1: delta-hyperbolicity map (whitened)"
   python -m hypprobe.geometry.delta_hyperbolicity --activations "$RESULTS_DIR/activations" \
     --whiten --out "$RESULTS_DIR/geometry" 2>&1 | tee -a "$RESULTS_DIR/logs/delta.log"
-  log "Phase 1: reproduce Raj structural-probe (sanity)"
+  log "Phase 1: reproduce Raj structural-probe on PrOntoQA (target=depth, sanity)"
   python -m hypprobe.geometry.structural_probe --activations "$RESULTS_DIR/activations" \
-    --dataset prontoqa --out "$RESULTS_DIR/geometry" 2>&1 | tee -a "$RESULTS_DIR/logs/struct.log" || \
-    log "  (structural probe skipped: no prontoqa activations yet)"
+    --dataset prontoqa --target depth --out "$RESULTS_DIR/geometry" \
+    2>&1 | tee -a "$RESULTS_DIR/logs/struct.log" || \
+    log "  (depth structural probe skipped: no prontoqa activations yet)"
+  log "Phase 1: structural probe on the SAFETY TAXONOMY tree (target=taxonomy)"
+  for ds in "${DATASETS[@]}"; do
+    python -m hypprobe.geometry.structural_probe --activations "$RESULTS_DIR/activations" \
+      --dataset "$ds" --target taxonomy --out "$RESULTS_DIR/geometry" \
+      2>&1 | tee -a "$RESULTS_DIR/logs/struct.log" || \
+      log "  (taxonomy structural probe skipped for $ds)"
+  done
   log "Phase 1: determinants (token / order / meaning)"
   python -m hypprobe.geometry.determinants --activations "$RESULTS_DIR/activations" \
     --whiten --out "$RESULTS_DIR/determinants" 2>&1 | tee -a "$RESULTS_DIR/logs/determinants.log"

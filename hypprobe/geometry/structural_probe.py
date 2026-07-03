@@ -76,7 +76,37 @@ def fit_structural(feats, target_d, curvature, proj_dim=5, epochs=300, seed=0):
     return rho, distortion
 
 
-def run(activations_dir, out_dir, dataset="prontoqa", proj_dim=5, seed=0):
+def _depth_target(samples):
+    """Reasoning-depth target |depth_i - depth_j| (Raj-style). (N, N)."""
+    depths = np.array([len(s.get("label_path", [0])) for s in samples], dtype=float)
+    return np.abs(depths[:, None] - depths[None, :])
+
+
+def _taxonomy_target(samples):
+    """Safety-taxonomy tree-distance target from each sample's label_path.
+
+    Uses the same shared-prefix tree metric as label_alignment, so the notion of
+    "tree distance" is identical across the codebase. Two samples in sibling
+    categories are close; cross-branch categories are far. Returns (N, N).
+    """
+    from .label_alignment import tree_distance_from_paths
+
+    paths = [list(s.get("label_path", [s.get("label", 0)])) for s in samples]
+    tree_d, uniq = tree_distance_from_paths(paths)
+    index = {tuple(p): k for k, p in enumerate(uniq)}
+    idx = np.array([index[tuple(p)] for p in paths])
+    # Expand the per-class tree distances to a per-sample (N, N) matrix.
+    return tree_d[np.ix_(idx, idx)]
+
+
+def run(activations_dir, out_dir, dataset="prontoqa", proj_dim=5, seed=0,
+        target="depth"):
+    """Structural probe per layer, flat vs hyperbolic.
+
+    target='depth'    -> reasoning-depth tree (reproduces Raj on PrOntoQA).
+    target='taxonomy' -> safety-taxonomy tree distance from label_path (the harm
+                         hierarchy; use this on AILuminate/Aegis/WOS).
+    """
     ensure_dir(out_dir)
     logfile = os.path.join(os.path.dirname(out_dir.rstrip("/")) or ".", "logs", "struct.log")
     rows = []
@@ -86,32 +116,43 @@ def run(activations_dir, out_dir, dataset="prontoqa", proj_dim=5, seed=0):
         if len(samples) < 8:
             log_line(logfile, f"{model}/{dataset}: too few samples for structural probe")
             continue
-        # Target distance = |depth_i - depth_j| using label_path length (reasoning depth).
-        depths = np.array([len(s.get("label_path", [0])) for s in samples], dtype=float)
-        target_d = np.abs(depths[:, None] - depths[None, :])
+        if target == "taxonomy":
+            target_d = _taxonomy_target(samples)
+        else:
+            target_d = _depth_target(samples)
+        if float(target_d.max()) <= 0:
+            log_line(logfile, f"{model}/{dataset}: target '{target}' is degenerate "
+                              f"(all distances 0 -- need >1 class/depth); skipping")
+            continue
         n_layers = int(np.asarray(samples[0]["hidden"]).shape[0])
         for layer in range(n_layers):
             feats = np.stack([np.asarray(s["hidden"])[layer, -1] for s in samples]).astype(np.float64)
             rho_e, dist_e = fit_structural(feats, target_d, 0.0, proj_dim, seed=seed)
             rho_h, dist_h = fit_structural(feats, target_d, 1.0, proj_dim, seed=seed)
-            rows.append(dict(model=model, dataset=dataset, layer=layer,
+            rows.append(dict(model=model, dataset=dataset, target=target, layer=layer,
                              rho_euclidean=round(rho_e, 3), rho_hyperbolic=round(rho_h, 3),
                              dist_euclidean=round(dist_e, 3), dist_hyperbolic=round(dist_h, 3)))
-        log_line(logfile, f"{model}/{dataset}: structural probe over {n_layers} layers "
-                          f"(final-layer Euc rho={rows[-1]['rho_euclidean']}, "
-                          f"Hyp rho={rows[-1]['rho_hyperbolic']}) -- Raj target ~0.488/0.967")
-    save_csv(os.path.join(out_dir, "structural_probe.csv"), rows)
+        raj_note = " -- Raj target ~0.488/0.967" if target == "depth" else ""
+        log_line(logfile, f"{model}/{dataset} [target={target}]: structural probe over "
+                          f"{n_layers} layers (final-layer Euc rho={rows[-1]['rho_euclidean']}, "
+                          f"Hyp rho={rows[-1]['rho_hyperbolic']}){raj_note}")
+    suffix = "" if target == "depth" else f"_{target}"
+    save_csv(os.path.join(out_dir, f"structural_probe{suffix}.csv"), rows)
     return rows
 
 
 def main(argv=None):
-    ap = argparse.ArgumentParser(description="Phase 1: structural probe (reproduces Raj).")
+    ap = argparse.ArgumentParser(
+        description="Phase 1: structural probe. target=depth reproduces Raj; "
+                    "target=taxonomy tests the safety hierarchy.")
     ap.add_argument("--activations", required=True)
     ap.add_argument("--out", default="./results/geometry")
     ap.add_argument("--dataset", default="prontoqa")
+    ap.add_argument("--target", default="depth", choices=["depth", "taxonomy"])
     ap.add_argument("--seed", type=int, default=0)
     args = ap.parse_args(argv)
-    run(args.activations, args.out, dataset=args.dataset, seed=args.seed)
+    run(args.activations, args.out, dataset=args.dataset, seed=args.seed,
+        target=args.target)
 
 
 if __name__ == "__main__":

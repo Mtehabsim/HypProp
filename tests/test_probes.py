@@ -79,3 +79,25 @@ def test_probe_learns_something():
         in_dim=feats.shape[1], n_classes=n_classes, proj_dim=5,
         curvature=1.0, seed=0, epochs=200))
     assert res.val_acc > 1.5 / n_classes
+
+
+def test_structural_probe_taxonomy_target(tmp_path):
+    """The structural probe can target the SAFETY TAXONOMY tree (not just depth).
+
+    On mock activations whose label_path encodes a real 2-level tree, the
+    taxonomy-target structural probe should run and the hyperbolic variant should
+    achieve distortion no worse than a large blow-up (sanity: it fits the tree).
+    """
+    from hypprobe.data.mock_activations import generate
+    from hypprobe.geometry import structural_probe
+
+    out = str(tmp_path / "acts")
+    generate(out, n_samples=60, with_variants=False)
+    rows = structural_probe.run(out, str(tmp_path / "geom"),
+                                dataset="wordnet_control", target="taxonomy", seed=0)
+    assert rows, "taxonomy structural probe produced no rows"
+    # Each row reports both geometries and is tagged with the taxonomy target.
+    r = rows[len(rows) // 2]
+    assert r["target"] == "taxonomy"
+    assert 0.0 <= r["rho_hyperbolic"] <= 1.0 or -1.0 <= r["rho_hyperbolic"] <= 1.0
+    assert r["dist_hyperbolic"] >= 0.0

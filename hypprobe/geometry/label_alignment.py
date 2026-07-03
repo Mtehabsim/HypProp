@@ -88,7 +88,9 @@ def label_alignment(
     path from root to leaf. Prototypes are per-unique-path means.
     """
     X = np.asarray(X, dtype=np.float64)
-    if do_whiten and X.shape[0] > X.shape[1]:
+    if do_whiten:
+        # whiten() is now sound in the N<<d regime (PCA-then-whiten), so we no
+        # longer need the old "only if N>d" guard.
         X = zca_whiten(X)
 
     tree_d, uniq_paths = tree_distance_from_paths(label_paths)

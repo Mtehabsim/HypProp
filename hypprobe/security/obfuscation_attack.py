@@ -1,19 +1,28 @@
-"""Phase 3 CLI: obfuscation-cost evaluation (core deliverable).
+"""Phase 3 CLI: probe-margin robustness under feature-space perturbation.
 
-We reproduce the *idea* of Bailey et al. (2024) at the probe level: an attacker
-perturbs a harmful sample's pooled activation to flip a trained probe's decision
-(harmful -> benign) while staying close to the original (a proxy for preserving
-behaviour). We measure the ATTACKER'S BUDGET -- the perturbation size / steps
-needed -- for a flat probe vs the hyperbolic probe, and test TRANSFER (does a
-perturbation optimised against one geometry fool the other?).
+IMPORTANT SCOPE / HONESTY CAVEAT (do not overclaim this as "attacker cost"):
 
-Honest framing (per plan): the claim is "hyperbolic RAISES the attacker's budget
-/ forces more perturbation", never "unbreakable". Because attacks transfer
-(Bailey et al.), we explicitly report transfer as well.
+This measures how far a POOLED ACTIVATION must be pushed in FEATURE SPACE to flip
+a trained probe's decision (harmful -> benign), for a flat probe vs the
+hyperbolic probe. That is a property of the probe's DECISION-MARGIN GEOMETRY, NOT
+a realizable attacker cost:
 
-This runs on saved activations; it does not need the LLM, so it works on the DGX
-or locally on cached features. The probe here is a trained binary
-harmful/benign H-MLR (c>0) vs its flat limit (c=0), on the same features.
+  * an arbitrary perturbed activation has NO prompt preimage -- it is off the
+    reachable manifold, so unlike Bailey et al.'s input-space attacks it does not
+    correspond to any prompt an attacker could actually send;
+  * the flat and hyperbolic margins are measured on differently-shaped surfaces
+    after different projections, so their raw L2 magnitudes are NOT directly
+    commensurable.
+
+We therefore report the margin numbers as ``margin_l2`` (a diagnostic), NOT as
+"attacker cost". The one result that IS meaningful and geometry-agnostic is
+TRANSFER: does a perturbation found against one geometry also flip the other?
+A realizable attacker-cost study requires optimizing a SUFFIX IN INPUT SPACE and
+re-extracting activations through the model (a DGX task); that is future work and
+is flagged as such in the output.
+
+Runs on saved activations; no LLM needed. Probe is a binary harmful/benign H-MLR
+(c>0) vs its flat limit (c=0), on the same features.
 """
 
 from __future__ import annotations
@@ -24,7 +33,8 @@ import os
 import numpy as np
 import torch
 
-from ..io import build_feature_matrix, ensure_dir, iter_samples, log_line, save_csv
+from ..io import (build_feature_matrix, ensure_dir, iter_samples, log_line,
+                  save_csv, save_json)
 from ..probes.hmlr import HyperbolicMLR, ProbeConfig
 
 
@@ -66,7 +76,7 @@ def _attack_budget(model, x0, target_class, max_steps=200, lr=0.05):
 
 
 def run(probes_dir_unused, activations_dir, out_dir, seed=0, proj_dim=5,
-        layer=None, source="last", n_attack=40):
+        layer=None, source="last", n_attack=40, determinants_dir=None):
     ensure_dir(out_dir)
     logfile = os.path.join(os.path.dirname(out_dir.rstrip("/")) or ".", "logs", "security.log")
     rows = []
@@ -90,19 +100,27 @@ def run(probes_dir_unused, activations_dir, out_dir, seed=0, proj_dim=5,
             for i in harmful_idx:
                 s_ok, pnorm, st = _attack_budget(model, X[i], target_class=0)
                 succ.append(s_ok); norms.append(pnorm); steps.append(st)
+            # margin_l2 is FEATURE-SPACE decision margin, NOT realizable attacker
+            # cost (see module docstring). Names reflect that.
             rows.append(dict(model=model_name, dataset=dataset, geometry=geom,
                              n_attacked=len(harmful_idx),
-                             attack_success_rate=round(float(np.mean(succ)), 3),
-                             mean_budget_norm=round(float(np.mean(norms)), 4),
-                             mean_steps=round(float(np.mean(steps)), 1)))
-        # Transfer: perturbation found on flat, applied to hyperbolic and vice versa.
+                             flip_success_rate=round(float(np.mean(succ)), 3),
+                             margin_l2=round(float(np.mean(norms)), 4),
+                             mean_steps=round(float(np.mean(steps)), 1),
+                             realizable="no_feature_space_only"))
+        # Transfer (the geometry-agnostic, meaningful result): perturbation found
+        # on flat, applied to hyperbolic.
         rows.append(_transfer_row(model_name, dataset, flat, hyp, X, yb, harmful_idx))
         f = rows[-3]; h = rows[-2]
-        log_line(logfile, f"{model_name}/{dataset}: flat budget={f['mean_budget_norm']} "
-                          f"vs hyperbolic budget={h['mean_budget_norm']} "
-                          f"(higher = attacker pays more)")
+        log_line(logfile, f"{model_name}/{dataset}: FEATURE-SPACE margin_l2 flat={f['margin_l2']} "
+                          f"vs hyperbolic={h['margin_l2']} "
+                          f"(diagnostic only -- NOT attacker cost; see transfer row)")
     save_csv(os.path.join(out_dir, "attack.csv"), rows)
     _maybe_plot(rows, out_dir)
+    # #10: bridge the Phase-1 determinant driver to detector robustness.
+    if determinants_dir:
+        verdict = write_robustness_bridge(rows, determinants_dir, out_dir)
+        log_line(logfile, f"robustness bridge: {verdict}")
     return rows
 
 
@@ -123,8 +141,8 @@ def _transfer_row(model_name, dataset, flat, hyp, X, yb, harmful_idx):
         transferred.append(fooled_hyp)
     return dict(model=model_name, dataset=dataset, geometry="transfer_flat_to_hyp",
                 n_attacked=len(harmful_idx),
-                attack_success_rate=round(float(np.mean(transferred)), 3),
-                mean_budget_norm="", mean_steps="")
+                flip_success_rate=round(float(np.mean(transferred)), 3),
+                margin_l2="", mean_steps="", realizable="transfer_is_meaningful")
 
 
 def _maybe_plot(rows, out_dir):
@@ -139,15 +157,54 @@ def _maybe_plot(rows, out_dir):
     geoms = ["flat", "hyperbolic"]
     vals = []
     for g in geoms:
-        gv = [r["mean_budget_norm"] for r in rows
-              if r["geometry"] == g and isinstance(r["mean_budget_norm"], (int, float))]
+        gv = [r["margin_l2"] for r in rows
+              if r["geometry"] == g and isinstance(r["margin_l2"], (int, float))]
         vals.append(np.mean(gv) if gv else 0.0)
     fig, ax = plt.subplots(figsize=(5, 4))
     ax.bar(geoms, vals)
-    ax.set_ylabel("mean attacker budget (perturbation L2)")
-    ax.set_title("Obfuscation cost: flat vs hyperbolic")
-    fig.tight_layout(); fig.savefig(os.path.join(out_dir, "budget_comparison.png"), dpi=120)
+    ax.set_ylabel("mean feature-space decision margin (L2)")
+    ax.set_title("Probe decision-margin geometry (diagnostic, NOT attacker cost)")
+    fig.tight_layout(); fig.savefig(os.path.join(out_dir, "margin_comparison.png"), dpi=120)
     plt.close(fig)
+
+
+def write_robustness_bridge(security_rows, determinants_dir, out_dir):
+    """#10: connect the determinants driver to detector robustness.
+
+    If Phase-1 found hyperbolicity is driven by TOKEN IDENTITY (nonce destroys
+    it), then an attacker can rebuild benign token statistics and the geometry
+    gives little defense -> we WARN. If it is driven by MEANING (paraphrase
+    preserves it, nonce destroys it but identity-swap does not), the structure is
+    harder to obfuscate -> more defensible. This makes the inference explicit
+    rather than leaving it un-run.
+    """
+    import csv
+
+    driver = None
+    attr_path = os.path.join(determinants_dir, "attribution.csv")
+    if os.path.exists(attr_path):
+        with open(attr_path) as fh:
+            rows = list(csv.DictReader(fh))
+        if rows:
+            # dominant driver = edit with the largest |delta_change|.
+            top = max(rows, key=lambda r: abs(float(r.get("delta_change", 0) or 0)))
+            driver = top["edit"]
+    transfer = [r for r in security_rows if r["geometry"] == "transfer_flat_to_hyp"]
+    transfer_rate = np.mean([r["flip_success_rate"] for r in transfer]) if transfer else float("nan")
+
+    if driver and driver.startswith("token_identity"):
+        verdict = ("WARN: hyperbolicity is token-identity-driven -> an attacker can "
+                   "likely rebuild benign token statistics; geometric defense is weak.")
+    elif driver and (driver.startswith("meaning") or driver.startswith("order")):
+        verdict = (f"hyperbolicity is {driver}-driven -> harder to obfuscate by "
+                   "surface token edits; geometric defense is more defensible.")
+    else:
+        verdict = "driver unknown (no determinants output found); cannot bridge."
+
+    save_json(os.path.join(out_dir, "robustness_bridge.json"),
+              dict(dominant_driver=driver, transfer_flat_to_hyp_rate=float(transfer_rate),
+                   verdict=verdict))
+    return verdict
 
 
 def main(argv=None):
@@ -159,9 +216,12 @@ def main(argv=None):
     ap.add_argument("--proj-dim", type=int, default=5)
     ap.add_argument("--source", default="last")
     ap.add_argument("--layer", type=int, default=None)
+    ap.add_argument("--determinants", default=None,
+                    help="determinants dir; enables the #10 robustness bridge output")
     args = ap.parse_args(argv)
     run(args.probes, args.activations, args.out, seed=args.seed,
-        proj_dim=args.proj_dim, layer=args.layer, source=args.source)
+        proj_dim=args.proj_dim, layer=args.layer, source=args.source,
+        determinants_dir=args.determinants)
 
 
 if __name__ == "__main__":

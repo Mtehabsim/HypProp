@@ -199,7 +199,10 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description="Phase 1 main science: determinants.")
     ap.add_argument("--activations", required=True)
     ap.add_argument("--out", default="./results/determinants")
-    ap.add_argument("--whiten", action="store_true", default=False)
+    ap.add_argument("--whiten", dest="whiten", action="store_true", default=True,
+                    help="whiten before delta -- ON by default (doctrine)")
+    ap.add_argument("--no-whiten", dest="whiten", action="store_false",
+                    help="disable whitening (NOT recommended)")
     ap.add_argument("--source", default="thinking")
     ap.add_argument("--layer", type=int, default=None)
     ap.add_argument("--seed", type=int, default=0)

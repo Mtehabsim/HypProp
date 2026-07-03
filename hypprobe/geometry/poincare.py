@@ -160,10 +160,15 @@ def gyroplane_distance(
     a_norm = a.norm(dim=-1).clamp_min(_MIN_DENOM)  # (K,)
 
     if float(sqrt_c) == 0.0:
-        # Euclidean limit: affine logit 2 <x - p, a> / ||a||.
+        # Euclidean limit of the gyroplane formula. As c->0: mobius_add(-p,x)->x-p,
+        # arcsinh(z)->z, so (2/sqrt(c)) * arcsinh(2 sqrt(c) <x-p,a>/((1)||a||))
+        # -> 4 <x-p,a> / ||a||. The constant is 4 (NOT 2) so that this branch is
+        # exactly the c->0 limit of the c>0 path (verified by
+        # test_gyroplane_limit_c_to_zero_converges_to_flat). A wrong constant here
+        # would break the "only geometry differs" fairness identity.
         diff = x.unsqueeze(1) - p.unsqueeze(0)  # (N, K, d)
         inner = (diff * a.unsqueeze(0)).sum(dim=-1)  # (N, K)
-        return 2.0 * inner / a_norm.unsqueeze(0)
+        return 4.0 * inner / a_norm.unsqueeze(0)
 
     # mobius add of (-p_k) and x for every (n, k) pair.
     x_e = x.unsqueeze(1).expand(n, k, d)

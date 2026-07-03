@@ -150,7 +150,10 @@ def pool_features(sample: dict, layer: int, token_source: str) -> np.ndarray | N
 
 
 def build_feature_matrix(activations_dir, model, dataset, layer, token_source):
-    """Assemble (X, y, label_paths) across all samples for a (layer, source)."""
+    """Assemble (X, y, label_paths) across all samples for a (layer, source).
+
+    point_mode = PROMPT: each row is one prompt's pooled vector.
+    """
     xs, ys, paths = [], [], []
     for s in iter_samples(activations_dir, model, dataset):
         vec = pool_features(s, layer, token_source)
@@ -162,3 +165,53 @@ def build_feature_matrix(activations_dir, model, dataset, layer, token_source):
     if not xs:
         return np.empty((0, 0)), np.empty(0, int), []
     return np.stack(xs), np.asarray(ys, int), paths
+
+
+def build_token_matrix(activations_dir, model, dataset, layer,
+                       token_filter=None, max_tokens=4000, with_meta=False):
+    """point_mode = TOKEN: each row is a single token's hidden state at ``layer``.
+
+    Unlike the prompt-pooled view, this exposes the representation manifold at the
+    token level. ``token_filter(token_str) -> bool`` restricts to a token type
+    (e.g. only "The"); default keeps all tokens. If ``with_meta`` we also return,
+    per row, the token string, its position index, and its source label so the
+    caller can split "same token, vary POSITION" vs "vary CONTEXT".
+    """
+    xs, toks, positions, sample_ids = [], [], [], []
+    for s in iter_samples(activations_dir, model, dataset):
+        hidden = s["hidden"]
+        if hasattr(hidden, "numpy"):
+            hidden = hidden.numpy()
+        hidden = np.asarray(hidden, dtype=np.float64)
+        L = min(layer, hidden.shape[0] - 1)
+        h = hidden[L]  # (n_tokens, hidden)
+        token_strs = s.get("tokens", [f"tok{i}" for i in range(h.shape[0])])
+        for i in range(h.shape[0]):
+            if token_filter is not None and not token_filter(token_strs[i]):
+                continue
+            xs.append(h[i])
+            toks.append(token_strs[i])
+            positions.append(i)
+            sample_ids.append(s.get("sample_id", ""))
+            if len(xs) >= max_tokens:
+                break
+        if len(xs) >= max_tokens:
+            break
+    if not xs:
+        empty = np.empty((0, 0))
+        return (empty, [], np.empty(0, int), []) if with_meta else empty
+    X = np.stack(xs)
+    if with_meta:
+        return X, toks, np.asarray(positions, int), sample_ids
+    return X
+
+
+def frequent_token_types(activations_dir, model, dataset, top_k=15, min_count=20):
+    """Return the most frequent token strings across the store (for token_type)."""
+    from collections import Counter
+
+    counter: Counter = Counter()
+    for s in iter_samples(activations_dir, model, dataset):
+        for t in s.get("tokens", []):
+            counter[t] += 1
+    return [tok for tok, c in counter.most_common(top_k) if c >= min_count]

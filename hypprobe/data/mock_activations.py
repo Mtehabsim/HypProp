@@ -55,10 +55,21 @@ def generate(out_dir, model="mock/tree-7b", dataset="wordnet_control",
             is_generated = np.zeros(n_tokens, bool)
             is_generated[n_tokens // 3:] = True  # first third = prompt
 
+            # A shared token "The" placed at a VARYING position per sample, and
+            # whose late-layer activation encodes its POSITION (not the class).
+            # This gives the token_type position-vs-context split real ground
+            # truth: "The" should look tree-like along POSITION, flat along
+            # CONTEXT. Other tokens keep unique per-slot names.
+            the_pos = n_tokens // 3 + (i % (n_tokens // 3))
+            tokens = [f"tok{j}" for j in range(n_tokens)]
+            tokens[the_pos] = "The"
+            pos_frac = the_pos / (n_tokens - 1)
+            hidden_states[-1, the_pos] += 3.0 * pos_frac * directions[0]
+
             sid = f"s{i}" if variant == "original" else f"s{i}__{variant}"
             rec = dict(
                 hidden=torch.from_numpy(hidden_states),
-                tokens=[f"tok{j}" for j in range(n_tokens)],
+                tokens=tokens,
                 positions=torch.arange(n_tokens),
                 is_generated=torch.from_numpy(is_generated),
                 is_thinking=torch.from_numpy(is_think),

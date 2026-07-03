@@ -82,8 +82,37 @@ def run(activations_dir, out_dir, whiten=True, n_layers_hint=None, seed=0):
                           f"(delta_rel={best_joint['delta_rel']}, "
                           f"align_hyp={best_joint['align_hyp']}, "
                           f"align_euc={best_joint['align_euc']})")
+        # #8: reference layers so the headline comparison is not only run on
+        # hyperbolic-favourable ground. We emit the best-case (joint), a
+        # flat-favourable layer (highest delta_rel), and a median layer, per
+        # (model, source). Phase-2 comparison should report all three.
+        _write_reference_layers(rows, out_dir, logfile)
     _maybe_plot(rows, out_dir)
     return rows
+
+
+def _write_reference_layers(rows, out_dir, logfile):
+    """Emit best-case / flat-favourable / median layers to guard selection bias."""
+    ref = []
+    keys = sorted({(r["model"], r["dataset"], r["token_source"]) for r in rows})
+    for model, dataset, src in keys:
+        sub = [r for r in rows if (r["model"], r["dataset"], r["token_source"]) == (model, dataset, src)]
+        if not sub:
+            continue
+        by_joint = sorted(sub, key=lambda r: r["joint_score"])
+        best_case = by_joint[-1]                     # most hyperbolic-favourable
+        flat_fav = max(sub, key=lambda r: r["delta_rel"])  # least tree-like
+        median = sorted(sub, key=lambda r: r["delta_rel"])[len(sub) // 2]
+        for role, r in [("best_case", best_case), ("flat_favorable", flat_fav),
+                        ("median", median)]:
+            ref.append(dict(model=model, dataset=dataset, token_source=src, role=role,
+                            layer=r["layer"], delta_rel=r["delta_rel"],
+                            align_hyp=r["align_hyp"], joint_score=r["joint_score"]))
+    save_csv(os.path.join(out_dir, "reference_layers.csv"), ref,
+             columns=["model", "dataset", "token_source", "role", "layer",
+                      "delta_rel", "align_hyp", "joint_score"])
+    log_line(logfile, f"wrote reference_layers.csv "
+                      f"(best_case / flat_favorable / median) to guard selection bias")
 
 
 def _maybe_plot(rows, out_dir):
@@ -113,7 +142,10 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description="Phase 1: delta-hyperbolicity map.")
     ap.add_argument("--activations", required=True)
     ap.add_argument("--out", default="./results/geometry")
-    ap.add_argument("--whiten", action="store_true", default=False)
+    ap.add_argument("--whiten", dest="whiten", action="store_true", default=True,
+                    help="whiten (PCA-then-whiten) before delta -- ON by default (doctrine)")
+    ap.add_argument("--no-whiten", dest="whiten", action="store_false",
+                    help="disable whitening (NOT recommended; violates the protocol)")
     ap.add_argument("--seed", type=int, default=0)
     args = ap.parse_args(argv)
     run(args.activations, args.out, whiten=args.whiten, seed=args.seed)

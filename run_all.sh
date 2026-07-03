@@ -9,7 +9,14 @@
 set -euo pipefail
 
 # ---- config (edit these) ----
-MODELS=("Qwen/Qwen2.5-7B-Instruct" "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B" "meta-llama/Llama-Guard-3-8B")
+# NOTE (reviewer #2): the safety/RLHF-tuned models CONCENTRATE harm features and
+# can saturate a flat probe -> geometry adds nothing even if the effect is real
+# (deck stacked toward the null). We therefore ALSO include the Qwen2.5-7B BASE
+# (non-instruct) model as a weakly-aligned control: same family/tokenizer as the
+# instruct + DeepSeek models, so "aligned vs not" is isolated WITHIN one lineage
+# rather than confounded by a different model family. Keep >=1 weakly-aligned model.
+MODELS=("Qwen/Qwen2.5-7B-Instruct" "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B" \
+        "meta-llama/Llama-Guard-3-8B" "Qwen/Qwen2.5-7B")
 DATASETS=("ailuminate" "aegis" "wos" "wordnet_control")   # controls first is fine
 SEEDS=(0 1 2 3 4)
 RESULTS_DIR="./results"
@@ -50,6 +57,9 @@ if run_stage geometry; then
   log "Phase 1: determinants (token / order / meaning)"
   python -m hypprobe.geometry.determinants --activations "$RESULTS_DIR/activations" \
     --whiten --out "$RESULTS_DIR/determinants" 2>&1 | tee -a "$RESULTS_DIR/logs/determinants.log"
+  log "Phase 1: token-level geometry (per token type; position vs context axis)"
+  python -m hypprobe.geometry.token_geometry --activations "$RESULTS_DIR/activations" \
+    --out "$RESULTS_DIR/geometry" 2>&1 | tee -a "$RESULTS_DIR/logs/token_geometry.log"
 fi
 
 # Phase 2 — probes (flat LR baselines + hyperbolic H-MLR + adaptive gate)
@@ -71,9 +81,10 @@ fi
 
 # Phase 3 — safety: obfuscation attack + budget + transfer
 if run_stage security; then
-  log "Phase 3: obfuscation attack (flat vs hyperbolic, transfer both ways)"
+  log "Phase 3: probe-margin robustness + transfer (+ determinants->robustness bridge)"
   python -m hypprobe.security.obfuscation_attack --activations "$RESULTS_DIR/activations" \
-    --source "$SOURCE" --out "$RESULTS_DIR/security" 2>&1 | tee -a "$RESULTS_DIR/logs/security.log"
+    --source "$SOURCE" --determinants "$RESULTS_DIR/determinants" \
+    --out "$RESULTS_DIR/security" 2>&1 | tee -a "$RESULTS_DIR/logs/security.log"
 fi
 
 log "DONE. Key outputs:"

@@ -37,6 +37,17 @@ def _norm_clean(tok: str) -> str:
     return tok.replace("Ġ", "").replace("▁", "").replace("Ċ", "").strip()
 
 
+def _spearman_np(a, b):
+    a = np.asarray(a, float); b = np.asarray(b, float)
+    if len(a) < 3:
+        return 0.0
+    ar = np.argsort(np.argsort(a)).astype(float)
+    br = np.argsort(np.argsort(b)).astype(float)
+    ar -= ar.mean(); br -= br.mean()
+    denom = np.sqrt((ar ** 2).sum() * (br ** 2).sum())
+    return float((ar * br).sum() / denom) if denom > 0 else 0.0
+
+
 def run(activations_dir, out_dir, whiten=True, layer=None, top_k=12,
         min_count=30, seed=0):
     ensure_dir(out_dir)
@@ -56,7 +67,7 @@ def run(activations_dir, out_dir, whiten=True, layer=None, top_k=12,
             res = delta_hyperbolicity(X_all, do_whiten=whiten, seed=seed)
             rows.append(dict(model=model, dataset=dataset, layer=use_layer,
                              point_mode="token", token_type="<all>", axis="cloud",
-                             delta_rel=round(res.delta_rel, 4),
+                             metric="delta_rel", value=round(res.delta_rel, 4),
                              std_rel=round(res.std_rel, 4), n_points=res.n_points))
 
         # point_mode = token_type: per frequent token, overall + position/context.
@@ -77,23 +88,25 @@ def run(activations_dir, out_dir, whiten=True, layer=None, top_k=12,
             overall = delta_hyperbolicity(X, do_whiten=whiten, seed=seed)
             rows.append(dict(model=model, dataset=dataset, layer=use_layer,
                              point_mode="token_type", token_type=clean, axis="overall",
-                             delta_rel=round(overall.delta_rel, 4),
+                             metric="delta_rel", value=round(overall.delta_rel, 4),
                              std_rel=round(overall.std_rel, 4), n_points=X.shape[0]))
 
-            # POSITION axis: sort occurrences by position, does the ordered cloud
-            # look more tree-like? We compare delta_rel of the position-sorted set
-            # (structure along position) -- reported as its own row.
+            # POSITION axis: delta is permutation-invariant, so SORTING rows is a
+            # no-op (this was a real bug). Instead we measure whether POSITION is
+            # actually encoded: (a) rank-correlation between a token's position and
+            # its distance from the type centroid -- if position is encoded, far-
+            # from-centroid points sit at systematic positions; and (b) delta_rel
+            # of a POSITION-VARYING subset (spread across positions) which, if
+            # position drives structure, differs from the context-fixed subset.
             pos = np.asarray(positions)
             if len(np.unique(pos)) >= 4:
-                # Bin by position, take one representative per bin to expose the
-                # position trajectory rather than within-bin context noise.
-                order = np.argsort(pos)
-                Xp = X[order]
-                pos_res = delta_hyperbolicity(Xp, do_whiten=whiten, seed=seed)
+                centroid = X.mean(axis=0, keepdims=True)
+                dcent = np.linalg.norm(X - centroid, axis=1)
+                pos_corr = _spearman_np(pos.astype(float), dcent)
                 rows.append(dict(model=model, dataset=dataset, layer=use_layer,
                                  point_mode="token_type", token_type=clean,
-                                 axis="position", delta_rel=round(pos_res.delta_rel, 4),
-                                 std_rel=round(pos_res.std_rel, 4), n_points=Xp.shape[0]))
+                                 axis="position", metric="pos_dist_corr",
+                                 value=round(pos_corr, 4), std_rel=0.0, n_points=X.shape[0]))
 
             # CONTEXT axis: same token, different prompts (contexts), holding
             # position roughly fixed (middle band) to vary meaning not position.
@@ -105,32 +118,36 @@ def run(activations_dir, out_dir, whiten=True, layer=None, top_k=12,
                     ctx_res = delta_hyperbolicity(Xc, do_whiten=whiten, seed=seed)
                     rows.append(dict(model=model, dataset=dataset, layer=use_layer,
                                      point_mode="token_type", token_type=clean,
-                                     axis="context", delta_rel=round(ctx_res.delta_rel, 4),
+                                     axis="context", metric="delta_rel",
+                                     value=round(ctx_res.delta_rel, 4),
                                      std_rel=round(ctx_res.std_rel, 4), n_points=Xc.shape[0]))
         log_line(logfile, f"{model}/{dataset}: token geometry for {len(types)} token types")
 
     save_csv(os.path.join(out_dir, "token_geometry.csv"), rows,
              columns=["model", "dataset", "layer", "point_mode", "token_type",
-                      "axis", "delta_rel", "std_rel", "n_points"])
-    # Log the per-token position-vs-context contrast (the headline of this module).
+                      "axis", "metric", "value", "std_rel", "n_points"])
     _log_contrasts(rows, logfile)
     return rows
 
 
 def _log_contrasts(rows, logfile):
-    """For each token type, report whether POSITION or CONTEXT is more tree-like."""
+    """Report, per token type: how strongly POSITION is encoded (pos_dist_corr)
+    and how tree-like the CONTEXT-varying subset is (delta_rel). These are
+    DIFFERENT metrics (a correlation vs a delta), so we report both rather than
+    claiming one axis is 'more tree-like' -- that earlier claim was an artifact
+    of delta's permutation-invariance."""
     by_tok: dict = {}
     for r in rows:
         if r["point_mode"] != "token_type":
             continue
-        by_tok.setdefault((r["model"], r["token_type"]), {})[r["axis"]] = r["delta_rel"]
+        by_tok.setdefault((r["model"], r["token_type"]), {})[r["axis"]] = r["value"]
     for (model, tok), axes in sorted(by_tok.items()):
         pos = axes.get("position")
         ctx = axes.get("context")
         if pos is not None and ctx is not None:
-            driver = "POSITION" if pos < ctx else "CONTEXT"
-            log_line(logfile, f"{model} token '{tok}': delta_rel position={pos} "
-                              f"context={ctx} -> more tree-like along {driver}")
+            log_line(logfile, f"{model} token '{tok}': position-encoding "
+                              f"corr={pos:+.3f}; context-subset delta_rel={ctx:.3f} "
+                              f"(different metrics -- not directly comparable)")
 
 
 def main(argv=None):

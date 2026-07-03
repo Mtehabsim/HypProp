@@ -84,6 +84,23 @@ python -m hypprobe.data.prepare --datasets ailuminate aegis wos wordnet_control 
   to avoid the N<<d whitening blow-up and outlier/max biases. Never trust a δ_rel
   gap smaller than its reported `std_rel`.
 
+## Evidence standard (enforced in code, not just claimed)
+
+- **All probe arms train on the SAME whitened, low-rank features** (fit on train,
+  applied to val) -- so hyperbolic vs flat differ only in geometry, and the
+  compression/anisotropy confound is controlled on the exact headline comparison.
+- **The verdict uses SELECTIVITY (real minus random-label control) as primary**,
+  with MDL codelength secondary and raw accuracy least-trusted (Hewitt & Liang;
+  Voita & Titov). All three are computed per arm.
+- **Determinants use one shared pooling operator across all edits + a placebo
+  no-op null**, and a driver is only declared if its Δδ_rel beats both its own
+  std_rel and the placebo. The adaptive gate reads that (trustworthy) driver; the
+  safety bridge refuses to make a claim from a driver that didn't clear the null.
+- **Controls both ways:** `wordnet_control` (hierarchy should win) and
+  `flat_control` (binary, non-hierarchical -- hyperbolic should NOT win).
+- **Pausing:** `STAGE=geometry ./run_all.sh` runs only the hierarchy metrics and
+  stops (STAGE/LIMIT/SOURCE are env-overridable).
+
 ## Ground rules (enforced in code)
 
 Whiten features before every comparison; report normalized `delta_rel` (not raw delta); match

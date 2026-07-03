@@ -9,6 +9,7 @@ import numpy as np
 
 from ..io import build_feature_matrix, ensure_dir, iter_samples, log_line, save_json
 from .hmlr import ProbeConfig, fit_probe
+from .baselines import prepare_features, evaluate_arm
 
 
 def _split(n, seed, frac=0.7):
@@ -32,19 +33,22 @@ def run(activations_dir, out_dir, seed=0, proj_dim=5, curvature=1.0,
             continue
         n_classes = int(y.max() + 1)
         tr, va = _split(len(y), seed)
-        cfg = ProbeConfig(in_dim=X.shape[1], n_classes=n_classes, proj_dim=proj_dim,
+        # Whiten (fit on train, apply to both) so this matches the shared,
+        # confound-controlled feature space used by the baselines/comparison.
+        xt, xv = prepare_features(X[tr], X[va], whiten=True)
+        cfg = ProbeConfig(in_dim=xt.shape[1], n_classes=n_classes, proj_dim=proj_dim,
                           curvature=curvature, learn_curvature=learn_curvature,
                           seed=seed, epochs=epochs)
-        _, res = fit_probe(X[tr], y[tr], X[va], y[va], cfg)
+        acc, f1, sel, mdl, cval = evaluate_arm(xt, y[tr], xv, y[va], cfg)
         tag = f"{model.replace('/', '_')}_{dataset}_L{use_layer}_{source}_seed{seed}"
         save_json(os.path.join(out_dir, f"hmlr_{tag}.json"),
                   dict(model=model, dataset=dataset, layer=use_layer, source=source,
                        seed=seed, proj_dim=proj_dim,
-                       arms={"hyperbolic": {"val_acc": res.val_acc,
-                                            "macro_f1": res.macro_f1,
-                                            "curvature": res.curvature}}))
-        log_line(logfile, f"{tag}: hyperbolic acc={res.val_acc:.3f} "
-                          f"f1={res.macro_f1:.3f} c={res.curvature:.3f}")
+                       arms={"hyperbolic": {"val_acc": acc, "macro_f1": f1,
+                                            "selectivity": sel, "mdl_bits": mdl,
+                                            "curvature": cval}}))
+        log_line(logfile, f"{tag}: hyperbolic acc={acc:.3f} sel={sel:+.3f} "
+                          f"mdl={mdl:.0f}b c={cval:.3f}")
 
 
 def main(argv=None):

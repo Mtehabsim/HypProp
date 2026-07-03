@@ -22,6 +22,7 @@ import numpy as np
 from ..geometry.delta import delta_hyperbolicity
 from ..io import build_feature_matrix, ensure_dir, iter_samples, log_line, save_csv, save_json
 from .hmlr import ProbeConfig, fit_probe
+from .baselines import prepare_features
 
 
 def _split(n, seed, frac=0.7):
@@ -29,6 +30,37 @@ def _split(n, seed, frac=0.7):
     idx = rng.permutation(n)
     cut = int(frac * n)
     return idx[:cut], idx[cut:]
+
+
+def _read_determinant_driver(determinants_dir, model, dataset):
+    """Read the Phase-1 dominant driver for (model,dataset), gated on std_rel.
+
+    Returns (driver, trustworthy). ``driver`` is the edit with the largest
+    |Δδ_rel|; ``trustworthy`` is False if that change is smaller than the
+    per-edit noise (std_rel of base or edit), per the project's non-negotiable
+    "never trust a gap below std_rel" rule. This is what makes the gate
+    'determinants-defined' rather than a hardcoded threshold.
+    """
+    import csv
+
+    if not determinants_dir:
+        return None, False
+    path = os.path.join(determinants_dir, "attribution.csv")
+    if not os.path.exists(path):
+        return None, False
+    rows = [r for r in csv.DictReader(open(path))
+            if r.get("model") == model and r.get("dataset") == dataset]
+    if not rows:
+        return None, False
+    top = max(rows, key=lambda r: abs(float(r.get("delta_change", 0) or 0)))
+    change = abs(float(top.get("delta_change", 0) or 0))
+    # std columns may not exist in older CSVs; default to a small floor.
+    noise = 0.0
+    for key in ("std_rel_base", "std_rel_edit", "std_rel"):
+        if key in top and top[key] not in ("", None):
+            noise = max(noise, float(top[key]))
+    trustworthy = change > max(noise, 1e-6)
+    return top.get("edit"), trustworthy
 
 
 def run(activations_dir, out_dir, determinants_dir=None, seed=0, proj_dim=5,
@@ -47,21 +79,39 @@ def run(activations_dir, out_dir, determinants_dir=None, seed=0, proj_dim=5,
             continue
         n_classes = int(y.max() + 1)
         tr, va = _split(len(y), seed)
+        # Shared whitened features (fit on train) -- same space as the comparison.
+        xt, xv = prepare_features(X[tr], X[va], whiten=True)
 
-        # Gate: measure hyperbolicity on the training features (whitened).
+        # Gate signal 1: hyperbolicity of the (whitened) training features.
         dr = delta_hyperbolicity(X[tr], do_whiten=True, seed=seed).delta_rel
-        chosen = "hyperbolic" if dr < delta_threshold else "flat"
+        # Gate signal 2 (the Part-1 -> Part-2 link): the Phase-1 dominant driver,
+        # if it is trustworthy (change > std_rel). The determinants result now
+        # ACTUALLY informs the gate: if hyperbolicity is a token-identity artifact,
+        # we do NOT trust it as hierarchy and fall back to flat even when delta is
+        # low; a meaning/order driver lets a low-delta setting go hyperbolic.
+        driver, driver_ok = _read_determinant_driver(determinants_dir, model, dataset)
+        if driver_ok and driver and driver.startswith("token_identity"):
+            chosen, reason = "flat", f"driver={driver} (identity artifact -> distrust)"
+        elif driver_ok and driver and (driver.startswith("meaning") or driver.startswith("order")):
+            chosen = "hyperbolic" if dr < delta_threshold else "flat"
+            reason = f"driver={driver} (structural) + delta_rel={dr:.3f}"
+        else:
+            chosen = "hyperbolic" if dr < delta_threshold else "flat"
+            reason = f"delta_rel={dr:.3f} (no trustworthy driver)"
+
         curvature = 1.0 if chosen == "hyperbolic" else 0.0
-        cfg = ProbeConfig(in_dim=X.shape[1], n_classes=n_classes, proj_dim=proj_dim,
+        cfg = ProbeConfig(in_dim=xt.shape[1], n_classes=n_classes, proj_dim=proj_dim,
                           curvature=curvature, use_manifold=(chosen == "hyperbolic"),
                           learn_curvature=(chosen == "hyperbolic"),
                           seed=seed, epochs=epochs)
-        _, res = fit_probe(X[tr], y[tr], X[va], y[va], cfg)
+        _, res = fit_probe(xt, y[tr], xv, y[va], cfg)
         decisions.append(dict(model=model, dataset=dataset, layer=use_layer, source=source,
-                              seed=seed, delta_rel=round(dr, 4), chosen_geometry=chosen,
+                              seed=seed, delta_rel=round(dr, 4),
+                              driver=driver or "", driver_trustworthy=driver_ok,
+                              chosen_geometry=chosen,
                               val_acc=round(res.val_acc, 4), macro_f1=round(res.macro_f1, 4)))
-        log_line(logfile, f"{model}/{dataset} L{use_layer}: delta_rel={dr:.3f} "
-                          f"-> {chosen} (acc={res.val_acc:.3f})")
+        log_line(logfile, f"{model}/{dataset} L{use_layer}: {reason} -> {chosen} "
+                          f"(acc={res.val_acc:.3f})")
 
     save_csv(os.path.join(adir, "gate_decisions.csv"), decisions)
     save_json(os.path.join(adir, f"gate_seed{seed}.json"),

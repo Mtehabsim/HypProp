@@ -77,6 +77,34 @@ def build_wordnet_control(n_per_leaf: int = 20, seed: int = 0) -> list[dict]:
     return rows
 
 
+def build_flat_control(n_per_class: int = 60, seed: int = 0) -> list[dict]:
+    """A genuinely FLAT, non-hierarchical binary task (negative control).
+
+    Two classes with NO nested structure (label_path is a single level), so a
+    hyperbolic probe should have NO advantage here. If it 'wins' on this set,
+    that is a red flag the pipeline is manufacturing hierarchy. This is the
+    negative control the plan promised but that previously did not exist.
+    """
+    import random
+
+    rng = random.Random(seed)
+    pos = ["a bright sunny morning", "the cheerful festival crowd",
+           "a warm friendly greeting", "the joyful celebration"]
+    neg = ["a dull grey afternoon", "the tedious waiting room",
+           "a flat monotone lecture", "the empty parking lot"]
+    rows = []
+    for cls, pool in [(0, neg), (1, pos)]:
+        for k in range(n_per_class):
+            rows.append({
+                "sample_id": f"flat_{cls}_{k}",
+                "prompt": f"Describe: {rng.choice(pool)}",
+                "label": cls,
+                "label_path": [cls],   # single level -> no hierarchy
+            })
+    rng.shuffle(rows)
+    return rows
+
+
 def _load_real_dataset(name: str, raw_dir: str) -> list[dict]:
     """Load a real dataset from a raw drop-in directory (DGX).
 
@@ -101,7 +129,8 @@ def _load_real_dataset(name: str, raw_dir: str) -> list[dict]:
         f"'wordnet_control' for a local smoke test.")
 
 
-BUILDERS = {"wordnet_control": build_wordnet_control}
+BUILDERS = {"wordnet_control": build_wordnet_control,
+            "flat_control": build_flat_control}
 REAL = {"ailuminate", "aegis", "harmbench", "advbench", "wos"}
 
 

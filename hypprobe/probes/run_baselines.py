@@ -14,7 +14,7 @@ import numpy as np
 
 from ..io import build_feature_matrix, ensure_dir, iter_samples, log_line, save_json
 from .hmlr import ProbeConfig, fit_probe
-from .baselines import euclidean_lr
+from .baselines import euclidean_lr, prepare_features, evaluate_arm
 
 
 def _split(n, seed, frac=0.7):
@@ -37,18 +37,20 @@ def run(activations_dir, out_dir, seed=0, proj_dim=5, layer=None, source="last",
             continue
         n_classes = int(y.max() + 1)
         tr, va = _split(len(y), seed)
-        _, acc = euclidean_lr(X[tr], y[tr], X[va], y[va], seed=seed)
+        # Shared whitened features for every arm (fit on train, apply to both).
+        xt, xv = prepare_features(X[tr], X[va], whiten=True)
+        _, acc = euclidean_lr(xt, y[tr], xv, y[va], seed=seed, prewhitened=True)
         arms = {"euclidean_lr": {"val_acc": acc}}
         for name, cfg in [
-            ("flat_on_transform", ProbeConfig(in_dim=X.shape[1], n_classes=n_classes,
+            ("flat_on_transform", ProbeConfig(in_dim=xt.shape[1], n_classes=n_classes,
                                               proj_dim=proj_dim, curvature=1.0,
                                               use_manifold=False, seed=seed, epochs=epochs)),
-            ("curvature_zero", ProbeConfig(in_dim=X.shape[1], n_classes=n_classes,
+            ("curvature_zero", ProbeConfig(in_dim=xt.shape[1], n_classes=n_classes,
                                            proj_dim=proj_dim, curvature=0.0,
                                            seed=seed, epochs=epochs)),
         ]:
-            _, res = fit_probe(X[tr], y[tr], X[va], y[va], cfg)
-            arms[name] = {"val_acc": res.val_acc, "macro_f1": res.macro_f1}
+            a, f1, sel, mdl, _ = evaluate_arm(xt, y[tr], xv, y[va], cfg)
+            arms[name] = {"val_acc": a, "macro_f1": f1, "selectivity": sel, "mdl_bits": mdl}
         tag = f"{model.replace('/', '_')}_{dataset}_L{use_layer}_{source}_seed{seed}"
         save_json(os.path.join(out_dir, f"baselines_{tag}.json"),
                   dict(model=model, dataset=dataset, layer=use_layer, source=source,

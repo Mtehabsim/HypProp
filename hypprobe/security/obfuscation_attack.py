@@ -108,13 +108,17 @@ def run(probes_dir_unused, activations_dir, out_dir, seed=0, proj_dim=5,
                              margin_l2=round(float(np.mean(norms)), 4),
                              mean_steps=round(float(np.mean(steps)), 1),
                              realizable="no_feature_space_only"))
-        # Transfer (the geometry-agnostic, meaningful result): perturbation found
-        # on flat, applied to hyperbolic.
-        rows.append(_transfer_row(model_name, dataset, flat, hyp, X, yb, harmful_idx))
-        f = rows[-3]; h = rows[-2]
-        log_line(logfile, f"{model_name}/{dataset}: FEATURE-SPACE margin_l2 flat={f['margin_l2']} "
-                          f"vs hyperbolic={h['margin_l2']} "
-                          f"(diagnostic only -- NOT attacker cost; see transfer row)")
+        # Transfer (the geometry-agnostic, meaningful result), BOTH directions.
+        trows = _transfer_rows(model_name, dataset, flat, hyp, X, yb, harmful_idx)
+        rows.extend(trows)
+        f = next(r for r in rows if r["geometry"] == "flat" and r["model"] == model_name
+                 and r["dataset"] == dataset)
+        h = next(r for r in rows if r["geometry"] == "hyperbolic" and r["model"] == model_name
+                 and r["dataset"] == dataset)
+        log_line(logfile, f"{model_name}/{dataset}: margin_l2 flat={f['margin_l2']} "
+                          f"vs hyp={h['margin_l2']} (diagnostic, NOT attacker cost); "
+                          f"transfer flat->hyp={trows[0]['flip_success_rate']} "
+                          f"hyp->flat={trows[1]['flip_success_rate']}")
     save_csv(os.path.join(out_dir, "attack.csv"), rows)
     _maybe_plot(rows, out_dir)
     # #10: bridge the Phase-1 determinant driver to detector robustness.
@@ -124,25 +128,40 @@ def run(probes_dir_unused, activations_dir, out_dir, seed=0, proj_dim=5,
     return rows
 
 
-def _transfer_row(model_name, dataset, flat, hyp, X, yb, harmful_idx):
-    """Attack flat, then check if the same perturbed point fools hyperbolic."""
+def _one_transfer(src, dst, X, harmful_idx):
+    """Attack the SRC probe; report how often the perturbed point fools DST."""
+    import torch.nn.functional as F
+
     transferred = []
     for i in harmful_idx:
         x = torch.as_tensor(X[i], dtype=torch.float32).clone().requires_grad_(True)
         tgt = torch.tensor([0]); opt = torch.optim.Adam([x], lr=0.05)
-        import torch.nn.functional as F
         for _ in range(200):
-            opt.zero_grad(); loss = F.cross_entropy(flat(x.unsqueeze(0)), tgt)
+            opt.zero_grad(); loss = F.cross_entropy(src(x.unsqueeze(0)), tgt)
             loss.backward(); opt.step()
-            if flat(x.unsqueeze(0)).argmax(-1).item() == 0:
+            if src(x.unsqueeze(0)).argmax(-1).item() == 0:
                 break
         with torch.no_grad():
-            fooled_hyp = hyp(x.detach().unsqueeze(0)).argmax(-1).item() == 0
-        transferred.append(fooled_hyp)
-    return dict(model=model_name, dataset=dataset, geometry="transfer_flat_to_hyp",
-                n_attacked=len(harmful_idx),
-                flip_success_rate=round(float(np.mean(transferred)), 3),
-                margin_l2="", mean_steps="", realizable="transfer_is_meaningful")
+            transferred.append(dst(x.detach().unsqueeze(0)).argmax(-1).item() == 0)
+    return round(float(np.mean(transferred)), 3)
+
+
+def _transfer_rows(model_name, dataset, flat, hyp, X, yb, harmful_idx):
+    """BIDIRECTIONAL transfer: flat->hyp AND hyp->flat.
+
+    Bidirectionality matters (review #6): a one-way number can't tell a real
+    robustness asymmetry from a coordinate/scale difference. If flat->hyp is much
+    lower than hyp->flat, hyperbolic is genuinely catching attacks the flat probe
+    misses; if they are symmetric, the geometries are equally obfuscatable.
+    """
+    f2h = _one_transfer(flat, hyp, X, harmful_idx)
+    h2f = _one_transfer(hyp, flat, X, harmful_idx)
+    common = dict(model=model_name, dataset=dataset, n_attacked=len(harmful_idx),
+                  margin_l2="", mean_steps="", realizable="transfer_is_meaningful")
+    return [
+        dict(geometry="transfer_flat_to_hyp", flip_success_rate=f2h, **common),
+        dict(geometry="transfer_hyp_to_flat", flip_success_rate=h2f, **common),
+    ]
 
 
 def _maybe_plot(rows, out_dir):
@@ -181,29 +200,47 @@ def write_robustness_bridge(security_rows, determinants_dir, out_dir):
     import csv
 
     driver = None
+    driver_trustworthy = False
     attr_path = os.path.join(determinants_dir, "attribution.csv")
     if os.path.exists(attr_path):
         with open(attr_path) as fh:
             rows = list(csv.DictReader(fh))
-        if rows:
-            # dominant driver = edit with the largest |delta_change|.
+        # Prefer a row the determinants step already FLAGGED as a trustworthy
+        # driver (change beat both std_rel and the placebo null). Never re-derive
+        # a driver by raw argmax -- that is exactly the confounded path the review
+        # flagged (a noise-level Δ manufacturing a safety verdict).
+        flagged = [r for r in rows if str(r.get("is_driver", "")).lower() == "true"]
+        if flagged:
+            driver = flagged[0]["edit"]
+            driver_trustworthy = True
+        elif rows:
             top = max(rows, key=lambda r: abs(float(r.get("delta_change", 0) or 0)))
-            driver = top["edit"]
-    transfer = [r for r in security_rows if r["geometry"] == "transfer_flat_to_hyp"]
-    transfer_rate = np.mean([r["flip_success_rate"] for r in transfer]) if transfer else float("nan")
+            driver = top["edit"]           # recorded for transparency only
+            driver_trustworthy = False
 
-    if driver and driver.startswith("token_identity"):
+    transfer_rows = [r for r in security_rows if str(r["geometry"]).startswith("transfer_")]
+    transfer_rate = (np.mean([r["flip_success_rate"] for r in transfer_rows])
+                     if transfer_rows else float("nan"))
+
+    if not driver_trustworthy:
+        # Circuit-breaker: a confounded / noise-level driver must NOT produce a
+        # safety claim. This is the disconnected safety valve the review flagged.
+        verdict = ("INCONCLUSIVE: no determinant driver exceeded the noise/placebo "
+                   "floor, so we make NO geometric-defense claim. (raw-argmax driver "
+                   f"was '{driver}', reported for transparency only.)")
+    elif driver.startswith("token_identity"):
         verdict = ("WARN: hyperbolicity is token-identity-driven -> an attacker can "
                    "likely rebuild benign token statistics; geometric defense is weak.")
-    elif driver and (driver.startswith("meaning") or driver.startswith("order")):
-        verdict = (f"hyperbolicity is {driver}-driven -> harder to obfuscate by "
-                   "surface token edits; geometric defense is more defensible.")
+    elif driver.startswith("meaning") or driver.startswith("order"):
+        verdict = (f"hyperbolicity is {driver}-driven (trustworthy) -> harder to "
+                   "obfuscate by surface token edits; geometric defense is more "
+                   "defensible -- pending an input-space attack to confirm.")
     else:
-        verdict = "driver unknown (no determinants output found); cannot bridge."
+        verdict = f"driver '{driver}' trustworthy but uncategorised; no strong claim."
 
     save_json(os.path.join(out_dir, "robustness_bridge.json"),
-              dict(dominant_driver=driver, transfer_flat_to_hyp_rate=float(transfer_rate),
-                   verdict=verdict))
+              dict(dominant_driver=driver, driver_trustworthy=driver_trustworthy,
+                   transfer_rate=float(transfer_rate), verdict=verdict))
     return verdict
 
 

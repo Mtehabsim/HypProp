@@ -36,6 +36,8 @@ def _load_all(probes_dir):
                              seed=obj.get("seed"), proj_dim=obj.get("proj_dim"),
                              arm=arm, val_acc=metrics.get("val_acc"),
                              macro_f1=metrics.get("macro_f1"),
+                             selectivity=metrics.get("selectivity"),
+                             mdl_bits=metrics.get("mdl_bits"),
                              curvature=metrics.get("curvature", "")))
     return rows
 
@@ -73,40 +75,65 @@ def run(probes_dir, out_dir):
             agg[key].append(r["val_acc"])
 
     # Matched paired diffs: hyperbolic - flat_on_transform, same setting+seed.
-    by_setting_seed = defaultdict(dict)
+    # We test SELECTIVITY as the primary metric (the methodology says raw acc is
+    # not to be trusted), with accuracy and MDL reported alongside.
+    by_metric = {m: defaultdict(dict) for m in ("val_acc", "selectivity", "mdl_bits")}
     for r in rows:
         k = (r["model"], r["dataset"], r["layer"], r["source"], r["seed"])
-        by_setting_seed[k][r["arm"]] = r["val_acc"]
-    diffs = []
-    for k, arms in by_setting_seed.items():
-        if "hyperbolic" in arms and "flat_on_transform" in arms:
-            if arms["hyperbolic"] is not None and arms["flat_on_transform"] is not None:
-                diffs.append(arms["hyperbolic"] - arms["flat_on_transform"])
-    sig = _paired_test(diffs)
+        for m in by_metric:
+            if r.get(m) is not None:
+                by_metric[m][k][r["arm"]] = r[m]
+
+    def _diffs(metric):
+        out = []
+        for _k, arms in by_metric[metric].items():
+            if arms.get("hyperbolic") is not None and arms.get("flat_on_transform") is not None:
+                out.append(arms["hyperbolic"] - arms["flat_on_transform"])
+        return out
+
+    sig_sel = _paired_test(_diffs("selectivity"))
+    sig_acc = _paired_test(_diffs("val_acc"))
+    # MDL: lower is better, so hyperbolic wins if (hyp - flat) < 0.
+    sig_mdl = _paired_test(_diffs("mdl_bits"))
     save_json(os.path.join(out_dir, "significance.json"),
-              dict(comparison="hyperbolic - flat_on_transform (matched)", **sig))
+              dict(primary="selectivity",
+                   selectivity_hyp_minus_flat=sig_sel,
+                   val_acc_hyp_minus_flat=sig_acc,
+                   mdl_bits_hyp_minus_flat=sig_mdl))
 
     # summary.md
     lines = ["# Probe comparison summary", "",
              "Matched arms (capacity-equal): **hyperbolic** vs **flat_on_transform**.",
-             "`euclidean_lr` uses full-dim features (NOT capacity-matched) -- shown for reference.",
-             "", "| model | dataset | layer | source | arm | mean val_acc | n |",
-             "|---|---|---|---|---|---|---|"]
+             "PRIMARY metric = **selectivity** (real - random-label control; Hewitt & Liang).",
+             "Secondary: MDL bits (lower=better) and raw val_acc (least trusted).",
+             "`euclidean_lr` is NOT capacity-matched -- reference only.",
+             "", "| model | dataset | layer | source | arm | mean acc | mean sel | mean mdl | n |",
+             "|---|---|---|---|---|---|---|---|---|"]
     for key in sorted(agg):
-        accs = agg[key]
+        # per-(setting,arm) means directly from rows
+        sub = [r for r in rows if (r["model"], r["dataset"], r["layer"], r["source"], r["arm"]) == key]
+        macc = np.mean([r["val_acc"] for r in sub if r.get("val_acc") is not None]) if sub else float("nan")
+        msel = [r["selectivity"] for r in sub if r.get("selectivity") is not None]
+        mmdl = [r["mdl_bits"] for r in sub if r.get("mdl_bits") is not None]
         lines.append(f"| {key[0]} | {key[1]} | {key[2]} | {key[3]} | {key[4]} | "
-                     f"{np.mean(accs):.3f} | {len(accs)} |")
+                     f"{macc:.3f} | {np.mean(msel):.3f} | "
+                     f"{(np.mean(mmdl) if mmdl else float('nan')):.0f} | {len(sub)} |")
     lines += ["", "## Matched verdict (hyperbolic - flat_on_transform)",
-              f"- mean difference: {sig.get('mean', 0):+.3f} over n={sig.get('n', 0)} settings",
-              f"- p-value: {sig.get('p_value')}"]
-    verdict = ("hyperbolic > flat" if sig.get("mean", 0) > 0 else "no hyperbolic advantage")
-    lines.append(f"- **verdict: {verdict}** "
-                 f"(remember: only counts if it survives whitening + is significant)")
+              f"- **selectivity** (PRIMARY): mean {sig_sel.get('mean', 0):+.3f}, "
+              f"p={sig_sel.get('p_value')}, n={sig_sel.get('n', 0)}",
+              f"- MDL bits (lower=better): mean {sig_mdl.get('mean', 0):+.1f} "
+              f"(negative favours hyperbolic)",
+              f"- val_acc (least trusted): mean {sig_acc.get('mean', 0):+.3f}"]
+    win = sig_sel.get("mean", 0) > 0 and (sig_sel.get("p_value") or 1) < 0.05
+    verdict = ("hyperbolic > flat on selectivity (significant)" if win
+               else "NO significant hyperbolic advantage on selectivity")
+    lines.append(f"- **verdict: {verdict}** (counts only if it survives whitening -- it now does -- "
+                 f"AND is significant on selectivity, not raw acc)")
     with open(os.path.join(out_dir, "summary.md"), "w") as fh:
         fh.write("\n".join(lines) + "\n")
 
-    log_line(logfile, f"comparison: hyperbolic - flat_on_transform mean={sig.get('mean', 0):+.3f} "
-                      f"(n={sig.get('n', 0)}, p={sig.get('p_value')})")
+    log_line(logfile, f"comparison: selectivity(hyp-flat) mean={sig_sel.get('mean', 0):+.3f} "
+                      f"p={sig_sel.get('p_value')} | acc mean={sig_acc.get('mean', 0):+.3f}")
     return rows
 
 

@@ -33,10 +33,14 @@ from ..io import (build_feature_matrix, ensure_dir, iter_samples, log_line,
 from .delta import delta_hyperbolicity
 
 
-def _token_cloud(activations_dir, model, dataset, layer, source, max_samples=400):
-    """Build a per-sample pooled cloud AND keep raw per-token vectors for edits."""
+def _token_cloud(activations_dir, model, dataset, layer, source, max_samples=400,
+                 variant=None):
+    """Return (pooled_cloud, raw_tokens). If ``variant`` is set, only samples with
+    that variant tag are used (default 'original' when variants exist)."""
     pooled, raw_tokens = [], []
     for s in iter_samples(activations_dir, model, dataset):
+        if variant is not None and s.get("variant", "original") != variant:
+            continue
         vec = pool_features(s, layer, source)
         if vec is None:
             continue
@@ -48,8 +52,37 @@ def _token_cloud(activations_dir, model, dataset, layer, source, max_samples=400
     return np.stack(pooled) if pooled else np.empty((0, 0)), raw_tokens
 
 
+# --- Controlled edits ---------------------------------------------------------
+# CRITICAL fairness rule (from review): every edit MUST use the SAME pooling
+# operator and produce the SAME number of points as the base, so that the change
+# in delta_rel reflects the named factor and NOT a change of pooling/point-set.
+# We fix the pooling operator to POSITION-WEIGHTED mean: pooled = sum_t w_t h_t,
+# with weights w_t that encode token position. This single operator is
+# order-SENSITIVE (unlike a plain mean), so the order edit is a real test rather
+# than a guaranteed null, yet it is identical across all edits.
+
+def _pos_weights(n, rng=None, shuffle=False):
+    """Position-encoding pooling weights (linearly increasing, normalised)."""
+    w = np.linspace(1.0, 2.0, n)
+    if shuffle and rng is not None:
+        w = w[rng.permutation(n)]
+    return w / w.sum()
+
+
+def _pooled_base(raw_tokens):
+    """Base pooling: position-weighted mean over each sample's tokens."""
+    out = []
+    for h, _ in raw_tokens:
+        if h.shape[0] == 0:
+            continue
+        w = _pos_weights(h.shape[0])
+        out.append((w[:, None] * h).sum(0))
+    return np.stack(out) if out else np.empty((0, 0))
+
+
 def _edit_token_identity(raw_tokens, rng):
-    """Rebuild pooled vectors after swapping thinking-token rows for random rows."""
+    """Same position-weighted pooling, but thinking-token rows swapped for random
+    rows first. Isolates TOKEN IDENTITY (pooling/point-set unchanged)."""
     out = []
     for h, is_think in raw_tokens:
         if h.shape[0] == 0:
@@ -57,22 +90,30 @@ def _edit_token_identity(raw_tokens, rng):
         h2 = h.copy()
         think_idx = np.where(is_think)[0] if is_think is not None and is_think.size else []
         for ti in think_idx:
-            out_idx = rng.integers(0, h.shape[0])
-            h2[ti] = h[out_idx]
-        out.append(h2.mean(axis=0))
+            h2[ti] = h[rng.integers(0, h.shape[0])]
+        w = _pos_weights(h.shape[0])
+        out.append((w[:, None] * h2).sum(0))
     return np.stack(out) if out else np.empty((0, 0))
 
 
 def _edit_order_shuffle(raw_tokens, rng):
-    """Pool after shuffling token order (tests order via last-token-style pooling)."""
+    """Same position-weighted pooling, but the POSITION WEIGHTS are shuffled, so
+    each token is treated as if it sat at a random position. Isolates ORDER while
+    keeping the identical pooling operator and point count."""
     out = []
     for h, _ in raw_tokens:
         if h.shape[0] == 0:
             continue
-        perm = rng.permutation(h.shape[0])
-        # Use the (post-shuffle) last token, so order actually matters.
-        out.append(h[perm][-1])
+        w = _pos_weights(h.shape[0], rng=rng, shuffle=True)
+        out.append((w[:, None] * h).sum(0))
     return np.stack(out) if out else np.empty((0, 0))
+
+
+def _edit_placebo(raw_tokens, rng):
+    """PLACEBO / null-calibration edit: re-pool the IDENTICAL tokens with the
+    IDENTICAL operator (only the delta estimator's own resampling differs). Any
+    |delta_change| here is pure noise -> a real driver must exceed the placebo."""
+    return _pooled_base(raw_tokens)
 
 
 def _edit_project_out_top_pc(X):
@@ -128,50 +169,70 @@ def run(activations_dir, out_dir, whiten=True, seed=0, layer=None, source="think
         variants = _available_variants(activations_dir, model, dataset)
         has_real_variants = {"nonce", "paraphrase"} & variants
 
-        if has_real_variants:
-            # Base = ORIGINAL variant only, so comparisons are apples-to-apples.
-            base_X = _variant_matrix(activations_dir, model, dataset, use_layer, source, "original")
-        else:
-            base_X, _, _ = build_feature_matrix(activations_dir, model, dataset, use_layer, source)
+        # Base uses the SHARED position-weighted pooling over the same tokens the
+        # edits use, so base and every edit are strictly comparable. When variants
+        # exist, base = the 'original' variant only (apples-to-apples vs meaning).
+        base_variant = "original" if has_real_variants else None
+        _, raw_tokens = _token_cloud(activations_dir, model, dataset, use_layer, source,
+                                     variant=base_variant)
+        base_X = _pooled_base(raw_tokens)
         if base_X.shape[0] < 8:
             log_line(logfile, f"{model}/{dataset}: too few '{source}' samples; skipping")
             continue
-        base = delta_hyperbolicity(base_X, do_whiten=whiten, seed=seed).delta_rel
+        base_res = delta_hyperbolicity(base_X, do_whiten=whiten, seed=seed)
+        base = base_res.delta_rel
 
-        _, raw_tokens = _token_cloud(activations_dir, model, dataset, use_layer, source)
         edits = {
+            "placebo": _edit_placebo(raw_tokens, rng),       # null calibration
             "token_identity": _edit_token_identity(raw_tokens, rng),
             "order_shuffle": _edit_order_shuffle(raw_tokens, rng),
         }
-        # Meaning control: prefer REAL re-run variants (nonce destroys meaning,
-        # keeps structure; paraphrase keeps meaning). Fall back to top-PC proxy.
-        if "nonce" in variants:
-            edits["meaning_nonce"] = _variant_matrix(
-                activations_dir, model, dataset, use_layer, source, "nonce")
-        if "paraphrase" in variants:
-            edits["meaning_paraphrase"] = _variant_matrix(
-                activations_dir, model, dataset, use_layer, source, "paraphrase")
+        # Meaning control: prefer REAL re-run variants. These are re-pooled with
+        # the SAME operator so they stay comparable.
+        for vname in ("nonce", "paraphrase"):
+            if vname in variants:
+                _, vtok = _token_cloud(activations_dir, model, dataset, use_layer, source,
+                                       variant=vname)
+                edits[f"meaning_{vname}"] = _pooled_base(vtok)
         if not has_real_variants:
             edits["meaning_topPC"] = _edit_project_out_top_pc(base_X)
+
+        edit_rows = []
         for edit_name, X_edit in edits.items():
             if X_edit.shape[0] < 8:
                 continue
-            d = delta_hyperbolicity(X_edit, do_whiten=whiten, seed=seed).delta_rel
-            rows.append(dict(model=model, dataset=dataset, layer=use_layer,
-                             token_source=source, edit=edit_name,
-                             delta_rel_base=round(base, 4), delta_rel_edit=round(d, 4),
-                             delta_change=round(d - base, 4)))
-        # Which edit moved delta_rel the most -> dominant driver.
-        model_rows = [r for r in rows if r["model"] == model and r["dataset"] == dataset]
-        if model_rows:
-            driver = max(model_rows, key=lambda r: abs(r["delta_change"]))
-            log_line(logfile, f"{model}/{dataset}: base delta_rel={base:.3f}; "
-                              f"dominant driver = {driver['edit']} "
-                              f"(delta {driver['delta_change']:+.3f})")
+            r = delta_hyperbolicity(X_edit, do_whiten=whiten, seed=seed)
+            # Noise floor for this comparison = max of base and edit estimator std.
+            noise = max(base_res.std_rel, r.std_rel)
+            row = dict(model=model, dataset=dataset, layer=use_layer,
+                       token_source=source, edit=edit_name,
+                       delta_rel_base=round(base, 4), delta_rel_edit=round(r.delta_rel, 4),
+                       delta_change=round(r.delta_rel - base, 4),
+                       std_rel=round(noise, 4))
+            edit_rows.append(row)
+            rows.append(row)
+
+        # Driver selection, gated on BOTH the placebo null and std_rel.
+        placebo = next((r for r in edit_rows if r["edit"] == "placebo"), None)
+        placebo_mag = abs(placebo["delta_change"]) if placebo else 0.0
+        candidates = [r for r in edit_rows if r["edit"] != "placebo"]
+        if candidates:
+            top = max(candidates, key=lambda r: abs(r["delta_change"]))
+            change = abs(top["delta_change"])
+            # Must beat BOTH the estimator noise AND the placebo (real no-op) null.
+            trustworthy = change > max(top["std_rel"], placebo_mag)
+            for r in edit_rows:
+                r["is_driver"] = (r is top and trustworthy)
+                r["placebo_mag"] = round(placebo_mag, 4)
+            verdict = (f"dominant driver = {top['edit']} (delta {top['delta_change']:+.4f}, "
+                       f"std {top['std_rel']:.4f}, placebo {placebo_mag:.4f}) -> "
+                       + ("TRUSTWORTHY" if trustworthy else "NOT ABOVE NOISE/PLACEBO (no driver)"))
+            log_line(logfile, f"{model}/{dataset}: base delta_rel={base:.3f}; {verdict}")
 
     save_csv(os.path.join(out_dir, "attribution.csv"), rows,
              columns=["model", "dataset", "layer", "token_source", "edit",
-                      "delta_rel_base", "delta_rel_edit", "delta_change"])
+                      "delta_rel_base", "delta_rel_edit", "delta_change", "std_rel",
+                      "placebo_mag", "is_driver"])
     _maybe_plot(rows, out_dir)
     return rows
 

@@ -17,14 +17,18 @@ set -euo pipefail
 # rather than confounded by a different model family. Keep >=1 weakly-aligned model.
 MODELS=("Qwen/Qwen2.5-7B-Instruct" "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B" \
         "meta-llama/Llama-Guard-3-8B" "Qwen/Qwen2.5-7B")
-DATASETS=("ailuminate" "aegis" "wos" "wordnet_control")   # controls first is fine
+# wordnet_control = hierarchy positive control; flat_control = NEGATIVE control
+# (binary, non-hierarchical -> hyperbolic should NOT win; red flag if it does).
+DATASETS=("ailuminate" "aegis" "wos" "wordnet_control" "flat_control")
 SEEDS=(0 1 2 3 4)
 RESULTS_DIR="./results"
 DTYPE="fp32"          # fp32 recommended (bf16 breaks near the Poincare boundary)
 DEVICE="cuda"         # DGX
-LIMIT=0               # cap samples per dataset (0 = all); set small for a smoke test
-SOURCE="last"         # token source for the probe phases (input|thinking|last|all)
-STAGE="all"           # override: STAGE=geometry ./run_all.sh
+LIMIT="${LIMIT:-0}"   # cap samples per dataset (0 = all); set small for a smoke test
+SOURCE="${SOURCE:-last}"  # token source for the probe phases (input|thinking|last|all)
+# STAGE selects which phase(s) run: all | extract | geometry | probes | security.
+# Respect an env override (STAGE=geometry ./run_all.sh) instead of clobbering it.
+STAGE="${STAGE:-all}"
 # -----------------------------
 
 mkdir -p "$RESULTS_DIR"/{logs,activations,geometry,determinants,probes,eval,security,data_cache}

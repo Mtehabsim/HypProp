@@ -25,19 +25,42 @@ from ..io import ensure_dir, iter_samples, log_line, save_csv
 
 
 class StructuralProbe(nn.Module):
-    """Learn B (proj) so transformed distances match target distances."""
+    """Learn a map so transformed distances match target tree distances.
 
-    def __init__(self, in_dim, proj_dim, curvature=0.0, seed=0):
+    Follows Raj (2026) / Chen et al. (2021) for the hyperbolic arm, which is NOT
+    a bare ``expmap0(Wx)``: raw LLM activations have norm ~1000, so ``Wx`` lands
+    at norm ~100 and ``expmap0`` saturates -- tanh(sqrt(c)*100)->1 pins every
+    point on the ball boundary, all pairwise distances collapse to ~equal, and
+    the probe scores rho~0 (a dead probe, not a weak one). Raj's recipe prevents
+    this with:
+      LayerNorm(h) -> W h' -> BOUNDED SCALING sigma(alpha)*tanh(z) -> expmap0.
+    The bounded scaling keeps points strictly inside the ball regardless of the
+    input norm; alpha (init 0.95) is learnable. Curvature default c=0.5 (Raj).
+
+    The Euclidean arm (curvature=0) uses the SAME LayerNorm + linear so the two
+    geometries are matched on everything except the exp map / distance -- which is
+    the whole point of the comparison.
+    """
+
+    def __init__(self, in_dim, proj_dim, curvature=0.5, seed=0):
         super().__init__()
         g = torch.Generator().manual_seed(seed)
-        self.B = nn.Linear(in_dim, proj_dim, bias=False)
+        self.ln = nn.LayerNorm(in_dim)
+        self.B = nn.Linear(in_dim, proj_dim, bias=True)
         with torch.no_grad():
             self.B.weight.copy_(torch.randn(proj_dim, in_dim, generator=g) * 0.05)
+            self.B.bias.zero_()
+        # Learnable bounded-scaling gate (Raj init 0.95); only used for c>0.
+        self.alpha = nn.Parameter(torch.tensor(0.95))
         self.curvature = curvature
 
     def transformed(self, x):
-        z = self.B(x)
+        z = self.B(self.ln(x))
         if self.curvature > 0:
+            # Bounded scaling: sigma(alpha)*tanh(z) lies in (-1, 1) per coord, so
+            # the point is strictly inside the ball BEFORE the exp map -> no
+            # boundary saturation. This is the fix for the rho~0 dead probe.
+            z = torch.sigmoid(self.alpha) * torch.tanh(z)
             return poincare.expmap0(z, self.curvature)
         return z
 
@@ -142,7 +165,7 @@ def run(activations_dir, out_dir, dataset="prontoqa", proj_dim=5, seed=0,
         for layer in range(n_layers):
             feats = np.stack([np.asarray(s["hidden"])[layer, -1] for s in samples]).astype(np.float64)
             rho_e, dist_e = fit_structural(feats, target_d, 0.0, proj_dim, seed=seed)
-            rho_h, dist_h = fit_structural(feats, target_d, 1.0, proj_dim, seed=seed)
+            rho_h, dist_h = fit_structural(feats, target_d, 0.5, proj_dim, seed=seed)  # Raj c=0.5
             rows.append(dict(model=model, dataset=dataset, target=target, layer=layer,
                              rho_euclidean=round(rho_e, 3), rho_hyperbolic=round(rho_h, 3),
                              dist_euclidean=round(dist_e, 3), dist_hyperbolic=round(dist_h, 3)))

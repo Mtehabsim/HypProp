@@ -18,6 +18,31 @@ raw_data/
 *.pt
 *.log
 
+# ...but DO keep the small, decisive result artifacts (CSVs, verdicts, plots).
+# These are KB-sized and are the actual evidence worth version-controlling.
+# The huge activations (*.pt, ignored above) and logs are never committed.
+!results/
+results/*
+!results/geometry/
+results/geometry/*
+!results/geometry/*.csv
+!results/geometry/*.md
+!results/geometry/*.png
+!results/eval/
+results/eval/*
+!results/eval/*.csv
+!results/eval/*.md
+!results/eval/*.json
+!results/determinants/
+results/determinants/*
+!results/determinants/*.csv
+!results/determinants/*.png
+!results/security/
+results/security/*
+!results/security/*.csv
+!results/security/*.png
+!results/security/*.json
+
 # Environments
 .venv/
 venv/

@@ -105,6 +105,55 @@ def build_flat_control(n_per_class: int = 60, seed: int = 0) -> list[dict]:
     return rows
 
 
+def build_prontoqa(n_per_depth: int = 60, depths=(1, 2, 3, 4, 5), seed: int = 0) -> list[dict]:
+    """Synthetic PrOntoQA (Saparov & He 2023) -- reasoning-eliciting prompts.
+
+    Each example is a nonce-ontology chain: 'Every <A> is a <B>. Every <B> is a
+    <C>. ... <X> is a <A>. True or false: <X> is a <Z>?' The nonsense predicates
+    ('yumpus', 'wumpus', ...) force the model to actually CHAIN the rules rather
+    than recall facts -- so it generates a multi-step reasoning trace, which is
+    exactly what WHEN (H1/H2) needs and what a benign 'Describe: ...' prompt does
+    not give. This is the dataset Raj used, so our H1/H2 are directly comparable.
+
+    label = reasoning depth (# hops); label_path = a coarse-then-fine path over
+    depth so the taxonomy/structural targets have graded structure to recover.
+    Fully synthetic: no downloads, deterministic per seed.
+    """
+    import random
+
+    rng = random.Random(seed)
+    # A pool of pronounceable nonce predicates (PrOntoQA-style).
+    stems = ["yumpus", "wumpus", "jompus", "zumpus", "numpus", "vumpus",
+             "tumpus", "rompus", "dumpus", "sterpus", "lorpus", "grimpus",
+             "shumpus", "brimpus", "gorpus", "lempus", "twmpus", "frompus"]
+    entities = ["Max", "Alex", "Sam", "Polly", "Rex", "Fae", "Wren", "Stella"]
+    rows = []
+    for depth in depths:
+        for k in range(n_per_depth):
+            chain = rng.sample(stems, depth + 1)      # depth edges -> depth+1 kinds
+            ent = rng.choice(entities)
+            facts = " ".join(f"Every {chain[i]} is a {chain[i+1]}." for i in range(depth))
+            true_query = f"{ent} is a {chain[0]}."
+            # Half TRUE (ask about the last kind), half FALSE (ask about an unrelated kind).
+            if k % 2 == 0:
+                target, answer = chain[-1], 1
+            else:
+                distractor = rng.choice([s for s in stems if s not in chain])
+                target, answer = distractor, 0
+            prompt = (f"{facts} {true_query}\n"
+                      f"Question: Is it true or false that {ent} is a {target}? "
+                      f"Reason step by step, then answer True or False.")
+            rows.append({
+                "sample_id": f"pronto_d{depth}_{k}",
+                "prompt": prompt,
+                "label": depth,                       # reasoning depth
+                "label_path": [0 if depth <= 2 else 1, depth],  # coarse (shallow/deep) -> depth
+                "answer": answer,
+            })
+    rng.shuffle(rows)
+    return rows
+
+
 def _load_real_dataset(name: str, raw_dir: str) -> list[dict]:
     """Load a real dataset from a raw drop-in directory (DGX).
 
@@ -130,7 +179,8 @@ def _load_real_dataset(name: str, raw_dir: str) -> list[dict]:
 
 
 BUILDERS = {"wordnet_control": build_wordnet_control,
-            "flat_control": build_flat_control}
+            "flat_control": build_flat_control,
+            "prontoqa": build_prontoqa}
 REAL = {"ailuminate", "aegis", "harmbench", "advbench", "wos"}
 
 

@@ -25,11 +25,16 @@ from .reason_markers import ThinkingMatcher
 
 
 def extract_model_dataset(model_name, dataset, samples, out_dir, logfile,
-                          max_new_tokens=256, dtype="fp32", device="cuda"):
+                          max_new_tokens=256, dtype="fp32", device="cuda",
+                          chat_mode="plain"):
     """Extract and save activations for every sample of one (model, dataset).
 
     ``samples`` is a list of dicts: {"sample_id", "prompt", "label",
-    "label_path"}. Returns the number of samples written.
+    "label_path"}. Returns the number of samples written. ``chat_mode`` controls
+    prompt scaffolding across models -- default 'plain' gives EVERY model the
+    identical raw prompt, which is required for a fair H1/H2 cross-model contrast
+    (a base model with no chat template must not get different scaffolding than a
+    chat model).
     """
     import torch
     from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -44,11 +49,17 @@ def extract_model_dataset(model_name, dataset, samples, out_dir, logfile,
         model_name, torch_dtype=torch_dtype, device_map=device)
     model.eval()
 
+    # Report the scaffolding decision so cross-model parity is auditable.
+    has_tmpl = getattr(tok, "chat_template", None) is not None
+    log_line(logfile, f"  {model_name}: chat_template={'yes' if has_tmpl else 'NO'}, "
+                      f"chat_mode='{chat_mode}' -> "
+                      f"{'chat template' if (chat_mode=='chat' or (chat_mode=='auto' and has_tmpl)) else 'PLAIN prompt'}")
+
     matcher = ThinkingMatcher(tok)
     written = 0
     for s in samples:
         try:
-            rec = _extract_one(model, tok, matcher, s, max_new_tokens, device)
+            rec = _extract_one(model, tok, matcher, s, max_new_tokens, device, chat_mode)
         except Exception as exc:  # keep going; log the skip
             log_line(logfile, f"  skip {s['sample_id']}: {exc}")
             continue
@@ -66,12 +77,35 @@ def extract_model_dataset(model_name, dataset, samples, out_dir, logfile,
     return written
 
 
-def _extract_one(model, tok, matcher, sample, max_new_tokens, device):
+def _format_prompt(tok, prompt, chat_mode):
+    """Format a prompt consistently across models to avoid a scaffolding confound.
+
+    A base model (e.g. Qwen2.5-7B) may have NO chat template, while a chat/reasoning
+    model does. If we templated one and not the other, the prompt-token geometry
+    comparison (H2 especially) would be confounded by scaffolding, not reasoning.
+    ``chat_mode`` forces a single policy for the whole run:
+      - "plain": raw prompt text, identical for every model (RECOMMENDED for the
+        H1/H2 cross-model contrast -- guarantees identical scaffolding).
+      - "chat": use each model's chat template (only valid if ALL models have one).
+      - "auto": chat template iff the tokenizer actually has one, else plain
+        (convenient, but can mix scaffolds across models -- logged, not silent).
+    Returns (text, used_chat_bool).
+    """
+    has_tmpl = getattr(tok, "chat_template", None) is not None
+    if chat_mode == "plain" or (chat_mode == "auto" and not has_tmpl):
+        return prompt, False
+    if chat_mode == "chat" and not has_tmpl:
+        raise ValueError("chat_mode='chat' but this tokenizer has no chat template; "
+                         "use 'plain' for cross-model parity")
+    messages = [{"role": "user", "content": prompt}]
+    return tok.apply_chat_template(messages, tokenize=False, add_generation_prompt=True), True
+
+
+def _extract_one(model, tok, matcher, sample, max_new_tokens, device, chat_mode="plain"):
     """Generate, capture aligned hidden states, tag tokens. Returns a record."""
     import torch
 
-    messages = [{"role": "user", "content": sample["prompt"]}]
-    text = tok.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+    text, used_chat = _format_prompt(tok, sample["prompt"], chat_mode)
     inputs = tok(text, return_tensors="pt").to(device)
     prompt_len = inputs["input_ids"].shape[1]
 
@@ -145,6 +179,10 @@ def main(argv=None):
     ap.add_argument("--device", default="cuda")
     ap.add_argument("--max-new-tokens", type=int, default=256)
     ap.add_argument("--limit", type=int, default=0, help="cap samples per dataset (0=all)")
+    ap.add_argument("--chat-mode", default="plain", choices=["plain", "chat", "auto"],
+                    help="prompt scaffolding. 'plain' (default) gives every model the "
+                         "identical raw prompt -> fair cross-model H1/H2. 'chat' uses each "
+                         "model's chat template (all must have one). 'auto' = chat iff present.")
     args = ap.parse_args(argv)
 
     ensure_dir(args.out)
@@ -157,7 +195,8 @@ def main(argv=None):
         log_line(logfile, f"extracting {len(samples)} samples for {args.model}/{ds}")
         extract_model_dataset(args.model, ds, samples, args.out, logfile,
                               max_new_tokens=args.max_new_tokens,
-                              dtype=args.dtype, device=args.device)
+                              dtype=args.dtype, device=args.device,
+                              chat_mode=args.chat_mode)
 
 
 if __name__ == "__main__":

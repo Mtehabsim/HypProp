@@ -26,6 +26,9 @@ DTYPE="fp32"          # fp32 recommended (bf16 breaks near the Poincare boundary
 DEVICE="cuda"         # DGX
 LIMIT="${LIMIT:-0}"   # cap samples per dataset (0 = all); set small for a smoke test
 SOURCE="${SOURCE:-last}"  # token source for the probe phases (input|thinking|last|all)
+# 'plain' gives every model the identical raw prompt -> fair cross-model H1/H2
+# (a base model with no chat template must not get different scaffolding).
+CHAT_MODE="${CHAT_MODE:-plain}"
 # STAGE selects which phase(s) run: all | extract | geometry | probes | security.
 # Respect an env override (STAGE=geometry ./run_all.sh) instead of clobbering it.
 STAGE="${STAGE:-all}"
@@ -43,7 +46,7 @@ if run_stage extract; then
   for m in "${MODELS[@]}"; do
     [ -z "$m" ] && continue
     python -m hypprobe.extract.hidden_state_extractor --model "$m" --datasets "${DATASETS[@]}" \
-      --dtype "$DTYPE" --device "$DEVICE" --limit "$LIMIT" \
+      --dtype "$DTYPE" --device "$DEVICE" --limit "$LIMIT" --chat-mode "$CHAT_MODE" \
       --cache "$RESULTS_DIR/data_cache" --out "$RESULTS_DIR/activations" \
       2>&1 | tee -a "$RESULTS_DIR/logs/extract.log"
   done

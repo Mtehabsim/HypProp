@@ -36,7 +36,7 @@ import os
 import numpy as np
 
 from ..data import synthetic
-from ..io import (TOKEN_SOURCES, build_token_matrix, ensure_dir, iter_samples,
+from ..io import (TOKEN_SOURCES, ensure_dir, iter_samples,
                   log_line, pool_features, save_csv, save_json)
 from .delta import (delta_from_distance_matrix, delta_hyperbolicity, fit_background,
                     _pairwise_euclidean)
@@ -137,10 +137,24 @@ def run(activations_dir, out_dir, seed=0, n_bootstrap=25, pca_cap=256,
         n_layers = int(np.asarray(sample["hidden"]).shape[0])
         hidden_dim = int(np.asarray(sample["hidden"]).shape[-1])
 
-        # Fit the GENERIC background transform ONCE per (model) from a big pooled
-        # token sample across everything available for this model.
-        bg_pool = build_token_matrix(activations_dir, model, dataset,
-                                     layer=n_layers - 1, max_tokens=4000)
+        # SINGLE PASS over the activation store: load each sample once and pool
+        # ALL (layer x token_source) vectors + a background token pool in one go.
+        # (Previously each (layer x source) reloaded the whole store -> 145x the
+        # disk I/O; on ~40 GB/model that is TBs of redundant reads.)
+        feats = {(L, src): [] for L in range(n_layers) for src in TOKEN_SOURCES}
+        bg_tokens = []
+        for s in iter_samples(activations_dir, model, dataset):
+            for L in range(n_layers):
+                for src in TOKEN_SOURCES:
+                    v = pool_features(s, L, src)
+                    if v is not None:
+                        feats[(L, src)].append(v)
+            # background pool: raw final-layer token states (cap to keep it bounded)
+            if len(bg_tokens) < 4000:
+                h = np.asarray(s["hidden"], dtype=np.float64)[n_layers - 1]
+                bg_tokens.extend(h[: max(0, 4000 - len(bg_tokens))])
+
+        bg_pool = np.stack(bg_tokens) if bg_tokens else np.empty((0, hidden_dim))
         bg_transform = fit_background(bg_pool, pca_cap=pca_cap) if bg_pool.shape[0] >= 32 else None
 
         # Controls: calibrate the estimator (tree distance-matrix ~0; gaussian/
@@ -151,14 +165,10 @@ def run(activations_dir, out_dir, seed=0, n_bootstrap=25, pca_cap=256,
                              delta_rel=round(dr, 4), noise_floor=round(floor, 4),
                              cloud_kind=cname))
 
-        # Data: sweep layers x token_source through the metric family.
+        # Data: adjudicate each pre-pooled (layer x token_source) through the metric family.
         for layer in range(n_layers):
             for src in TOKEN_SOURCES:
-                xs = []
-                for s in iter_samples(activations_dir, model, dataset):
-                    v = pool_features(s, layer, src)
-                    if v is not None:
-                        xs.append(v)
+                xs = feats[(layer, src)]
                 if len(xs) < 16:
                     continue
                 X = np.stack(xs)
@@ -169,7 +179,8 @@ def run(activations_dir, out_dir, seed=0, n_bootstrap=25, pca_cap=256,
                                      delta_rel=round(dr, 4), noise_floor=round(floor, 4),
                                      cloud_kind="data"))
         log_line(logfile, f"{model}/{dataset}: adjudicated {n_layers} layers x "
-                          f"{len(TOKEN_SOURCES)} sources x {len(METRICS)} metrics")
+                          f"{len(TOKEN_SOURCES)} sources x {len(METRICS)} metrics "
+                          f"(single-pass load)")
 
     save_csv(os.path.join(out_dir, "rung0.csv"), rows,
              columns=["model", "dataset", "layer", "token_source", "metric",

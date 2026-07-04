@@ -55,6 +55,15 @@ def generate(out_dir, model="mock/tree-7b", dataset="wordnet_control",
             is_generated = np.zeros(n_tokens, bool)
             is_generated[n_tokens // 3:] = True  # first third = prompt
 
+            # Inject an ATTENTION SINK at position 0 in the middle layers, matching
+            # the real DGX finding (~250x median norm). This reproduces the delta_rel
+            # degeneracy so the sink-stripping fix (io._sink_mask) is exercised
+            # end-to-end: without the fix, middle-layer delta collapses; with it,
+            # the sink is removed and delta is sane.
+            mid = n_layers // 2
+            for L in range(max(1, mid - 3), min(n_layers - 1, mid + 4)):
+                hidden_states[L, 0] = 250.0 * rng.standard_normal(hidden)
+
             # A shared token "The" placed at a VARYING position per sample, and
             # whose late-layer activation encodes its POSITION (not the class).
             # This gives the token_type position-vs-context split real ground

@@ -1,0 +1,5 @@
+model,dataset,layer,rel_depth,n_tok,norm_ratio_maxovermed,top1_sv_energy,participation_ratio,topnorm_is_first_frac,delta_all_maxdiam,delta_all_p99diam,delta_droptop_maxdiam,delta_droptop_p99diam,n_prompts
+mock/tree-7b,wordnet_control,0,0.0,12.0,1.1384,0.1642,9.3092,0.0,0.107,0.1109,0.1115,0.1103,60
+mock/tree-7b,wordnet_control,3,0.429,12.0,1.1362,0.165,9.2521,0.0,0.1108,0.1143,0.1107,0.112,60
+mock/tree-7b,wordnet_control,4,0.571,12.0,1.1528,0.1638,9.3135,0.0,0.1092,0.1109,0.1086,0.1096,60
+mock/tree-7b,wordnet_control,7,1.0,12.0,1.5385,0.2082,8.5243,0.0,0.1045,0.107,0.1038,0.1079,60

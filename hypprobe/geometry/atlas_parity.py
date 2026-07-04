@@ -25,7 +25,7 @@ import os
 
 import numpy as np
 
-from ..io import ensure_dir, iter_samples, save_csv
+from ..io import _sink_mask, ensure_dir, iter_samples, save_csv
 
 
 def _atlas_delta_rel(points: np.ndarray, n_quadruples: int, rng) -> float:
@@ -53,7 +53,8 @@ def _atlas_delta_rel(points: np.ndarray, n_quadruples: int, rng) -> float:
     return delta / diam
 
 
-def run(activations_dir, out_dir, n_quadruples=2000, max_prompts=200, seed=0):
+def run(activations_dir, out_dir, n_quadruples=2000, max_prompts=200, seed=0,
+        drop_sink=True):
     ensure_dir(out_dir)
     rng = np.random.default_rng(seed)
     rows = []
@@ -68,7 +69,10 @@ def run(activations_dir, out_dir, n_quadruples=2000, max_prompts=200, seed=0):
             if n_tok < 4:
                 continue
             for L in range(n_layers):
-                dr = _atlas_delta_rel(hidden[L], n_quadruples, rng)
+                hL = hidden[L]
+                if drop_sink:
+                    hL = hL[_sink_mask(hL)]          # strip attention-sink tokens
+                dr = _atlas_delta_rel(hL, n_quadruples, rng)
                 per_layer.setdefault(L, []).append(dr)
             n_used += 1
             if n_used >= max_prompts:
@@ -107,9 +111,11 @@ def main(argv=None):
     ap.add_argument("--n-quadruples", type=int, default=2000)
     ap.add_argument("--max-prompts", type=int, default=200)
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--keep-sink", action="store_true",
+                    help="do NOT strip attention-sink tokens (shows the degeneracy)")
     args = ap.parse_args(argv)
     run(args.activations, args.out, n_quadruples=args.n_quadruples,
-        max_prompts=args.max_prompts, seed=args.seed)
+        max_prompts=args.max_prompts, seed=args.seed, drop_sink=not args.keep_sink)
 
 
 if __name__ == "__main__":

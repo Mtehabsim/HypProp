@@ -114,12 +114,41 @@ def sample_path(activations_dir: str, model: str, dataset: str, sample_id: str) 
     return os.path.join(d, f"{sample_id}.pt")
 
 
-def pool_features(sample: dict, layer: int, token_source: str) -> np.ndarray | None:
+# Attention-sink / massive-activation guard. Middle layers contain a token
+# (typically position 0, the BOS/sink) whose norm is ~250x the median. It makes
+# the token cloud effectively 1-D (top singular value ~1.0) and, because it sets
+# the max pairwise distance, it crushes delta_rel = defect/diam to ~0.001 -- a
+# NORMALIZATION degeneracy, not a geometry fact. This was verified directly on
+# the DGX activations (norm max=14816 vs median=61; dropping the token raised
+# delta_rel ~130x). We strip norm-outlier tokens by a robust, scale-free rule:
+# any token whose norm exceeds SINK_NORM_MULT * median-norm is dropped. The gap
+# in the data (sink ~245x, others 1-3x) makes the choice of multiplier
+# non-sensitive across a wide range.
+SINK_NORM_MULT = 10.0
+
+
+def _sink_mask(h: np.ndarray, mult: float = SINK_NORM_MULT) -> np.ndarray:
+    """Return a boolean keep-mask that drops norm-outlier (attention-sink) tokens."""
+    if h.shape[0] < 3:
+        return np.ones(h.shape[0], bool)
+    norms = np.linalg.norm(h, axis=1)
+    med = np.median(norms)
+    if med <= 0:
+        return np.ones(h.shape[0], bool)
+    return norms <= mult * med
+
+
+def pool_features(sample: dict, layer: int, token_source: str,
+                  drop_sink: bool = True) -> np.ndarray | None:
     """Pool one sample's hidden states at ``layer`` for a given token source.
 
     Returns a single (hidden,) vector or None if no tokens match. ``token_source``
-    is one of TOKEN_SOURCES: 'input' (prompt tokens), 'thinking' (reasoning
-    markers), 'last' (final token), 'all' (mean over every token).
+    is one of TOKEN_SOURCES: 'input' (prompt tokens), 'generated', 'thinking'
+    (reasoning markers), 'last' (final token), 'all' (mean over every token).
+
+    ``drop_sink`` (default True) removes attention-sink / massive-activation
+    tokens (norm > SINK_NORM_MULT * median) before pooling -- see :func:`_sink_mask`.
+    Without this, middle-layer pools are dominated by the sink token.
     """
     hidden = sample["hidden"]  # (n_layers, n_tokens, hidden)
     if hasattr(hidden, "numpy"):
@@ -147,6 +176,11 @@ def pool_features(sample: dict, layer: int, token_source: str) -> np.ndarray | N
         mask = np.ones(h.shape[0], bool)
     else:
         raise ValueError(f"unknown token_source {token_source}")
+
+    # Drop attention-sink tokens (except when the source IS a single token, e.g.
+    # 'last', where masking to empty would be meaningless).
+    if drop_sink and token_source != "last":
+        mask = mask & _sink_mask(h)
 
     if mask.sum() == 0:
         return None

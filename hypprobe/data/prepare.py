@@ -150,9 +150,15 @@ def main(argv=None):
         if ds in BUILDERS:
             rows = BUILDERS[ds]()
         elif ds in REAL:
-            rows = _load_real_dataset(ds, args.raw)
+            try:
+                rows = _load_real_dataset(ds, args.raw)
+            except FileNotFoundError as exc:
+                # Clean, actionable message instead of a scary traceback mid-run.
+                raise SystemExit(f"[prepare] {exc}")
         else:
-            raise SystemExit(f"unknown dataset '{ds}'")
+            raise SystemExit(
+                f"unknown dataset '{ds}'. Builders: {sorted(BUILDERS)}; "
+                f"real (need --raw dir): {sorted(REAL)}")
         out_path = os.path.join(args.out, f"{ds}.jsonl")
         _write_jsonl(out_path, rows)
         n_classes = len({r["label"] for r in rows})

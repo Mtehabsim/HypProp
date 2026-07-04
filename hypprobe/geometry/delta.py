@@ -46,8 +46,10 @@ class DeltaResult:
     diam: float           # percentile diameter (robust scale) of the sample
     n_points: int         # number of points used
     n_quadruples: int     # number of quadruples sampled (per repeat)
-    std_rel: float        # std of delta_rel across repeats (do not trust claims below this)
+    std_rel: float        # MC (quadruple-sampling) noise: the WEAKER floor
     pca_dim: int = 0      # PCA dimension used before whitening (0 = no whitening/PCA)
+    bootstrap_std: float = 0.0  # std of delta_rel over point-resamples: the HONEST floor
+    metric: str = "raw"   # which distance metric family member produced this
 
 
 def whiten(x: np.ndarray, eps: float = 1e-6, pca_cap: int = 256) -> np.ndarray:
@@ -77,6 +79,74 @@ def whiten(x: np.ndarray, eps: float = 1e-6, pca_cap: int = 256) -> np.ndarray:
     std = s[:k] / np.sqrt(max(n - 1, 1))
     std = np.clip(std, eps, None)
     return proj / std[None, :]
+
+
+def pca_only(x: np.ndarray, pca_cap: int = 256) -> np.ndarray:
+    """PCA-project to k top components but DO NOT rescale to unit variance.
+
+    This isolates the effect of dimensionality reduction from the effect of
+    rescaling: comparing ``pca_only`` vs ``per_cloud`` tells us whether a change
+    in delta is driven by dropping empty directions or by equalising variance.
+    """
+    x = np.asarray(x, dtype=np.float64)
+    n, d = x.shape
+    mu = x.mean(axis=0, keepdims=True)
+    xc = x - mu
+    k = max(1, min(n // 3, pca_cap, d))
+    _, s, vt = np.linalg.svd(xc, full_matrices=False)
+    k = min(k, s.shape[0])
+    return xc @ vt[:k].T            # projected, NOT divided by std
+
+
+def fit_background(x: np.ndarray, eps: float = 1e-6, pca_cap: int = 256):
+    """Fit a GENERIC anisotropy transform from a large background sample.
+
+    Unlike per-cloud whitening (which removes THIS cloud's own 2nd-order
+    structure and can erase real hierarchy), the background transform removes
+    only the model's *generic* anisotropy, estimated once from a big pooled
+    sample, and is then applied to every cloud. This is the "honest middle":
+    it strips the shared cone without whitening away each cloud's own structure.
+
+    Returns a callable ``transform(z) -> z'`` mapping any (M, d) into the same
+    background-whitened k-dim space.
+    """
+    x = np.asarray(x, dtype=np.float64)
+    n, d = x.shape
+    mu = x.mean(axis=0, keepdims=True)
+    xc = x - mu
+    k = max(1, min(n // 3, pca_cap, d))
+    _, s, vt = np.linalg.svd(xc, full_matrices=False)
+    k = min(k, s.shape[0])
+    comps = vt[:k]
+    std = np.clip(s[:k] / np.sqrt(max(n - 1, 1)), eps, None)
+    W = comps.T / std[None, :]                       # (d, k)
+
+    def transform(z: np.ndarray) -> np.ndarray:
+        return (np.asarray(z, dtype=np.float64) - mu) @ W
+
+    return transform
+
+
+def _apply_metric(x, metric, pca_cap, bg_transform):
+    """Map raw points into the space chosen by ``metric``."""
+    if metric == "raw":
+        return np.asarray(x, dtype=np.float64)
+    if metric == "pca_only":
+        return pca_only(x, pca_cap=pca_cap)
+    if metric == "per_cloud":
+        return whiten(x, pca_cap=pca_cap)
+    if metric == "background":
+        if bg_transform is None:
+            raise ValueError("metric='background' requires a fitted bg_transform")
+        return bg_transform(x)
+    if metric == "causal":
+        # Park et al. causal inner product (model-level whitening). Estimator is
+        # a separate (DGX) artifact; we accept it as bg_transform. If not
+        # supplied, refuse rather than fake it.
+        if bg_transform is None:
+            raise ValueError("metric='causal' requires a model-level transform (Park)")
+        return bg_transform(x)
+    raise ValueError(f"unknown metric {metric!r}")
 
 
 def _pairwise_euclidean(x: np.ndarray) -> np.ndarray:
@@ -148,34 +218,62 @@ def delta_hyperbolicity(
     points: np.ndarray,
     n_quadruples: int | None = None,
     n_repeats: int = 5,
-    do_whiten: bool = True,
+    do_whiten: bool | None = None,
+    metric: str | None = None,
+    bg_transform=None,
     max_points: int = 1500,
     seed: int = 0,
     defect_percentile: float = 99.0,
     diam_percentile: float = 99.0,
     pca_cap: int = 256,
+    n_bootstrap: int = 0,
 ) -> DeltaResult:
     """Estimate delta_rel for a cloud of points (rows of ``points``).
 
-    If ``do_whiten`` the points are PCA-then-whitened (sound for LLM hidden
-    states; see :func:`whiten`). If there are more than ``max_points`` rows we
-    subsample. ``n_quadruples`` defaults to ``max(1500, 50 * N)`` so the sampling
-    scales with the number of points (a fixed budget under-samples large clouds).
+    ``metric`` selects the distance-space (the Rung-0 family):
+      - "raw"        : original coordinates (reproduces the Atlas).
+      - "pca_only"   : PCA-project to k, NO rescale (dims vs rescaling probe).
+      - "per_cloud"  : PCA-then-whiten on this cloud (strong, but biased against
+                       real hierarchy that lives in the cloud's own directions).
+      - "background" : apply a generic anisotropy transform fitted elsewhere
+                       (needs ``bg_transform``) -- the honest middle.
+      - "causal"     : model-level (Park) transform via ``bg_transform``.
+
+    Backward-compat: if ``metric`` is None we map the old ``do_whiten`` flag
+    (True->"per_cloud", False->"raw"); default is "per_cloud".
+
+    ``n_bootstrap`` > 0 adds ``bootstrap_std`` by resampling the point set with
+    replacement -- the honest noise floor (vs ``std_rel``, which is only
+    quadruple-sampling noise).
     """
+    if metric is None:
+        metric = "raw" if do_whiten is False else "per_cloud"
     rng = np.random.default_rng(seed)
-    x = np.asarray(points, dtype=np.float64)
-    pca_dim = 0
-    if do_whiten:
-        x = whiten(x, pca_cap=pca_cap)
-        pca_dim = x.shape[1]
+    x0 = np.asarray(points, dtype=np.float64)
+    x = _apply_metric(x0, metric, pca_cap, bg_transform)
+    pca_dim = x.shape[1] if metric in ("pca_only", "per_cloud", "background", "causal") else 0
     if x.shape[0] > max_points:
         sel = rng.choice(x.shape[0], size=max_points, replace=False)
         x = x[sel]
     if n_quadruples is None:
         n_quadruples = max(1500, 50 * x.shape[0])
     dmat = _pairwise_euclidean(x)
-    return delta_from_distance_matrix(
+    res = delta_from_distance_matrix(
         dmat, n_quadruples, n_repeats, rng,
         defect_percentile=defect_percentile, diam_percentile=diam_percentile,
         pca_dim=pca_dim,
     )
+    res.metric = metric
+
+    if n_bootstrap and n_bootstrap > 1:
+        boot = []
+        m = x.shape[0]
+        for _ in range(n_bootstrap):
+            idx = rng.integers(0, m, size=m)         # resample points w/ replacement
+            db = _pairwise_euclidean(x[idx])
+            rb = delta_from_distance_matrix(db, n_quadruples, 1, rng,
+                                            defect_percentile=defect_percentile,
+                                            diam_percentile=diam_percentile)
+            boot.append(rb.delta_rel)
+        res.bootstrap_std = float(np.std(boot))
+    return res

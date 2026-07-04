@@ -64,6 +64,29 @@ python -m hypprobe.data.prepare --datasets ailuminate aegis wos wordnet_control 
 - `results/eval/summary.md` — matched hyperbolic-vs-flat verdict (+ significance.json).
 - `results/security/attack.csv` — attacker budget flat vs hyperbolic, and transfer rate.
 
+## The decisive first experiment: Rung 0 (run this before anything else)
+
+The whole thesis rests on one question: is the final-layer tree-likeness **real
+hierarchy** or just **anisotropy/compression** (Park et al. 2025)? `Rung 0`
+answers it with a metric family (`raw` / `pca_only` / `per_cloud` / `background`)
+read against calibration controls (a true tree distance-matrix must score δ≈0; a
+Gaussian must score high), with pre-registered thresholds in `PREREGISTER.md`.
+
+```bash
+# after extracting activations (generation ON), on the DGX:
+STAGE=rung0 ./run_all.sh
+#  -> results/geometry/rung0.csv  and  rung0_verdict.md
+```
+
+**Read `rung0_verdict.md` and stop.** If it says `REAL_HIERARCHY`, proceed to
+`STAGE=geometry`. If it says `ANISOTROPY_ARTIFACT`, the honest outcome is the
+*deflationary* paper (an Atlas correction) — do **not** build a probe expecting a
+hyperbolic win. The thresholds are committed in `PREREGISTER.md` before looking,
+so the verdict is pre-decided, not chosen after seeing the numbers.
+
+This is the one run that resurrects or kills the project. Everything downstream
+(WHEN/WHY, the harm probe, the safety test) is conditional on it.
+
 ## Scope & known limitations (read before interpreting results)
 
 - **Single-turn only (by design).** Every point is one prompt -> one pooled vector

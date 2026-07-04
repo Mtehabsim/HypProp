@@ -49,6 +49,18 @@ if run_stage extract; then
   done
 fi
 
+# Rung 0 — the whitening adjudication: the go/no-go for the whole thesis.
+# Run this FIRST (after extract) and READ results/geometry/rung0_verdict.md before
+# building anything downstream. If the verdict is ANISOTROPY_ARTIFACT, the honest
+# move is the deflationary paper -- do NOT proceed to build a probe expecting a win.
+if run_stage rung0; then
+  log "Rung 0: whitening adjudication (metric family + calibration controls)"
+  python -m hypprobe.geometry.rung0 --activations "$RESULTS_DIR/activations" \
+    --project-root . --out "$RESULTS_DIR/geometry" \
+    2>&1 | tee -a "$RESULTS_DIR/logs/rung0.log"
+  log "Rung 0 done -> READ $RESULTS_DIR/geometry/rung0_verdict.md before continuing"
+fi
+
 # Phase 1 — geometry map + determinants (main science) + Raj reproduction
 if run_stage geometry; then
   log "Phase 1: delta-hyperbolicity map (whitened)"

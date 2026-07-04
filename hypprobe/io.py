@@ -30,7 +30,7 @@ from typing import Any
 
 import numpy as np
 
-TOKEN_SOURCES = ("input", "thinking", "last", "all")
+TOKEN_SOURCES = ("input", "generated", "thinking", "last", "all")
 
 
 def ensure_dir(path: str) -> str:
@@ -134,6 +134,10 @@ def pool_features(sample: dict, layer: int, token_source: str) -> np.ndarray | N
 
     if token_source == "input":
         mask = ~is_gen if is_gen is not None and is_gen.size else np.ones(h.shape[0], bool)
+    elif token_source == "generated":
+        # The Atlas measured prompt tokens only; 'generated' is the axis it
+        # excluded and the one H1/H2 need (generation-produced representations).
+        mask = is_gen if is_gen is not None and is_gen.size else np.zeros(h.shape[0], bool)
     elif token_source == "thinking":
         mask = is_think if is_think is not None and is_think.size else np.zeros(h.shape[0], bool)
     elif token_source == "last":

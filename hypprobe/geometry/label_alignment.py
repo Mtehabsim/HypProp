@@ -131,8 +131,16 @@ def label_alignment(
     corr_e = _spearman(d_euc, tree_flat)
     corr_h = _spearman(d_hyp, tree_flat)
 
-    # Norm-depth: distance-from-origin of each prototype vs its depth.
-    depths = np.array([len(p) for p in uniq_paths], dtype=float)
+    # Norm-depth: distance-from-origin of each prototype vs its depth. Depth is
+    # the LAST path element (the fine level), not len(path): builders that store
+    # a fixed-length path (e.g. [coarse, depth]) have constant len -> a constant
+    # depth vector -> a meaningless norm-depth correlation. Fall back to len only
+    # when the path is a variable-length root->leaf chain.
+    _lens = {len(p) for p in uniq_paths}
+    if len(_lens) == 1 and uniq_paths and len(uniq_paths[0]) > 0:
+        depths = np.array([float(p[-1]) for p in uniq_paths], dtype=float)
+    else:
+        depths = np.array([len(p) for p in uniq_paths], dtype=float)
     norms = poincare.dist0(pb, curvature).numpy()
     norm_depth = _spearman(norms, depths)
 

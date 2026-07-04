@@ -77,8 +77,22 @@ def fit_structural(feats, target_d, curvature, proj_dim=5, epochs=300, seed=0):
 
 
 def _depth_target(samples):
-    """Reasoning-depth target |depth_i - depth_j| (Raj-style). (N, N)."""
-    depths = np.array([len(s.get("label_path", [0])) for s in samples], dtype=float)
+    """Reasoning-depth target |depth_i - depth_j| (Raj-style). (N, N).
+
+    Depth is the scalar ``label`` (PrOntoQA stores label = # reasoning hops).
+    Fall back to the LAST element of label_path (the fine/depth level), and only
+    then to len(label_path). Using len(label_path) alone was a bug: builders that
+    store a fixed-length path (e.g. [coarse, depth]) made every depth identical
+    -> an all-zero target -> "degenerate, skipping".
+    """
+    def _depth(s):
+        lab = s.get("label")
+        if isinstance(lab, (int, float)):
+            return float(lab)
+        lp = s.get("label_path") or [0]
+        return float(lp[-1] if len(lp) else 0)
+
+    depths = np.array([_depth(s) for s in samples], dtype=float)
     return np.abs(depths[:, None] - depths[None, :])
 
 

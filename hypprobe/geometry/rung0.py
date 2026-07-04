@@ -36,7 +36,7 @@ import os
 import numpy as np
 
 from ..data import synthetic
-from ..io import (TOKEN_SOURCES, ensure_dir, iter_samples,
+from ..io import (TOKEN_SOURCES, _sink_mask, ensure_dir, iter_samples,
                   log_line, pool_features, save_csv, save_json)
 from .delta import (delta_from_distance_matrix, delta_hyperbolicity, fit_background,
                     _pairwise_euclidean)
@@ -149,9 +149,13 @@ def run(activations_dir, out_dir, seed=0, n_bootstrap=25, pca_cap=256,
                     v = pool_features(s, L, src)
                     if v is not None:
                         feats[(L, src)].append(v)
-            # background pool: raw final-layer token states (cap to keep it bounded)
+            # background pool: final-layer token states, SINK-STRIPPED (so a
+            # massive-activation token can't dominate the fitted covariance and
+            # wreck the 'background' metric the verdict relies on). Final layer is
+            # usually sink-free, but strip regardless -- do not rely on that.
             if len(bg_tokens) < 4000:
                 h = np.asarray(s["hidden"], dtype=np.float64)[n_layers - 1]
+                h = h[_sink_mask(h)]
                 bg_tokens.extend(h[: max(0, 4000 - len(bg_tokens))])
 
         bg_pool = np.stack(bg_tokens) if bg_tokens else np.empty((0, hidden_dim))

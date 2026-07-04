@@ -74,7 +74,8 @@ shape, the problem is **extraction**, not geometry — fix that first.
   "when": {
     "h1_margin": 0.05,
     "h1_min_effect_over_boot": 2.0,
-    "h2_gap_margin": 0.05
+    "h2_gap_margin": 0.05,
+    "max_bootstrap_std_final": 0.02
   }
 }
 ```

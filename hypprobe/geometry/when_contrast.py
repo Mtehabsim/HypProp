@@ -33,6 +33,7 @@ DEFAULT_WHEN = {
     "h1_margin": 0.05,
     "h1_min_effect_over_boot": 2.0,
     "h2_gap_margin": 0.05,
+    "max_bootstrap_std_final": 0.02,   # power target: floor must be below this
 }
 
 
@@ -82,15 +83,25 @@ def score(rows, thresholds):
         d_gen, f_g = gen
         diff = d_prompt - d_gen                     # >0 means generated is MORE tree-like
         floor = max(f_p, f_g, 1e-6)
+        # Power: is the noise floor small enough that an AMBIGUOUS call is
+        # trustworthy? If floor > target, an AMBIGUOUS/near-miss is likely
+        # UNDERPOWERED (add prompts), not a real null.
+        target = thresholds.get("max_bootstrap_std_final", 0.02)
+        underpowered = floor > target
         if diff > thresholds["h1_margin"] and diff > thresholds["h1_min_effect_over_boot"] * floor:
             verdict = "PASS"
-        elif diff <= 0:
+        elif diff <= 0 and not underpowered:
             verdict = "FAIL"
+        elif diff <= 0 and underpowered:
+            verdict = "FAIL?(underpowered)"
+        elif underpowered:
+            verdict = "AMBIGUOUS(underpowered)"
         else:
-            verdict = "AMBIGUOUS"
+            verdict = "AMBIGUOUS(powered)"
         out["h1"].append(dict(model=model, delta_prompt=round(d_prompt, 4),
                               delta_generated=round(d_gen, 4), diff=round(diff, 4),
-                              floor=round(floor, 4), verdict=verdict,
+                              floor=round(floor, 4), target=target,
+                              underpowered=underpowered, verdict=verdict,
                               reasoning=_is_reasoning(model)))
         out["gaps"][model] = diff
 
@@ -132,7 +143,17 @@ def _render(result, thresholds, th_source):
         for r in result["h1"]:
             L.append(f"- **{r['model']}**: δ(prompt)={r['delta_prompt']} vs "
                      f"δ(generated)={r['delta_generated']} → diff={r['diff']} "
-                     f"(floor {r['floor']}) → **{r['verdict']}**")
+                     f"(floor {r['floor']}, target {r['target']}) → **{r['verdict']}**")
+        # Power banner: an underpowered AMBIGUOUS is NOT evidence of no effect.
+        under = [r for r in result["h1"] if r["underpowered"]]
+        if under:
+            worst = max(r["floor"] for r in under)
+            L += ["",
+                  f"> ⚠ **POWER WARNING:** final-layer bootstrap_std up to {round(worst,4)} "
+                  f"exceeds the pre-registered target {result['h1'][0]['target']}. Any "
+                  f"AMBIGUOUS/FAIL above is likely UNDERPOWERED, not a real null — "
+                  f"**add prompts and re-run** before concluding. Do NOT read an "
+                  f"underpowered result as 'no effect' (this is the replan-#4 trap)."]
     else:
         L.append("- no (prompt, generated) pairs found — was generation extracted?")
 
@@ -150,15 +171,22 @@ def _render(result, thresholds, th_source):
         L.append(f"- **{r['model']}**: lowest-δ source = `{r['lowest_source']}` "
                  f"(thinking lowest: {r['thinking_is_lowest']}) — {r['finals']}")
 
-    # Overall one-liner.
+    # Overall one-liner. Distinguish a POWERED null (real "drop the framing")
+    # from an UNDERPOWERED soft result (add prompts, do NOT conclude).
     h1_pass = [r for r in result["h1"] if r["verdict"] == "PASS"]
+    any_underpowered = any(r["underpowered"] for r in result["h1"])
+    powered_null = result["h1"] and not h1_pass and not any_underpowered
     L += ["", "## Summary"]
     if h1_pass and result["h2"] and result["h2"]["verdict"] == "PASS":
         L.append("- **H1 + H2 PASS → the generation-amplifies-compression bridge holds.** "
                  "Raj's model-specific effect is explained; proceed with the WHEN framing.")
-    elif not h1_pass:
-        L.append("- **H1 does not pass on any model → drop the 'generation amplifies' framing.** "
-                 "Raj's effect is not about generation (or the run is underpowered — check floors).")
+    elif any_underpowered and not h1_pass:
+        L.append("- **UNDERPOWERED → inconclusive, NOT a null.** The floor exceeds the "
+                 "pre-registered target on at least one model, so H1 cannot be decided. "
+                 "**Add prompts and re-run** — do not drop the framing yet.")
+    elif powered_null:
+        L.append("- **H1 does not pass and the run IS powered → genuinely drop the "
+                 "'generation amplifies' framing.** Raj's effect is not about generation.")
     else:
         L.append("- **Partial** → report per-model; do not over-claim the bridge.")
     return "\n".join(L) + "\n"

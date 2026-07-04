@@ -32,6 +32,32 @@ def test_h1_passes_when_generated_more_treelike():
 def test_h1_fails_when_generated_not_lower():
     rows = _two_model_rows(gen_reasoning=0.62, gen_base=0.61)  # generated >= prompt
     res = when_contrast.score(rows, TH)
+    # powered (floor 0.005 < 0.02 target) + diff<=0 -> clean FAIL
+    assert all(r["verdict"] == "FAIL" for r in res["h1"])
+
+
+def _two_model_rows_floor(gen_reasoning, gen_base, floor):
+    rows = []
+    for model, gd in (("deepseek-r1-distill-qwen-7b", gen_reasoning),
+                      ("qwen2.5-7b", gen_base)):
+        rows.append(_row(model, 1, "input", "background", 0.60, floor=floor))
+        rows.append(_row(model, 1, "generated", "background", gd, floor=floor))
+    return rows
+
+
+def test_underpowered_ambiguous_flagged_not_null():
+    # small positive diff (0.04 < 0.05 margin) AND high floor (0.05 > 0.02 target)
+    rows = _two_model_rows_floor(gen_reasoning=0.56, gen_base=0.56, floor=0.05)
+    res = when_contrast.score(rows, TH)
+    assert all(r["underpowered"] for r in res["h1"])
+    assert all("underpowered" in r["verdict"] for r in res["h1"])
+
+
+def test_powered_null_is_clean_fail():
+    # generated NOT lower, low floor -> genuine powered FAIL (not underpowered)
+    rows = _two_model_rows_floor(gen_reasoning=0.61, gen_base=0.61, floor=0.004)
+    res = when_contrast.score(rows, TH)
+    assert all(not r["underpowered"] for r in res["h1"])
     assert all(r["verdict"] == "FAIL" for r in res["h1"])
 
 

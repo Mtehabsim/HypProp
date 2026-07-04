@@ -58,7 +58,11 @@ if run_stage rung0; then
   python -m hypprobe.geometry.rung0 --activations "$RESULTS_DIR/activations" \
     --project-root . --out "$RESULTS_DIR/geometry" \
     2>&1 | tee -a "$RESULTS_DIR/logs/rung0.log"
-  log "Rung 0 done -> READ $RESULTS_DIR/geometry/rung0_verdict.md before continuing"
+  log "WHEN: scoring H1/H2/H3 from rung0.csv against preregistered thresholds"
+  python -m hypprobe.geometry.when_contrast --geometry "$RESULTS_DIR/geometry" \
+    --project-root . 2>&1 | tee -a "$RESULTS_DIR/logs/when.log" || \
+    log "  (WHEN scorer skipped: needs generated-token rows in rung0.csv)"
+  log "Rung 0 done -> READ $RESULTS_DIR/geometry/{rung0_verdict.md, when_verdict.md}"
 fi
 
 # Phase 1 — geometry map + determinants (main science) + Raj reproduction

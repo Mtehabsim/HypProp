@@ -182,6 +182,29 @@ def run(activations_dir, out_dir, seed=0, n_bootstrap=25, pca_cap=256,
     return rows
 
 
+def _plateau_and_final(sub):
+    """Return (plateau_delta, final_row, plateau_noise_floor) for a set of
+    per-layer rows (one token_source, one metric).
+
+    The plateau is the MEDIAN delta over relative depth 0.35-0.70 (the Atlas's
+    plateau definition), not a single midpoint index -- so the "drop" matches the
+    Atlas construction on deep (e.g. 28-layer) models. Falls back to the middle
+    element if too few layers land in the band.
+    """
+    import numpy as _np
+
+    layers = sorted(sub, key=lambda r: r["layer"])
+    idxs = [r["layer"] for r in layers]
+    lo, hi = min(idxs), max(idxs)
+    span = max(hi - lo, 1)
+    band = [r for r in layers if 0.35 <= (r["layer"] - lo) / span <= 0.70]
+    if not band:
+        band = [layers[len(layers) // 2]]
+    plateau = float(_np.median([r["delta_rel"] for r in band]))
+    floor = max([r["noise_floor"] for r in band] + [1e-6])
+    return plateau, layers[-1], floor
+
+
 def _verdict(rows, th, th_source):
     """Gate A (controls behave) + Gate B (data survives) -> plain-English verdict."""
     lines = ["# Rung 0 verdict", "",
@@ -215,19 +238,17 @@ def _verdict(rows, th, th_source):
                and r["model"] == model and r["token_source"] == src]
         if len(sub) < 3:
             continue
-        layers = sorted(sub, key=lambda r: r["layer"])
-        final = layers[-1]
-        mid = layers[len(layers) // 2]
-        drop = mid["delta_rel"] - final["delta_rel"]        # positive = final more tree-like
-        floor = max(final["noise_floor"], mid["noise_floor"], 1e-6)
+        plateau, final, floor = _plateau_and_final(sub)
+        drop = plateau - final["delta_rel"]                 # positive = final more tree-like
+        floor = max(floor, final["noise_floor"], 1e-6)
         survives = drop > th["survive_margin"] and drop > th["min_effect_over_boot"] * floor
         # compare to raw: did whitening REMOVE the drop? (raw drop vs background drop)
         raw_sub = [r for r in rows if r["cloud_kind"] == "data" and r["metric"] == "raw"
                    and r["model"] == model and r["token_source"] == src]
         raw_drop = None
         if len(raw_sub) >= 3:
-            rl = sorted(raw_sub, key=lambda r: r["layer"])
-            raw_drop = rl[len(rl) // 2]["delta_rel"] - rl[-1]["delta_rel"]
+            rp, rf, _ = _plateau_and_final(raw_sub)
+            raw_drop = rp - rf["delta_rel"]
         tag = "REAL_HIERARCHY" if survives else "ANISOTROPY_ARTIFACT"
         verdicts.append(tag)
         lines.append(f"- **{model} / {src}**: raw drop={raw_drop if raw_drop is None else round(raw_drop,3)}, "

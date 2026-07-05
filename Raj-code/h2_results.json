@@ -1,0 +1,74 @@
+{
+  "experiment": "token_ablation_h2",
+  "generate_cot": true,
+  "n_samples": 200,
+  "layers": "[27]",
+  "output_dim": 5,
+  "results": [
+    {
+      "selection_method": "thinking_tokens",
+      "layer": 27,
+      "probe_type": "hyperbolic",
+      "spearman_rho": 0.8032524573042614,
+      "avg_distortion": 0.28088799118995667,
+      "n_tokens_used": 20.79,
+      "improvement_vs_all": 0.09072598300846646,
+      "config": {
+        "output_dim": 5,
+        "layer": 27
+      }
+    },
+    {
+      "selection_method": "attention_weighted",
+      "layer": 27,
+      "probe_type": "hyperbolic",
+      "spearman_rho": 0.49709242537997167,
+      "avg_distortion": 0.36158302426338196,
+      "n_tokens_used": 1.0,
+      "improvement_vs_all": -0.2154340489158233,
+      "config": {
+        "output_dim": 5,
+        "layer": 27
+      }
+    },
+    {
+      "selection_method": "all_pool",
+      "layer": 27,
+      "probe_type": "hyperbolic",
+      "spearman_rho": 0.712526474295795,
+      "avg_distortion": 0.31632256507873535,
+      "n_tokens_used": 310.435,
+      "improvement_vs_all": 0.0,
+      "config": {
+        "output_dim": 5,
+        "layer": 27
+      }
+    },
+    {
+      "selection_method": "last_token",
+      "layer": 27,
+      "probe_type": "hyperbolic",
+      "spearman_rho": 0.49709242537997167,
+      "avg_distortion": 0.36158302426338196,
+      "n_tokens_used": 1.0,
+      "improvement_vs_all": -0.2154340489158233,
+      "config": {
+        "output_dim": 5,
+        "layer": 27
+      }
+    },
+    {
+      "selection_method": "random",
+      "layer": 27,
+      "probe_type": "hyperbolic",
+      "spearman_rho": 0.6728767090237049,
+      "avg_distortion": 0.3163253366947174,
+      "n_tokens_used": 5.0,
+      "improvement_vs_all": -0.039649765272090076,
+      "config": {
+        "output_dim": 5,
+        "layer": 27
+      }
+    }
+  ]
+}

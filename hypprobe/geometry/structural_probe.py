@@ -24,43 +24,77 @@ from ..geometry import poincare
 from ..io import ensure_dir, iter_samples, log_line, save_csv
 
 
+def _maximum_distance_rescaling(v: torch.Tensor, r_max: float = 15.0) -> torch.Tensor:
+    """MDR (Guo et al. 2022; Bdeir et al. 2025): cap the tangent-vector norm.
+
+    ``v_rescaled = v * tanh(||v|| / r_max) * r_max / ||v||``.
+    Small vectors (||v|| << r_max) pass ~unchanged; large ones are smoothly pulled
+    back toward norm r_max. This is a hard guardrail that stops a vector from being
+    large enough to push its exp-map image onto the Poincare-ball boundary (where
+    the 1/(1 - c||z||^2) term in the distance blows up -> exploding gradients /
+    NaNs). It is the numerical safety net that keeps hyperbolic training stable.
+    """
+    norm = v.norm(dim=-1, keepdim=True).clamp_min(1e-12)
+    scale = torch.tanh(norm / r_max) * r_max / norm
+    return v * scale
+
+
 class StructuralProbe(nn.Module):
     """Learn a map so transformed distances match target tree distances.
 
-    Follows Raj (2026) / Chen et al. (2021) for the hyperbolic arm, which is NOT
-    a bare ``expmap0(Wx)``: raw LLM activations have norm ~1000, so ``Wx`` lands
-    at norm ~100 and ``expmap0`` saturates -- tanh(sqrt(c)*100)->1 pins every
-    point on the ball boundary, all pairwise distances collapse to ~equal, and
-    the probe scores rho~0 (a dead probe, not a weak one). Raj's recipe prevents
-    this with:
-      LayerNorm(h) -> W h' -> BOUNDED SCALING sigma(alpha)*tanh(z) -> expmap0.
-    The bounded scaling keeps points strictly inside the ball regardless of the
-    input norm; alpha (init 0.95) is learnable. Curvature default c=0.5 (Raj).
+    Full Raj (2026) / Chen et al. (2021) hyperbolic-probe recipe. A bare
+    ``expmap0(Wx)`` fails: raw LLM activations have norm ~1000, so ``Wx`` lands at
+    norm ~100 and ``expmap0`` saturates -- tanh(sqrt(c)*100)->1 pins every point on
+    the ball boundary, all pairwise distances collapse to ~equal, and the probe
+    scores rho~0 (a DEAD probe). Three complementary stabilisers prevent this, and
+    each fixes a different failure mode:
 
-    The Euclidean arm (curvature=0) uses the SAME LayerNorm + linear so the two
-    geometries are matched on everything except the exp map / distance -- which is
-    the whole point of the comparison.
+      LayerNorm(h)                      -- normalise the input (per-coord std ~1)
+      -> W h'  with SPECTRAL NORM on W  -- cap W's gain at 1 (||Wx|| <= ||x||); W
+                                           can rotate/shrink but never AMPLIFY, so
+                                           training cannot let the projection blow
+                                           up. This is the STABILITY fix: without
+                                           it the probe's effective gain wanders
+                                           and rho bounces erratically layer-to-layer.
+      -> BOUNDED SCALING sigma(alpha)*tanh(z)  -- force the point into (-1,1)^d,
+                                           strictly inside the ball BEFORE the exp
+                                           map. This is the ALIVENESS fix (kills the
+                                           rho~0 saturation).
+      -> MDR (cap norm at r_max=15)     -- hard guardrail so nothing reaches the
+                                           boundary singularity. NUMERICAL-SAFETY fix.
+      -> expmap0  (curvature c=0.5, Raj)
+
+    The Euclidean arm (curvature=0) uses the SAME LayerNorm + spectral-normed
+    linear, so the two geometries are matched on everything except the exp map /
+    distance -- which is the whole point of the comparison.
     """
 
-    def __init__(self, in_dim, proj_dim, curvature=0.5, seed=0):
+    def __init__(self, in_dim, proj_dim, curvature=0.5, seed=0, r_max=15.0):
         super().__init__()
         g = torch.Generator().manual_seed(seed)
         self.ln = nn.LayerNorm(in_dim)
-        self.B = nn.Linear(in_dim, proj_dim, bias=True)
+        lin = nn.Linear(in_dim, proj_dim, bias=True)
         with torch.no_grad():
-            self.B.weight.copy_(torch.randn(proj_dim, in_dim, generator=g) * 0.05)
-            self.B.bias.zero_()
+            lin.weight.copy_(torch.randn(proj_dim, in_dim, generator=g) * 0.05)
+            lin.bias.zero_()
+        # Spectral normalisation: constrains the largest singular value of the
+        # weight to 1 (power-iteration, updated each forward pass) so ||Wx|| <=
+        # ||x|| -- the projection can never amplify. Stabilises the fit.
+        self.B = nn.utils.spectral_norm(lin)
         # Learnable bounded-scaling gate (Raj init 0.95); only used for c>0.
         self.alpha = nn.Parameter(torch.tensor(0.95))
         self.curvature = curvature
+        self.r_max = r_max
 
     def transformed(self, x):
         z = self.B(self.ln(x))
         if self.curvature > 0:
-            # Bounded scaling: sigma(alpha)*tanh(z) lies in (-1, 1) per coord, so
-            # the point is strictly inside the ball BEFORE the exp map -> no
-            # boundary saturation. This is the fix for the rho~0 dead probe.
+            # Bounded scaling: sigma(alpha)*tanh(z) in (-1, 1) per coord -> strictly
+            # inside the ball before the exp map (aliveness fix).
             z = torch.sigmoid(self.alpha) * torch.tanh(z)
+            # MDR: hard norm cap so the exp-map image can't hit the boundary
+            # singularity (numerical-safety fix).
+            z = _maximum_distance_rescaling(z, self.r_max)
             return poincare.expmap0(z, self.curvature)
         return z
 

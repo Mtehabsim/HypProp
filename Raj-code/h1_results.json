@@ -1,0 +1,495 @@
+{
+  "experiment": "hierarchy_h1",
+  "config": {
+    "learning_rate": 0.001,
+    "epochs": 100,
+    "batch_size": 64,
+    "output_dim": 5,
+    "curvature": 0.5,
+    "mdr_max_norm": 15.0,
+    "weight_decay": 0.0001,
+    "early_stopping_patience": 10
+  },
+  "results": [
+    {
+      "probe_type": "euclidean",
+      "layer": 8,
+      "spearman_rho": 0.9638711940750904,
+      "avg_distortion": 0.08343888819217682,
+      "map_at_5": 0.398,
+      "stress": 0.06686783581972122,
+      "train_loss_final": 0.010380967520177364,
+      "epochs_trained": 56,
+      "config": {
+        "learning_rate": 0.001,
+        "epochs": 100,
+        "batch_size": 64,
+        "output_dim": 5,
+        "curvature": 0.5,
+        "mdr_max_norm": 15.0,
+        "weight_decay": 0.0001,
+        "early_stopping_patience": 10
+      }
+    },
+    {
+      "probe_type": "hyperbolic",
+      "layer": 8,
+      "spearman_rho": 0.957865192724889,
+      "avg_distortion": 0.9215215444564819,
+      "map_at_5": 0.292,
+      "stress": 0.9218176007270813,
+      "train_loss_final": 0.7194667458534241,
+      "epochs_trained": 57,
+      "config": {
+        "learning_rate": 0.001,
+        "epochs": 100,
+        "batch_size": 64,
+        "output_dim": 5,
+        "curvature": 0.5,
+        "mdr_max_norm": 15.0,
+        "weight_decay": 0.0001,
+        "early_stopping_patience": 10
+      }
+    },
+    {
+      "probe_type": "lorentz",
+      "layer": 8,
+      "spearman_rho": 0.029144247240744284,
+      "avg_distortion": 5.080783843994141,
+      "map_at_5": 0.08,
+      "stress": 4.34727668762207,
+      "train_loss_final": 19.33321189880371,
+      "epochs_trained": 33,
+      "config": {
+        "learning_rate": 0.001,
+        "epochs": 100,
+        "batch_size": 64,
+        "output_dim": 5,
+        "curvature": 0.5,
+        "mdr_max_norm": 15.0,
+        "weight_decay": 0.0001,
+        "early_stopping_patience": 10
+      }
+    },
+    {
+      "probe_type": "euclidean",
+      "layer": 12,
+      "spearman_rho": 0.9688926793140532,
+      "avg_distortion": 0.0688970535993576,
+      "map_at_5": 0.33000000000000007,
+      "stress": 0.05360663682222366,
+      "train_loss_final": 0.00814221054315567,
+      "epochs_trained": 51,
+      "config": {
+        "learning_rate": 0.001,
+        "epochs": 100,
+        "batch_size": 64,
+        "output_dim": 5,
+        "curvature": 0.5,
+        "mdr_max_norm": 15.0,
+        "weight_decay": 0.0001,
+        "early_stopping_patience": 10
+      }
+    },
+    {
+      "probe_type": "hyperbolic",
+      "layer": 12,
+      "spearman_rho": 0.9678126607222649,
+      "avg_distortion": 0.9083924293518066,
+      "map_at_5": 0.26799999999999996,
+      "stress": 0.9087667465209961,
+      "train_loss_final": 0.6772517561912537,
+      "epochs_trained": 53,
+      "config": {
+        "learning_rate": 0.001,
+        "epochs": 100,
+        "batch_size": 64,
+        "output_dim": 5,
+        "curvature": 0.5,
+        "mdr_max_norm": 15.0,
+        "weight_decay": 0.0001,
+        "early_stopping_patience": 10
+      }
+    },
+    {
+      "probe_type": "lorentz",
+      "layer": 12,
+      "spearman_rho": -0.014463104313253,
+      "avg_distortion": 4.753874778747559,
+      "map_at_5": 0.09,
+      "stress": 4.131404876708984,
+      "train_loss_final": 14.360219955444336,
+      "epochs_trained": 52,
+      "config": {
+        "learning_rate": 0.001,
+        "epochs": 100,
+        "batch_size": 64,
+        "output_dim": 5,
+        "curvature": 0.5,
+        "mdr_max_norm": 15.0,
+        "weight_decay": 0.0001,
+        "early_stopping_patience": 10
+      }
+    },
+    {
+      "probe_type": "euclidean",
+      "layer": 16,
+      "spearman_rho": 0.9426726517626749,
+      "avg_distortion": 1.6682015657424927,
+      "map_at_5": 0.23800000000000002,
+      "stress": 1.6363805532455444,
+      "train_loss_final": 0.15530259907245636,
+      "epochs_trained": 12,
+      "config": {
+        "learning_rate": 0.001,
+        "epochs": 100,
+        "batch_size": 64,
+        "output_dim": 5,
+        "curvature": 0.5,
+        "mdr_max_norm": 15.0,
+        "weight_decay": 0.0001,
+        "early_stopping_patience": 10
+      }
+    },
+    {
+      "probe_type": "hyperbolic",
+      "layer": 16,
+      "spearman_rho": 0.9679020247612977,
+      "avg_distortion": 0.8736053705215454,
+      "map_at_5": 0.278,
+      "stress": 0.8740060329437256,
+      "train_loss_final": 0.5679674744606018,
+      "epochs_trained": 59,
+      "config": {
+        "learning_rate": 0.001,
+        "epochs": 100,
+        "batch_size": 64,
+        "output_dim": 5,
+        "curvature": 0.5,
+        "mdr_max_norm": 15.0,
+        "weight_decay": 0.0001,
+        "early_stopping_patience": 10
+      }
+    },
+    {
+      "probe_type": "lorentz",
+      "layer": 16,
+      "spearman_rho": 0.04619960828793518,
+      "avg_distortion": 4.727046012878418,
+      "map_at_5": 0.05,
+      "stress": 4.24584436416626,
+      "train_loss_final": 19.180374145507812,
+      "epochs_trained": 20,
+      "config": {
+        "learning_rate": 0.001,
+        "epochs": 100,
+        "batch_size": 64,
+        "output_dim": 5,
+        "curvature": 0.5,
+        "mdr_max_norm": 15.0,
+        "weight_decay": 0.0001,
+        "early_stopping_patience": 10
+      }
+    },
+    {
+      "probe_type": "euclidean",
+      "layer": 19,
+      "spearman_rho": 0.7946330810613057,
+      "avg_distortion": 1.3472460508346558,
+      "map_at_5": 0.17999999999999997,
+      "stress": 1.306173324584961,
+      "train_loss_final": 0.19374608993530273,
+      "epochs_trained": 12,
+      "config": {
+        "learning_rate": 0.001,
+        "epochs": 100,
+        "batch_size": 64,
+        "output_dim": 5,
+        "curvature": 0.5,
+        "mdr_max_norm": 15.0,
+        "weight_decay": 0.0001,
+        "early_stopping_patience": 10
+      }
+    },
+    {
+      "probe_type": "hyperbolic",
+      "layer": 19,
+      "spearman_rho": 0.9691211518325517,
+      "avg_distortion": 0.9031959772109985,
+      "map_at_5": 0.272,
+      "stress": 0.9036828875541687,
+      "train_loss_final": 0.4833907186985016,
+      "epochs_trained": 57,
+      "config": {
+        "learning_rate": 0.001,
+        "epochs": 100,
+        "batch_size": 64,
+        "output_dim": 5,
+        "curvature": 0.5,
+        "mdr_max_norm": 15.0,
+        "weight_decay": 0.0001,
+        "early_stopping_patience": 10
+      }
+    },
+    {
+      "probe_type": "lorentz",
+      "layer": 19,
+      "spearman_rho": 0.014136714830137863,
+      "avg_distortion": 5.0933308601379395,
+      "map_at_5": 0.09399999999999999,
+      "stress": 4.456991672515869,
+      "train_loss_final": 19.897266387939453,
+      "epochs_trained": 23,
+      "config": {
+        "learning_rate": 0.001,
+        "epochs": 100,
+        "batch_size": 64,
+        "output_dim": 5,
+        "curvature": 0.5,
+        "mdr_max_norm": 15.0,
+        "weight_decay": 0.0001,
+        "early_stopping_patience": 10
+      }
+    },
+    {
+      "probe_type": "euclidean",
+      "layer": 21,
+      "spearman_rho": 0.9545202642274275,
+      "avg_distortion": 0.11193902045488358,
+      "map_at_5": 0.31,
+      "stress": 0.09462043642997742,
+      "train_loss_final": 0.016527052968740463,
+      "epochs_trained": 72,
+      "config": {
+        "learning_rate": 0.001,
+        "epochs": 100,
+        "batch_size": 64,
+        "output_dim": 5,
+        "curvature": 0.5,
+        "mdr_max_norm": 15.0,
+        "weight_decay": 0.0001,
+        "early_stopping_patience": 10
+      }
+    },
+    {
+      "probe_type": "hyperbolic",
+      "layer": 21,
+      "spearman_rho": 0.9687202772495459,
+      "avg_distortion": 0.7737340331077576,
+      "map_at_5": 0.282,
+      "stress": 0.7750781178474426,
+      "train_loss_final": 0.4597310423851013,
+      "epochs_trained": 61,
+      "config": {
+        "learning_rate": 0.001,
+        "epochs": 100,
+        "batch_size": 64,
+        "output_dim": 5,
+        "curvature": 0.5,
+        "mdr_max_norm": 15.0,
+        "weight_decay": 0.0001,
+        "early_stopping_patience": 10
+      }
+    },
+    {
+      "probe_type": "lorentz",
+      "layer": 21,
+      "spearman_rho": 0.0660642955524153,
+      "avg_distortion": 4.747309684753418,
+      "map_at_5": 0.066,
+      "stress": 4.3102312088012695,
+      "train_loss_final": 22.914836883544922,
+      "epochs_trained": 29,
+      "config": {
+        "learning_rate": 0.001,
+        "epochs": 100,
+        "batch_size": 64,
+        "output_dim": 5,
+        "curvature": 0.5,
+        "mdr_max_norm": 15.0,
+        "weight_decay": 0.0001,
+        "early_stopping_patience": 10
+      }
+    },
+    {
+      "probe_type": "euclidean",
+      "layer": 23,
+      "spearman_rho": 0.5333163241862254,
+      "avg_distortion": 2.5643107891082764,
+      "map_at_5": 0.19399999999999998,
+      "stress": 2.485360622406006,
+      "train_loss_final": 0.03286992013454437,
+      "epochs_trained": 55,
+      "config": {
+        "learning_rate": 0.001,
+        "epochs": 100,
+        "batch_size": 64,
+        "output_dim": 5,
+        "curvature": 0.5,
+        "mdr_max_norm": 15.0,
+        "weight_decay": 0.0001,
+        "early_stopping_patience": 10
+      }
+    },
+    {
+      "probe_type": "hyperbolic",
+      "layer": 23,
+      "spearman_rho": 0.964154739123856,
+      "avg_distortion": 0.6897125244140625,
+      "map_at_5": 0.258,
+      "stress": 0.6931212544441223,
+      "train_loss_final": 0.4472769498825073,
+      "epochs_trained": 62,
+      "config": {
+        "learning_rate": 0.001,
+        "epochs": 100,
+        "batch_size": 64,
+        "output_dim": 5,
+        "curvature": 0.5,
+        "mdr_max_norm": 15.0,
+        "weight_decay": 0.0001,
+        "early_stopping_patience": 10
+      }
+    },
+    {
+      "probe_type": "lorentz",
+      "layer": 23,
+      "spearman_rho": 0.05592832212910321,
+      "avg_distortion": 5.057046890258789,
+      "map_at_5": 0.06200000000000001,
+      "stress": 4.404956817626953,
+      "train_loss_final": 16.27460289001465,
+      "epochs_trained": 66,
+      "config": {
+        "learning_rate": 0.001,
+        "epochs": 100,
+        "batch_size": 64,
+        "output_dim": 5,
+        "curvature": 0.5,
+        "mdr_max_norm": 15.0,
+        "weight_decay": 0.0001,
+        "early_stopping_patience": 10
+      }
+    },
+    {
+      "probe_type": "euclidean",
+      "layer": 25,
+      "spearman_rho": 0.724867015543285,
+      "avg_distortion": 3.0505566596984863,
+      "map_at_5": 0.16399999999999998,
+      "stress": 3.1186773777008057,
+      "train_loss_final": 0.765799880027771,
+      "epochs_trained": 21,
+      "config": {
+        "learning_rate": 0.001,
+        "epochs": 100,
+        "batch_size": 64,
+        "output_dim": 5,
+        "curvature": 0.5,
+        "mdr_max_norm": 15.0,
+        "weight_decay": 0.0001,
+        "early_stopping_patience": 10
+      }
+    },
+    {
+      "probe_type": "hyperbolic",
+      "layer": 25,
+      "spearman_rho": 0.9619284992012892,
+      "avg_distortion": 0.5929221510887146,
+      "map_at_5": 0.24599999999999997,
+      "stress": 0.6023203730583191,
+      "train_loss_final": 0.38532501459121704,
+      "epochs_trained": 65,
+      "config": {
+        "learning_rate": 0.001,
+        "epochs": 100,
+        "batch_size": 64,
+        "output_dim": 5,
+        "curvature": 0.5,
+        "mdr_max_norm": 15.0,
+        "weight_decay": 0.0001,
+        "early_stopping_patience": 10
+      }
+    },
+    {
+      "probe_type": "lorentz",
+      "layer": 25,
+      "spearman_rho": 0.048159589865799955,
+      "avg_distortion": 4.850317001342773,
+      "map_at_5": 0.07800000000000001,
+      "stress": 4.3604936599731445,
+      "train_loss_final": 22.371789932250977,
+      "epochs_trained": 36,
+      "config": {
+        "learning_rate": 0.001,
+        "epochs": 100,
+        "batch_size": 64,
+        "output_dim": 5,
+        "curvature": 0.5,
+        "mdr_max_norm": 15.0,
+        "weight_decay": 0.0001,
+        "early_stopping_patience": 10
+      }
+    },
+    {
+      "probe_type": "euclidean",
+      "layer": 27,
+      "spearman_rho": 0.967956055921638,
+      "avg_distortion": 0.06571434438228607,
+      "map_at_5": 0.20999999999999996,
+      "stress": 0.056849297136068344,
+      "train_loss_final": 0.015513766556978226,
+      "epochs_trained": 100,
+      "config": {
+        "learning_rate": 0.001,
+        "epochs": 100,
+        "batch_size": 64,
+        "output_dim": 5,
+        "curvature": 0.5,
+        "mdr_max_norm": 15.0,
+        "weight_decay": 0.0001,
+        "early_stopping_patience": 10
+      }
+    },
+    {
+      "probe_type": "hyperbolic",
+      "layer": 27,
+      "spearman_rho": 0.9687711606145543,
+      "avg_distortion": 0.14744669198989868,
+      "map_at_5": 0.296,
+      "stress": 0.13354910910129547,
+      "train_loss_final": 0.02094525657594204,
+      "epochs_trained": 100,
+      "config": {
+        "learning_rate": 0.001,
+        "epochs": 100,
+        "batch_size": 64,
+        "output_dim": 5,
+        "curvature": 0.5,
+        "mdr_max_norm": 15.0,
+        "weight_decay": 0.0001,
+        "early_stopping_patience": 10
+      }
+    },
+    {
+      "probe_type": "lorentz",
+      "layer": 27,
+      "spearman_rho": 0.12850685701303208,
+      "avg_distortion": 7.506907939910889,
+      "map_at_5": 0.08599999999999998,
+      "stress": 5.651460647583008,
+      "train_loss_final": 26.399782180786133,
+      "epochs_trained": 11,
+      "config": {
+        "learning_rate": 0.001,
+        "epochs": 100,
+        "batch_size": 64,
+        "output_dim": 5,
+        "curvature": 0.5,
+        "mdr_max_norm": 15.0,
+        "weight_decay": 0.0001,
+        "early_stopping_patience": 10
+      }
+    }
+  ]
+}

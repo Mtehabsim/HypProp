@@ -48,34 +48,79 @@ _SYNONYMS = {
     "quick": "fast", "begin": "start", "show": "display", "use": "employ",
 }
 
+# Task scaffolding that must survive nonce-ing verbatim: renaming these turns a
+# solvable task into gibberish (v1 turned "True or False" into "Zami or Fude"),
+# which conflates "meaning destroyed" with "task destroyed".
+_SCAFFOLD_WORDS = {"true", "false", "question", "answer", "reason", "step",
+                   "explain", "describe", "every"}
 
-def _pseudoword(token: str, seed_offset: int) -> str:
-    """Deterministic pseudo-word roughly matching the length of ``token``."""
-    n_syll = max(1, min(4, len(token) // 2))
-    out = []
-    for i in range(n_syll):
-        out.append(_SYLL[(len(token) + i + seed_offset) % len(_SYLL)])
-    word = "".join(out)
-    return word.capitalize() if token[:1].isupper() else word
+# Template-level rewrites for the paraphrase control. v1's word-level synonym
+# dict produced BYTE-IDENTICAL output on 300/300 PrOntoQA prompts (none of its
+# 11 words occur there) -> a vacuous control. These operate on the shared
+# instruction scaffolding, which every builder's prompts contain, and preserve
+# meaning while guaranteeing a surface change.
+_TEMPLATE_REWRITES = [
+    ("Reason step by step, then answer True or False.",
+     "Think it through carefully, then reply with True or False."),
+    ("Question: Is it true or false that",
+     "Question: Would you say it is true or false that"),
+    ("Describe:", "Give a description of:"),
+]
+
+
+def _pseudoword(word: str, mapping: dict) -> str:
+    """One consistent pseudo-word per unique word (case-insensitive).
+
+    Keyed on the WORD (not its position): v1 keyed on (length, position), so
+    'rompus' at two positions became two different pseudowords, shattering the
+    coreference chains the nonce control must preserve ('same structure,
+    destroyed meaning' requires the structure — including repeated mentions —
+    to survive).
+    """
+    key = word.lower()
+    if key not in mapping:
+        h = sum((i + 1) * ord(ch) for i, ch in enumerate(key))
+        n_syll = max(2, min(4, len(key) // 2))
+        mapping[key] = "".join(_SYLL[(h + 7 * i) % len(_SYLL)] for i in range(n_syll))
+    out = mapping[key]
+    return out.capitalize() if word[:1].isupper() else out
 
 
 def make_nonce(prompt: str) -> str:
-    """Replace content words with pseudo-words, keep structure/function words."""
+    """Replace content words with per-prompt-CONSISTENT pseudo-words.
+
+    Function words, task scaffolding (True/False, Question, ...), and
+    non-alphabetic tokens survive; every other unique word maps to ONE
+    pseudo-word reused at all its occurrences, so chains like 'Every rompus is
+    a lorpus. Alex is a rompus.' keep their link structure.
+    """
+    mapping: dict[str, str] = {}
     out_tokens = []
-    for i, tok in enumerate(prompt.split(" ")):
+    for tok in prompt.split(" "):
         core = tok.strip(".,!?;:\"'")
         suffix = tok[len(tok.rstrip(".,!?;:\"'")):] if tok else ""
-        if core.lower() in FUNCTION_WORDS or not core.isalpha():
+        low = core.lower()
+        if low in FUNCTION_WORDS or low in _SCAFFOLD_WORDS or not core.isalpha():
             out_tokens.append(tok)
         else:
-            out_tokens.append(_pseudoword(core, i) + suffix)
+            out_tokens.append(_pseudoword(core, mapping) + suffix)
     return " ".join(out_tokens)
 
 
 def make_paraphrase(prompt: str) -> str:
-    """Light meaning-preserving rewrite via conservative synonym swaps."""
+    """Meaning-preserving rewrite: template-level rewrites + synonym swaps.
+
+    Guaranteed non-identical wherever a known template phrase occurs (all
+    builders' prompts contain one); augment_jsonl additionally REFUSES to emit
+    a variant identical to its original, so a vacuous control can never reach
+    extraction again.
+    """
+    text = prompt
+    for old, new in _TEMPLATE_REWRITES:
+        if old in text:
+            text = text.replace(old, new)
     out_tokens = []
-    for tok in prompt.split(" "):
+    for tok in text.split(" "):
         core = tok.strip(".,!?;:\"'").lower()
         if core in _SYNONYMS:
             repl = _SYNONYMS[core]
@@ -88,8 +133,15 @@ def make_paraphrase(prompt: str) -> str:
 
 
 def augment_jsonl(in_path: str, out_path: str, kinds=("nonce", "paraphrase")) -> int:
-    """Read a prepared jsonl and write it plus variant rows to ``out_path``."""
+    """Read a prepared jsonl and write it plus variant rows to ``out_path``.
+
+    HARD GUARD: a variant that is byte-identical to its original is refused
+    (raise), never silently emitted — with greedy decoding an identical prompt
+    yields identical activations, which turns the meaning control into a
+    guaranteed-zero placebo (the v1 paraphrase failure: 300/300 identical).
+    """
     rows = []
+    n_identical = 0
     with open(in_path) as fh:
         for line in fh:
             obj = json.loads(line)
@@ -98,9 +150,21 @@ def augment_jsonl(in_path: str, out_path: str, kinds=("nonce", "paraphrase")) ->
             rows.append(obj)
             for kind in kinds:
                 text = make_nonce(obj["prompt"]) if kind == "nonce" else make_paraphrase(obj["prompt"])
+                if text == obj["prompt"]:
+                    n_identical += 1
+                    continue  # skip the vacuous row; count and report below
                 rows.append({**obj, "prompt": text, "variant": kind,
                              "orig_id": obj["sample_id"],
                              "sample_id": f"{obj['sample_id']}__{kind}"})
+    n_orig = sum(1 for r in rows if r["variant"] == "original")
+    for kind in kinds:
+        n_kind = sum(1 for r in rows if r["variant"] == kind)
+        if n_kind < 0.5 * n_orig:
+            raise SystemExit(
+                f"[variants] '{kind}' produced a non-identical variant for only "
+                f"{n_kind}/{n_orig} prompts ({n_identical} identical rows skipped). "
+                f"A control this sparse is vacuous — fix make_{kind} for this "
+                f"dataset before extracting.")
     ensure_dir(os.path.dirname(out_path) or ".")
     with open(out_path, "w") as fh:
         for r in rows:

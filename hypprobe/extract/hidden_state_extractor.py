@@ -67,7 +67,10 @@ def extract_model_dataset(model_name, dataset, samples, out_dir, logfile,
                    sample_id=s["sample_id"], label=s.get("label", 0),
                    label_path=s.get("label_path", []),
                    variant=s.get("variant", "original"),
-                   orig_id=s.get("orig_id", s["sample_id"]))
+                   orig_id=s.get("orig_id", s["sample_id"]),
+                   # provenance (per-sample, so it survives file reshuffles)
+                   chat_mode=chat_mode, max_new_tokens=max_new_tokens,
+                   dtype=dtype)
         torch.save(rec, sample_path(out_dir, model_name, dataset, s["sample_id"]))
         written += 1
         if written % 25 == 0:
@@ -133,7 +136,11 @@ def _extract_one(model, tok, matcher, sample, max_new_tokens, device, chat_mode=
     hidden = torch.stack([torch.cat(chunks, dim=0) for chunks in layer_chunks], dim=0)
     hidden = hidden.float().cpu()                            # (n_layers, n_tok, h) fp32
 
-    # Align token count (hidden may cover n_total tokens).
+    # Align token count (hidden may cover n_total tokens). NOTE: with KV-cache
+    # generation the FINAL sampled token is never re-fed, so hidden has
+    # n_total - 1 rows; everything below is sized to hidden's n_tok, and
+    # n_generated_with_states records the count that actually has states
+    # (v1's n_generated over-counted by exactly 1).
     n_tok = hidden.shape[1]
     ids = seq[:n_tok]
     tokens = tok.convert_ids_to_tokens(ids.tolist())
@@ -141,6 +148,12 @@ def _extract_one(model, tok, matcher, sample, max_new_tokens, device, chat_mode=
     is_generated = positions >= prompt_len
     # Match reasoning markers only among generated tokens, tokenizer-aware.
     is_thinking = matcher.mask(tokens, start=prompt_len)
+
+    # Truncation flag: did generation hit the cap instead of emitting EOS?
+    # If True, the 'last' token is a mid-trace cut point, not a conclusion
+    # state — downstream 'last'-source analyses must split on this flag.
+    hit_cap = bool(n_gen >= max_new_tokens
+                   and seq[-1].item() != (tok.eos_token_id or -1))
 
     return {
         "hidden": hidden,
@@ -151,6 +164,9 @@ def _extract_one(model, tok, matcher, sample, max_new_tokens, device, chat_mode=
         "text": tok.decode(seq[prompt_len:], skip_special_tokens=True),
         "prompt_len": prompt_len,
         "n_generated": int(n_gen),
+        "n_generated_with_states": int(is_generated.sum()),
+        "truncated": hit_cap,
+        "used_chat_template": used_chat,
     }
 
 
@@ -188,6 +204,9 @@ def main(argv=None):
     ensure_dir(args.out)
     logfile = os.path.join(os.path.dirname(args.out.rstrip("/")) or ".",
                            "logs", "extract.log")
+    from ..manifest import write_manifest
+    write_manifest(args.out, f"extract_{args.model.replace('/', '_')}",
+                   args=vars(args))
     for ds in args.datasets:
         samples = _load_samples(ds, args.cache)
         if args.limit:

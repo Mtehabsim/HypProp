@@ -19,7 +19,8 @@ MODELS=("Qwen/Qwen2.5-7B-Instruct" "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B" \
         "meta-llama/Llama-Guard-3-8B" "Qwen/Qwen2.5-7B")
 # wordnet_control = hierarchy positive control; flat_control = NEGATIVE control
 # (binary, non-hierarchical -> hyperbolic should NOT win; red flag if it does).
-DATASETS=("ailuminate" "aegis" "wos" "wordnet_control" "flat_control")
+# prontoqa was missing here even though the DGX run used it (provenance bug).
+DATASETS=("prontoqa" "ailuminate" "aegis" "wos" "wordnet_control" "flat_control")
 SEEDS=(0 1 2 3 4)
 RESULTS_DIR="./results"
 DTYPE="fp32"          # fp32 recommended (bf16 breaks near the Poincare boundary)
@@ -41,7 +42,12 @@ run_stage() { [ "$STAGE" = "all" ] || [ "$STAGE" = "$1" ]; }
 # Phase 0 — data + extraction
 if run_stage extract; then
   log "Phase 0: caching datasets (with nonce/paraphrase variants for the meaning control)"
-  python -m hypprobe.data.prepare --datasets "${DATASETS[@]}" --variants --out "$RESULTS_DIR/data_cache"
+  # Per-dataset so one missing real corpus (license-gated ailuminate/aegis/wos)
+  # skips with a log line instead of killing the whole run under set -e.
+  for ds in "${DATASETS[@]}"; do
+    python -m hypprobe.data.prepare --datasets "$ds" --variants --out "$RESULTS_DIR/data_cache" \
+      || log "  (skipped $ds: raw corpus not present — see logs/prepare.log)"
+  done
   log "Phase 0: extracting hidden states (needs GPU + transformers)"
   for m in "${MODELS[@]}"; do
     [ -z "$m" ] && continue

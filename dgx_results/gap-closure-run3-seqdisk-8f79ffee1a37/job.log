@@ -37,3 +37,22 @@ arm deepseek-ai_DeepSeek-R1-Distill-Qwen-7B__plain activations size: 93G
 [17:21:23] WARNING: deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa [plain]: 30% of generations truncated at the cap — 'last'-token analyses are contaminated; raise --max-new-tokens or split by the flag.
 audit flagged warnings (see CSV)
 --- atlas_forensics deepseek-ai_DeepSeek-R1-Distill-Qwen-7B__plain ---
+[17:29:00] atlas_forensics done
+ATLAS FORENSICS
+===============
+Euclidean ceiling of Eq.5/Eq.6 delta_rel: 0.2929 (analytic, unit square)
+  numeric check: worst over 60k random 4-point configs = 0.2855; unit square = 0.2929
+  => any Euclidean cloud satisfies delta_rel <= 0.2929; the Atlas's reported ~0.995 medians are unattainable under their own printed formula. Our measured ~0.08 is ~27% of the true ceiling.
+
+[deepseek-ai/DeepSeek-R1-Distill-Qwen-7B] candidate-statistic sweep (median across prompts):
+  eq56_delta_rel            : plateau=   0.024 final=   0.099
+  one_minus_delta_rel       : plateau=   0.976 final=   0.901
+  max_gromov_over_diam      : plateau=   0.853 final=   0.755
+  defect_over_meddist       : plateau=   0.108 final=   0.198
+  defect_over_mindist       : plateau=   0.620 final=   2.993
+  minform_over_maxgromov    : plateau=   0.051 final=   0.131
+  defect_unnorm             : plateau=  19.123 final=  41.457
+
+--- rung0_v2 deepseek-ai_DeepSeek-R1-Distill-Qwen-7B__plain ---
+[17:29:03] rung0_v2 thresholds from PREREGISTER2.md: {'parity_min_plateau': 0.2, 'span_effect_frac': 0.15, 'min_effect_over_floor': 3.0, 'h1_alpha': 0.05, 'gate_a_flat_frac': 0.5, 'gate_a_tree_frac': 0.5}
+[17:35:02] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa: fitting per-layer balanced backgrounds

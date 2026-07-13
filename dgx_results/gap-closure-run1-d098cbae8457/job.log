@@ -1,0 +1,49 @@
+=== gap-closure run starting on dgx02 ===
+torch 2.12.1+cu130 cuda True
+[14:48:57] NOTE: hypll not installed (pip install hypll) — the matched probe will skip the library cross-check
+[14:48:57] Phase 0: preparing prontoqa (+ non-vacuous variants)
+[14:48:59] prepared prontoqa: 300 samples, 5 classes -> ./results/data_cache_v2/prontoqa.jsonl
+[14:48:59]   + variants: prontoqa now 900 rows (original+nonce+paraphrase)
+[14:49:00] Phase 0: extracting deepseek-ai/DeepSeek-R1-Distill-Qwen-7B [plain] (300 samples, max_new_tokens=1024)
+The cache for model files in Transformers v4.22.0 has been updated. Migrating your old cache. This is a one-time only operation. You can interrupt this and resume the migration later on by calling `transformers.utils.move_cache()`.
+0it [00:00, ?it/s]0it [00:00, ?it/s]
+[14:49:05] extracting 300 samples for deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa
+[14:49:10] loading deepseek-ai/DeepSeek-R1-Distill-Qwen-7B (fp32) on cuda
+Downloading shards:   0%|          | 0/2 [00:00<?, ?it/s]/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/huggingface_hub/file_download.py:805: UserWarning: Not enough free disk space to download the file. The expected file size is: 8606.60 MB. The target location /network/rit/home/balhousani_alhussien/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-R1-Distill-Qwen-7B/blobs only has 2176.84 MB free disk space.
+  warnings.warn(
+Downloading shards:   0%|          | 0/2 [00:15<?, ?it/s]
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/mnt/lab/Mo/hyperbolic1/HypProp/hypprobe/extract/hidden_state_extractor.py", line 222, in <module>
+    main()
+  File "/mnt/lab/Mo/hyperbolic1/HypProp/hypprobe/extract/hidden_state_extractor.py", line 215, in main
+    extract_model_dataset(args.model, ds, samples, args.out, logfile,
+  File "/mnt/lab/Mo/hyperbolic1/HypProp/hypprobe/extract/hidden_state_extractor.py", line 48, in extract_model_dataset
+    model = AutoModelForCausalLM.from_pretrained(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/transformers/models/auto/auto_factory.py", line 564, in from_pretrained
+    return model_class.from_pretrained(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/transformers/modeling_utils.py", line 3974, in from_pretrained
+    resolved_archive_file, sharded_metadata = get_checkpoint_shard_files(
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/transformers/utils/hub.py", line 1098, in get_checkpoint_shard_files
+    cached_filename = cached_file(
+                      ^^^^^^^^^^^^
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/transformers/utils/hub.py", line 403, in cached_file
+    resolved_file = hf_hub_download(
+                    ^^^^^^^^^^^^^^^^
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/huggingface_hub/file_download.py", line 1014, in hf_hub_download
+    return _hf_hub_download_to_cache_dir(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/huggingface_hub/file_download.py", line 1175, in _hf_hub_download_to_cache_dir
+    _download_to_tmp_and_move(
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/huggingface_hub/file_download.py", line 1727, in _download_to_tmp_and_move
+    xet_get(
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/huggingface_hub/file_download.py", line 633, in xet_get
+    download_files(
+OSError: I/O error: IO Error: No space left on device (os error 28)

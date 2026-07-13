@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# NAME: gap-closure-run1
+# NAME: gap-closure-run2
 #
 # The current DGX job. dgx_agent.sh runs this file whenever its content hash
 # changes, with:
@@ -12,7 +12,14 @@
 set -euo pipefail
 cd "$(git rev-parse --show-toplevel)"
 
+# Fix: home dir has no space for model weights. Use the lab mount for caches.
+export HF_HOME="/mnt/lab/Mo/hyperbolic1/.hf_cache"
+export TRANSFORMERS_CACHE="$HF_HOME/hub"
+mkdir -p "$HF_HOME" "$TRANSFORMERS_CACHE"
+
 echo "=== gap-closure run starting on $(hostname) ==="
+echo "HF_HOME=$HF_HOME"
+df -h /mnt/lab/Mo/ | tail -1
 python -c "import torch; print('torch', torch.__version__, 'cuda', torch.cuda.is_available())"
 
 # Smoke-scale knob: bump LIMIT once the wiring is proven.

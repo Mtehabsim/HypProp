@@ -1,0 +1,5 @@
+host: dgx02
+started: 2026-07-13T14:48:27-04:00
+job: gap-closure-run1 (d098cbae8457)
+name, memory.total [MiB], memory.used [MiB]
+NVIDIA A100-SXM4-80GB, 81920 MiB, 0 MiB

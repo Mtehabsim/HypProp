@@ -1,0 +1,5 @@
+host: dgx02
+started: 2026-07-13T15:44:49-04:00
+job: gap-closure-run3-seqdisk (8f79ffee1a37)
+name, memory.total [MiB], memory.used [MiB]
+NVIDIA A100-SXM4-80GB, 81920 MiB, 0 MiB

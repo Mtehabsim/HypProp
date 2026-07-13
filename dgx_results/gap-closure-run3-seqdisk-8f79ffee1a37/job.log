@@ -17,3 +17,4 @@ torch 2.12.1+cu130 cuda True
   warnings.warn(
 From v4.47 onwards, when a model cache is to be returned, `generate` will return a `Cache` instance instead by default (as opposed to the legacy tuple of tuples format). If you want to keep returning the legacy format, please set `return_legacy_cache=True`.
 [15:53:50]   prontoqa: 25/300 (last had 51 thinking tokens)
+[16:01:09]   prontoqa: 50/300 (last had 38 thinking tokens)

@@ -43,6 +43,13 @@ results/security/*
 !results/security/*.png
 !results/security/*.json
 
+# DGX git-bridge: dgx_results/ holds shipped-back evidence (CSVs, verdicts,
+# job.log). The global *.log rule must not block them, so they are un-ignored.
+!dgx_results/
+!dgx_results/**
+dgx_results/**/*.oversize.local
+.dgx_agent.pid
+
 # Environments
 .venv/
 venv/

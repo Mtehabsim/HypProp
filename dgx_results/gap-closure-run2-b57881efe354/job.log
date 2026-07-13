@@ -24,3 +24,4 @@ From v4.47 onwards, when a model cache is to be returned, `generate` will return
 [15:16:17]   prontoqa: 75/300 (last had 20 thinking tokens)
 [15:24:24]   prontoqa: 100/300 (last had 34 thinking tokens)
 [15:32:02]   prontoqa: 125/300 (last had 34 thinking tokens)
+[15:39:31]   prontoqa: 150/300 (last had 19 thinking tokens)

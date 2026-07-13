@@ -145,3 +145,13 @@ From v4.47 onwards, when a model cache is to be returned, `generate` will return
 [19:10:31]   prontoqa: 200/300 (last had 17 thinking tokens)
 [19:15:41]   prontoqa: 225/300 (last had 10 thinking tokens)
 [19:21:31]   prontoqa: 250/300 (last had 16 thinking tokens)
+[19:27:31]   prontoqa: 275/300 (last had 17 thinking tokens)
+[19:33:07]   prontoqa: 300/300 (last had 20 thinking tokens)
+[19:33:07] done deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa: wrote 300/300
+arm deepseek-ai_DeepSeek-R1-Distill-Qwen-7B__chat activations size: 71G
+--- audit deepseek-ai_DeepSeek-R1-Distill-Qwen-7B__chat ---
+[19:34:02] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa/nonce [chat]: n=100 cot=1.0 answered=0.98 truncated=0.08 len_p50=596
+[19:34:02] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa/original [chat]: n=100 cot=1.0 answered=1.0 truncated=0.0 len_p50=486
+[19:34:02] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa/paraphrase [chat]: n=100 cot=1.0 answered=1.0 truncated=0.0 len_p50=438
+[19:34:02] audit clean: reasoning present, truncation low
+--- atlas_forensics deepseek-ai_DeepSeek-R1-Distill-Qwen-7B__chat ---

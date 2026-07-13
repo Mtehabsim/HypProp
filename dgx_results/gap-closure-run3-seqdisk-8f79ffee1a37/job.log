@@ -1,0 +1,19 @@
+=== gap-closure v3 (disk-safe, sequential arms) on dgx02 ===
+HF_HOME=/mnt/lab/Mo/hyperbolic1/.hf_cache  LIMIT=300  MAX_NEW_TOKENS=1024
+169.226.65.170:/labs/alhussien_lab   10T  9.8T  215G  98% /mnt/lab
+torch 2.12.1+cu130 cuda True
+=== preparing prontoqa (+ non-vacuous variants) ===
+[15:44:56] prepared prontoqa: 300 samples, 5 classes -> results/data_cache_v2/prontoqa.jsonl
+[15:44:56]   + variants: prontoqa now 900 rows (original+nonce+paraphrase)
+=== ARM deepseek-ai_DeepSeek-R1-Distill-Qwen-7B__plain | free disk 215G ===
+--- extract deepseek-ai_DeepSeek-R1-Distill-Qwen-7B__plain ---
+[15:44:59] extracting 300 samples for deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa
+[15:45:00] loading deepseek-ai/DeepSeek-R1-Distill-Qwen-7B (fp32) on cuda
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:37<00:37, 37.26s/it]Loading checkpoint shards: 100%|██████████| 2/2 [01:10<00:00, 34.92s/it]Loading checkpoint shards: 100%|██████████| 2/2 [01:10<00:00, 35.27s/it]
+[15:46:23]   deepseek-ai/DeepSeek-R1-Distill-Qwen-7B: chat_template=yes, chat_mode='plain' -> PLAIN prompt
+/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/transformers/generation/configuration_utils.py:590: UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.6` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`.
+  warnings.warn(
+/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/transformers/generation/configuration_utils.py:595: UserWarning: `do_sample` is set to `False`. However, `top_p` is set to `0.95` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_p`.
+  warnings.warn(
+From v4.47 onwards, when a model cache is to be returned, `generate` will return a `Cache` instance instead by default (as opposed to the legacy tuple of tuples format). If you want to keep returning the legacy format, please set `return_legacy_cache=True`.
+[15:53:50]   prontoqa: 25/300 (last had 51 thinking tokens)

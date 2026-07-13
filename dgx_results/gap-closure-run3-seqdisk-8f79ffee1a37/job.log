@@ -136,3 +136,5 @@ arm deepseek-ai_DeepSeek-R1-Distill-Qwen-7B__plain done; free disk now 252G
   warnings.warn(
 From v4.47 onwards, when a model cache is to be returned, `generate` will return a `Cache` instance instead by default (as opposed to the legacy tuple of tuples format). If you want to keep returning the legacy format, please set `return_legacy_cache=True`.
 [18:31:39]   prontoqa: 25/300 (last had 14 thinking tokens)
+[18:36:44]   prontoqa: 50/300 (last had 12 thinking tokens)
+[18:42:26]   prontoqa: 75/300 (last had 13 thinking tokens)

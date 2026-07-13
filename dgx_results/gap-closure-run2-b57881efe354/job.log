@@ -1,0 +1,22 @@
+=== gap-closure run starting on dgx02 ===
+HF_HOME=/mnt/lab/Mo/hyperbolic1/.hf_cache
+169.226.65.170:/labs/alhussien_lab   10T  9.8T  280G  98% /mnt/lab
+torch 2.12.1+cu130 cuda True
+[14:52:17] NOTE: hypll not installed (pip install hypll) — the matched probe will skip the library cross-check
+[14:52:17] Phase 0: preparing prontoqa (+ non-vacuous variants)
+[14:52:18] prepared prontoqa: 300 samples, 5 classes -> ./results/data_cache_v2/prontoqa.jsonl
+[14:52:18]   + variants: prontoqa now 900 rows (original+nonce+paraphrase)
+[14:52:19] Phase 0: extracting deepseek-ai/DeepSeek-R1-Distill-Qwen-7B [plain] (300 samples, max_new_tokens=1024)
+/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/transformers/utils/hub.py:128: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+[14:52:21] extracting 300 samples for deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa
+[14:52:22] loading deepseek-ai/DeepSeek-R1-Distill-Qwen-7B (fp32) on cuda
+Downloading shards:   0%|          | 0/2 [00:00<?, ?it/s]Downloading shards:  50%|█████     | 1/2 [00:21<00:21, 21.12s/it]Downloading shards: 100%|██████████| 2/2 [00:38<00:00, 19.08s/it]Downloading shards: 100%|██████████| 2/2 [00:38<00:00, 19.39s/it]
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:27<00:27, 27.46s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:48<00:00, 23.75s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:48<00:00, 24.31s/it]
+[14:53:59]   deepseek-ai/DeepSeek-R1-Distill-Qwen-7B: chat_template=yes, chat_mode='plain' -> PLAIN prompt
+/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/transformers/generation/configuration_utils.py:590: UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.6` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`.
+  warnings.warn(
+/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/transformers/generation/configuration_utils.py:595: UserWarning: `do_sample` is set to `False`. However, `top_p` is set to `0.95` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_p`.
+  warnings.warn(
+From v4.47 onwards, when a model cache is to be returned, `generate` will return a `Cache` instance instead by default (as opposed to the legacy tuple of tuples format). If you want to keep returning the legacy format, please set `return_legacy_cache=True`.
+[15:01:31]   prontoqa: 25/300 (last had 51 thinking tokens)

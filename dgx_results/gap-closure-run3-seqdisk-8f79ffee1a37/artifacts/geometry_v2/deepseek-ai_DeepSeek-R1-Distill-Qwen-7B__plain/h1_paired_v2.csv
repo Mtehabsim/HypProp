@@ -1,0 +1,2 @@
+n,median_diff,frac_positive,wilcoxon_p,verdict,model,dataset
+100,0.0177,0.81,2.3129702605871595e-12,PASS(generated more tree-like),deepseek-ai/DeepSeek-R1-Distill-Qwen-7B,prontoqa

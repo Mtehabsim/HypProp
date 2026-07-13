@@ -111,3 +111,15 @@ make NO tuning-causes-it claim (the v1 design error).
 [18:14:31] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa L7: 5 seeds x 3 arms done
 [18:14:45] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa L14: 5 seeds x 3 arms done
 [18:15:01] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa L21: 5 seeds x 3 arms done
+[18:15:19] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa L27: 5 seeds x 3 arms done
+[18:15:34] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa L28: 5 seeds x 3 arms done
+[18:15:40] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B L0: bare=0.093 cond=0.098 hyp=0.078 | conditioning gap=+0.006 (p=0.625) geometry gap=-0.020 (p=0.312) -> inconclusive at this layer
+[18:15:40] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B L7: bare=0.137 cond=0.172 hyp=0.189 | conditioning gap=+0.035 (p=0.188) geometry gap=+0.018 (p=0.812) -> inconclusive at this layer
+[18:15:40] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B L14: bare=0.187 cond=0.198 hyp=0.159 | conditioning gap=+0.011 (p=0.812) geometry gap=-0.039 (p=0.125) -> inconclusive at this layer
+[18:15:40] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B L21: bare=0.206 cond=0.219 hyp=0.233 | conditioning gap=+0.012 (p=0.625) geometry gap=+0.014 (p=0.812) -> inconclusive at this layer
+[18:15:40] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B L27: bare=0.157 cond=0.302 hyp=0.272 | conditioning gap=+0.145 (p=0.062) geometry gap=-0.029 (p=0.812) -> CONDITIONING explains Raj
+[18:15:40] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B L28: bare=0.120 cond=0.265 hyp=0.214 | conditioning gap=+0.145 (p=0.062) geometry gap=-0.051 (p=0.188) -> CONDITIONING explains Raj
+--- determinants_v2 deepseek-ai_DeepSeek-R1-Distill-Qwen-7B__plain ---
+[18:21:58] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa [generated@L28, per_cloud]: base=0.177; NO driver beats its null (report as null result) [CAUTION: order-power ceiling 0.0036 < 2x split-half null 0.0377 -> the order test is underpowered here; 'no order effect' is uninterpretable]
+[18:25:02] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa LAST-token adjudication: delta=0.110, cluster_null=0.138, excess=+0.028 -> exceeds the cluster null (structure beyond classes)
+--- deleting raw activations for deepseek-ai_DeepSeek-R1-Distill-Qwen-7B__plain to free disk ---

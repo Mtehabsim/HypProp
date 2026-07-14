@@ -194,3 +194,18 @@ arm scaleladder__Qwen_Qwen2.5-1.5B done; free 204G
 From v4.47 onwards, when a model cache is to be returned, `generate` will return a `Cache` instance instead by default (as opposed to the legacy tuple of tuples format). If you want to keep returning the legacy format, please set `return_legacy_cache=True`.
 [19:48:40]   prontoqa_tree: 25/240 (last had 0 thinking tokens)
 [19:49:10]   prontoqa_tree: 50/240 (last had 0 thinking tokens)
+[19:49:40]   prontoqa_tree: 75/240 (last had 0 thinking tokens)
+[19:50:11]   prontoqa_tree: 100/240 (last had 0 thinking tokens)
+[19:50:40]   prontoqa_tree: 125/240 (last had 0 thinking tokens)
+[19:51:11]   prontoqa_tree: 150/240 (last had 0 thinking tokens)
+[19:51:41]   prontoqa_tree: 175/240 (last had 0 thinking tokens)
+[19:52:11]   prontoqa_tree: 200/240 (last had 0 thinking tokens)
+[19:52:40]   prontoqa_tree: 225/240 (last had 0 thinking tokens)
+[19:52:58] done Qwen/Qwen2.5-14B/prontoqa_tree: wrote 240/240
+arm scaleladder__Qwen_Qwen2.5-14B size: 38G
+[19:53:31] Qwen/Qwen2.5-14B/prontoqa_tree/original [plain]: n=240 cot=1.0 answered=0.0 truncated=1.0 len_p50=15
+[19:53:31] WARNING: Qwen/Qwen2.5-14B/prontoqa_tree [plain]: 100% of generations truncated at the cap — 'last'-token analyses are contaminated; raise --max-new-tokens or split by the flag.
+audit warnings (see CSV)
+[19:53:34] Poincare distance matches the textbook closed form (max err 2.00e-15)
+[19:53:34] NOTE: HypLL differs under all tested conventions (best c/2: 1.76e-02); proceeding on the closed-form gate (our dist is proven correct vs the textbook form).
+[19:56:55] Qwen/Qwen2.5-14B [fictional_b1] premise L0: 6s x 5d done (60 prompts w/ >=4 concepts)

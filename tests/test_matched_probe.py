@@ -53,11 +53,29 @@ def test_conditioning_beats_bare_on_structured_data():
         f"cond ({res_cond['rho']:.3f}) should not collapse vs bare ({res_bare['rho']:.3f})")
 
 
-def test_hypll_cross_check():
-    """If HypLL is installed, verify our Poincare distance matches it."""
+def test_poincare_matches_closed_form():
+    """Our dist() must match the dependency-free textbook arcosh closed form.
+
+    This is the real correctness gate (no shared code with dist(): no Mobius add,
+    no artanh), so agreement is a genuine proof, not a tautology. Always runs."""
     from hypprobe.geometry.matched_probe import hypll_distance_check
 
     result = hypll_distance_check()
-    if result is None:
-        pytest.skip("HypLL not installed; cross-check skipped")
-    assert result["ok"], f"Poincare distance mismatch: max err = {result['max_abs_err']}"
+    assert result["closed_form_ok"], (
+        f"Poincare dist disagrees with textbook arcosh form: "
+        f"max err = {result['closed_form_max_abs_err']}")
+    assert result["ok"] == result["closed_form_ok"]   # ok is the closed-form gate
+
+
+def test_hypll_cross_check_convention_robust():
+    """If HypLL is installed, our distance must match it under SOME curvature
+    convention (libraries differ by a curvature-scale factor; that is expected
+    and not a bug — the closed-form test above is the true correctness proof)."""
+    from hypprobe.geometry.matched_probe import hypll_distance_check
+
+    result = hypll_distance_check()
+    if result.get("hypll") == "not installed":
+        pytest.skip("HypLL not installed; library cross-check skipped")
+    assert result["hypll_ok"], (
+        f"HypLL mismatch under all conventions: best "
+        f"{result.get('hypll_best_convention')} err {result.get('hypll_max_abs_err')}")

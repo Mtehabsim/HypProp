@@ -1,5 +1,13 @@
 #!/usr/bin/env bash
-# NAME: tree-probe-run1
+# NAME: tree-probe-run2
+#
+# run2: run1 extracted + audited both models fine but tree_probe HALTED on the
+# HypLL cross-check (max err 2.57e-2). Root-caused locally: our Poincare distance
+# is EXACT vs the textbook arcosh closed form (2e-15); the 2.57e-2 gap == our
+# |d(c=0.5)-d(c=1.0)|, i.e. a HypLL curvature-CONVENTION difference, not a bug.
+# Fix: the hard gate now keys on the dependency-free closed form; HypLL is a
+# convention-robust soft cross-check. Added a fail-fast pre-flight so geometry
+# regressions abort in seconds, not after extraction.
 #
 # dgx_agent.sh runs this whenever its content hash changes, with:
 #   $JOB_OUT  = dgx_results/<name>-<hash>/   (ship-back dir; >50 MB quarantined)
@@ -49,6 +57,26 @@ python -c "import hypll" 2>/dev/null && echo "hypll already present" || {
   pip install --quiet hypll 2>&1 | tail -3 || echo "WARNING: hypll install failed; cross-check will be skipped"
 }
 python -c "import hypll; print('hypll import OK')" 2>&1 | tail -1
+
+# ---- Phase 0.pre: fail-fast geometry gate (seconds, before any GPU time) ----
+# The tree probe hard-gates on our Poincare distance matching the textbook arcosh
+# closed form. Run it up front so a geometry regression fails in seconds rather
+# than after ~8 min of extraction (as happened in run1, where a HypLL curvature-
+# CONVENTION mismatch — not a bug — tripped the old gate post-extraction).
+echo "=== pre-flight: Poincare distance correctness gate ==="
+python - <<'PY'
+import sys
+from hypprobe.geometry.matched_probe import hypll_distance_check
+c = hypll_distance_check()
+print("closed-form gate:", c["closed_form_ok"], "err", f"{c['closed_form_max_abs_err']:.2e}")
+print("hypll:", c.get("hypll"),
+      ("best '%s' err %.2e" % (c.get("hypll_best_convention"), c.get("hypll_max_abs_err"))
+       if c.get("hypll") not in (None, "not installed") else ""))
+if not c["closed_form_ok"]:
+    print("FATAL: Poincare distance is wrong vs the closed form — aborting.")
+    sys.exit(1)
+PY
+if [ $? -ne 0 ]; then echo "pre-flight geometry gate FAILED — aborting run"; exit 1; fi
 
 # ---- Phase 0: prepare the branching-ontology dataset (tree retained) ----
 echo "=== preparing prontoqa_tree (fictional b1/b2/b3 + real, ground-truth tree) ==="

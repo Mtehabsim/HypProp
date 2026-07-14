@@ -259,15 +259,33 @@ def run(activations_dir, out_dir, dataset="prontoqa_tree", roles=("premise", "qu
                            "logs", "tree_probe.log")
 
     check = hypll_distance_check()
-    if check is None:
-        log_line(logfile, "HypLL not installed -> Poincare distance rests on the "
-                          "c->0 unit tests (pip install hypll to enable cross-check)")
-    elif not check["ok"]:
-        raise RuntimeError(f"Poincare distance mismatch vs HypLL "
-                           f"(max err {check['max_abs_err']:.2e}) — fix before running")
+    # HARD GATE: our Poincare distance must match the dependency-free textbook
+    # arcosh closed form. This is the real correctness proof (no shared code with
+    # dist()), and it does NOT depend on HypLL being installed.
+    if not check["ok"]:
+        raise RuntimeError(
+            f"Poincare distance disagrees with the textbook arcosh closed form "
+            f"(max err {check['closed_form_max_abs_err']:.2e}) — our geometry is "
+            f"wrong; fix before running")
+    log_line(logfile, f"Poincare distance matches the textbook closed form "
+                      f"(max err {check['closed_form_max_abs_err']:.2e})")
+    # SOFT cross-check: HypLL, if installed. A convention (curvature-scale)
+    # difference is expected and fine; only a mismatch under ALL conventions
+    # would be alarming — and the closed-form gate above already rules that out.
+    hy = check.get("hypll")
+    if hy == "not installed":
+        log_line(logfile, "HypLL not installed -> skipping the library cross-check "
+                          "(closed-form gate already passed)")
+    elif check.get("hypll_ok"):
+        log_line(logfile, f"HypLL cross-check matches under the "
+                          f"'{check['hypll_best_convention']}' curvature convention "
+                          f"(max err {check['hypll_max_abs_err']:.2e})")
     else:
-        log_line(logfile, f"Poincare distance matches HypLL "
-                          f"(max err {check['max_abs_err']:.2e})")
+        log_line(logfile, f"NOTE: HypLL differs under all tested conventions "
+                          f"(best {check.get('hypll_best_convention')}: "
+                          f"{check.get('hypll_max_abs_err', float('nan')):.2e}); "
+                          f"proceeding on the closed-form gate (our dist is proven "
+                          f"correct vs the textbook form).")
 
     rows = []          # one row per (model, arm, role, layer, dim, seed, geometry)
     radial_rows = []   # one row per (model, arm, role, layer)

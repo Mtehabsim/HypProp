@@ -89,3 +89,15 @@ audit warnings (see CSV)
 [17:14:23] Qwen/Qwen2.5-7B [part_of_b2] premise L28: 6s x 5d done (60 prompts w/ >=4 concepts)
 [17:16:00] Qwen/Qwen2.5-7B [part_of_b2] last L0: 6s x 5d done (60 prompts w/ >=4 concepts)
 [17:17:54] Qwen/Qwen2.5-7B [part_of_b2] last L4: 6s x 5d done (60 prompts w/ >=4 concepts)
+[17:19:31] Qwen/Qwen2.5-7B [part_of_b2] last L8: 6s x 5d done (60 prompts w/ >=4 concepts)
+[17:21:14] Qwen/Qwen2.5-7B [part_of_b2] last L12: 6s x 5d done (60 prompts w/ >=4 concepts)
+[17:23:07] Qwen/Qwen2.5-7B [part_of_b2] last L16: 6s x 5d done (60 prompts w/ >=4 concepts)
+[17:24:55] Qwen/Qwen2.5-7B [part_of_b2] last L20: 6s x 5d done (60 prompts w/ >=4 concepts)
+[17:26:42] Qwen/Qwen2.5-7B [part_of_b2] last L24: 6s x 5d done (60 prompts w/ >=4 concepts)
+[17:28:28] Qwen/Qwen2.5-7B [part_of_b2] last L28: 6s x 5d done (60 prompts w/ >=4 concepts)
+[17:28:34] VERDICT: 42 suitable position(s) passed G1-G3; 0/0 dose-response curves positive; 2/2 radial fingerprints pass
+arm relations__Qwen2.5-7B done; free 179G
+########## PHASE A: SCALE LADDER ##########
+=== ARM scaleladder__Qwen_Qwen2.5-1.5B (Qwen/Qwen2.5-1.5B on prontoqa_tree) | free 179G ===
+[17:28:44] extracting 240 samples for Qwen/Qwen2.5-1.5B/prontoqa_tree
+[17:28:44] loading Qwen/Qwen2.5-1.5B (fp32) on cuda

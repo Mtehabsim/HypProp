@@ -133,3 +133,7 @@ audit flagged warnings (see CSV)
 --- tree_probe Qwen_Qwen2.5-7B__plain ---
 [12:53:05] Poincare distance matches the textbook closed form (max err 2.00e-15)
 [12:53:05] NOTE: HypLL differs under all tested conventions (best c/2: 1.76e-02); proceeding on the closed-form gate (our dist is proven correct vs the textbook form).
+[12:55:09] Qwen/Qwen2.5-7B [fictional_b1] premise L0: 6s x 5d done (60 prompts w/ >=4 concepts)
+[12:57:29] Qwen/Qwen2.5-7B [fictional_b1] premise L4: 6s x 5d done (60 prompts w/ >=4 concepts)
+[12:59:50] Qwen/Qwen2.5-7B [fictional_b1] premise L8: 6s x 5d done (60 prompts w/ >=4 concepts)
+[13:02:09] Qwen/Qwen2.5-7B [fictional_b1] premise L12: 6s x 5d done (60 prompts w/ >=4 concepts)

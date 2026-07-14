@@ -33,6 +33,13 @@ One line per confirmed result. Newest at top. δ = hyperbolic advantage
   **flat_set (star, no hierarchy) Δ=+0.05, ρ_hyp=0.03** → rig recovers real
   relational trees and correctly finds ~nothing in a flat set. Trustworthy.
 
+## Campaign results (run3)
+- **Phase B — relation generality + neg control (Qwen2.5-7B, real activations, per-seed verified):**
+  hierarchy is GENERAL to structured relations, not is-a-specific. is_a Δ=+0.17,
+  part_of +0.16, causes +0.15 (all peak ~L8, ρ_hyp≈0.22, shuffle≈0); **flat_set
+  (star) Δ=+0.003, ρ_hyp=−0.007** — same prompt shape, no relation → no hierarchy.
+  Clean discriminator on real data: the rig measures structure, not tokens.
+
 ## Log
 - 2026-07-14: run2 launched (DeepSeek+Qwen 7B, prontoqa_tree). DeepSeek verdict above.
 - 2026-07-14: run3 campaign staged (relations + scale ladder + cross-family);

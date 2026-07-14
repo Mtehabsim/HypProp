@@ -21,6 +21,13 @@ One line per confirmed result. Newest at top. δ = hyperbolic advantage
 - **CAVEAT**: strict branching dose-response did NOT cleanly pass (b1 path not
   quite 0 at m≥5; b2≈b3). Lead with the dimension-collapse fingerprint instead.
 
+## ⚠️ run3 HUNG (2026-07-15 ~01:00) on Qwen2.5-1.5B tree_probe cell (fictional_b1
+   last L16): child stopped logging >60min, agent still heartbeating, campaign
+   blocked. run4 staged (per-stage `timeout` + resumable skip-shipped-arms). run4
+   CANNOT start until run3's stuck process is killed on the DGX (agent runs one
+   job at a time). ON RETURN: `pkill -f tree_probe` (or the run3 python) on the
+   DGX; the agent then auto-launches run4 which resumes from Phase A.
+
 ## Campaign (run3, 18h) — questions & status
 - [ ] Phase B relation types: is δ is-a-specific or generic? **flat_set must give δ≈0** (neg control).
 - [ ] Phase A scale ladder Qwen2.5 {1.5B,3B,7B,14B}: does δ sharpen / shift layer with scale?

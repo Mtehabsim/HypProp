@@ -1,5 +1,17 @@
 #!/usr/bin/env bash
-# NAME: hierarchy-campaign-run3
+# NAME: hierarchy-campaign-run4
+#
+# run4 = run3 + hang-proofing. run3 completed Phase B (relations, all shipped)
+# but then HUNG on a single Qwen2.5-1.5B tree_probe cell (fictional_b1 last L16):
+# the child produced no log for >60 min while the agent kept heartbeating, so the
+# whole campaign (scale ladder + cross-family) was blocked. Fixes here:
+#   - hard `timeout` around extraction (60m) and tree_probe (90m) per model, so a
+#     stuck cell kills that arm and the campaign PROCEEDS instead of wedging;
+#   - RESUMABILITY: any arm whose verdict already shipped is skipped, so run4 does
+#     NOT redo Phase B (relations) or any completed rung — it resumes the ladder.
+# NOTE: run4 can only start once run3's hung process is cleared on the DGX (the
+# agent won't launch a new job while the old one's process is alive). If run3 is
+# still hung, this file is staged and waiting.
 #
 # 18-HOUR RESEARCH CAMPAIGN: build a robust, GENERAL picture of activation
 # hierarchy, beyond the single PREREGISTER3 probe (run2, DeepSeek+Qwen 7B on
@@ -53,11 +65,28 @@ echo "=== preparing datasets ==="
 python -m hypprobe.data.prepare --datasets prontoqa_tree relation_trees --out "$CACHE" \
   2>&1 | tee -a results/logs/prepare_campaign.log
 
+# RESUME: seed this run's artifacts with any verdicts already shipped by a prior
+# campaign run (run3), so run_arm's skip-if-verdict-present check resumes rather
+# than redoing completed arms (Phase B relations, etc.).
+for prev in dgx_results/hierarchy-campaign-run3-*/artifacts/tree_probe_v3; do
+  [ -d "$prev" ] || continue
+  echo "=== resume: importing prior verdicts from $prev ==="
+  find "$prev" -name "tree_probe_verdict.json" | while read -r v; do
+    d="$ART/tree_probe_v3/$(basename "$(dirname "$v")")"; mkdir -p "$d"
+    cp "$(dirname "$v")"/*.csv "$(dirname "$v")"/*.json "$(dirname "$v")"/*.md "$d/" 2>/dev/null || true
+  done
+done
+
 collect() { local s="$1"; [ -d "$s" ] || return 0
   find "$s" -type f \( -name '*.csv' -o -name '*.md' -o -name '*.json' -o -name '*.txt' \) \
     -size -20M -print0 2>/dev/null | while IFS= read -r -d '' f; do
     dst="$ART/${f#results/}"; mkdir -p "$(dirname "$dst")"; cp "$f" "$dst"; done; }
 disk_free_gb() { df -BG /mnt/lab | tail -1 | awk '{gsub(/G/,"",$4); print $4}'; }
+
+# Hard wall-clock caps so ONE stuck cell can never wedge the whole campaign
+# (run3 hung on a single 1.5B tree_probe cell and blocked all remaining phases).
+EXTRACT_TIMEOUT="${EXTRACT_TIMEOUT:-3600}"     # 60 min/model extraction
+PROBE_TIMEOUT="${PROBE_TIMEOUT:-5400}"         # 90 min/model tree_probe grid
 
 # run_arm <model> <dataset> <tag> <roles...>
 run_arm() {
@@ -66,21 +95,30 @@ run_arm() {
   local ACT="results/activations_v3/${msafe}__${dataset}"
   local GEO="results/tree_probe_v3/${tag}"
   mkdir -p "$GEO"
+  # RESUMABILITY: if this arm's verdict already shipped (prior run), skip it.
+  if [ -f "$JOB_OUT/artifacts/tree_probe_v3/${tag}/tree_probe_verdict.json" ] \
+     || [ -f "$GEO/tree_probe_verdict.json" ]; then
+    echo "=== ARM $tag: verdict already present — SKIP (resume) ==="; return 0
+  fi
   echo "=== ARM $tag ($model on $dataset) | free $(disk_free_gb)G ==="
-  python -m hypprobe.extract.hidden_state_extractor --model "$model" \
-    --datasets "$dataset" --dtype fp32 --device cuda --limit "$LIMIT" \
+  timeout "$EXTRACT_TIMEOUT" python -m hypprobe.extract.hidden_state_extractor \
+    --model "$model" --datasets "$dataset" --dtype fp32 --device cuda --limit "$LIMIT" \
     --chat-mode plain --max-new-tokens "$MAX_NEW_TOKENS" \
     --cache "$CACHE" --out "$ACT" 2>&1 | tee -a results/logs/extract_campaign.log
   if [ -z "$(find "$ACT" -name '*.pt' 2>/dev/null | head -1)" ]; then
-    echo "ARM $tag: no activations (model absent/gated?) — SKIP"; rm -rf "$ACT"; return 0
+    echo "ARM $tag: no activations (model absent/gated/timeout?) — SKIP"; rm -rf "$ACT"; return 0
   fi
   echo "arm $tag size: $(du -sh "$ACT" 2>/dev/null | cut -f1)"
-  python -m hypprobe.extract.audit_generations --activations "$ACT" --out "$GEO" \
-    2>&1 | tee -a results/logs/audit_campaign.log || echo "audit warnings (see CSV)"
-  python -m hypprobe.geometry.tree_probe --activations "$ACT" --out "$GEO" \
-    --dataset "$dataset" --roles $roles --dims 2 3 5 8 16 --seeds $SEEDS \
-    --layer-stride 4 2>&1 | tee -a results/logs/tree_probe_campaign.log \
-    || echo "tree_probe failed for $tag"
+  timeout 900 python -m hypprobe.extract.audit_generations --activations "$ACT" --out "$GEO" \
+    2>&1 | tee -a results/logs/audit_campaign.log || echo "audit warnings/timeout (see CSV)"
+  # THE probe, hard-capped. If it hangs on a cell, timeout kills it, the arm is
+  # skipped, and the campaign proceeds to the next model instead of wedging.
+  timeout "$PROBE_TIMEOUT" python -m hypprobe.geometry.tree_probe --activations "$ACT" \
+    --out "$GEO" --dataset "$dataset" --roles $roles --dims 2 3 5 8 16 --seeds $SEEDS \
+    --layer-stride 4 2>&1 | tee -a results/logs/tree_probe_campaign.log
+  rc=${PIPESTATUS[0]}
+  [ "$rc" -eq 124 ] && echo "tree_probe TIMED OUT for $tag (killed after ${PROBE_TIMEOUT}s) — skipping"
+  [ "$rc" -ne 0 ] && [ "$rc" -ne 124 ] && echo "tree_probe failed for $tag (rc=$rc)"
   collect "$GEO"
   rm -rf "$ACT"
   echo "arm $tag done; free $(disk_free_gb)G"

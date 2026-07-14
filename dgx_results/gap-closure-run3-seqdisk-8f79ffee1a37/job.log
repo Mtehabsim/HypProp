@@ -247,4 +247,12 @@ arm deepseek-ai_DeepSeek-R1-Distill-Qwen-7B__chat done; free disk now 274G
 [20:23:54] extracting 300 samples for Qwen/Qwen2.5-7B/prontoqa
 [20:23:55] loading Qwen/Qwen2.5-7B (fp32) on cuda
 Downloading shards:   0%|          | 0/4 [00:00<?, ?it/s]Downloading shards:  25%|██▌       | 1/4 [00:16<00:48, 16.29s/it]Downloading shards:  50%|█████     | 2/4 [00:27<00:26, 13.38s/it]Downloading shards:  75%|███████▌  | 3/4 [00:36<00:11, 11.44s/it]Downloading shards: 100%|██████████| 4/4 [00:46<00:00, 10.79s/it]Downloading shards: 100%|██████████| 4/4 [00:46<00:00, 11.64s/it]
-Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:21<01:04, 21.56s/it]
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:21<01:04, 21.56s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:37<00:36, 18.35s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:51<00:16, 16.40s/it]Loading checkpoint shards: 100%|██████████| 4/4 [01:02<00:00, 14.33s/it]Loading checkpoint shards: 100%|██████████| 4/4 [01:02<00:00, 15.73s/it]
+[20:25:54]   Qwen/Qwen2.5-7B: chat_template=yes, chat_mode='plain' -> PLAIN prompt
+From v4.47 onwards, when a model cache is to be returned, `generate` will return a `Cache` instance instead by default (as opposed to the legacy tuple of tuples format). If you want to keep returning the legacy format, please set `return_legacy_cache=True`.
+[20:27:21]   prontoqa: 25/300 (last had 5 thinking tokens)
+[20:28:42]   prontoqa: 50/300 (last had 1 thinking tokens)
+[20:30:06]   prontoqa: 75/300 (last had 0 thinking tokens)
+[20:31:46]   prontoqa: 100/300 (last had 7 thinking tokens)
+[20:33:11]   prontoqa: 125/300 (last had 3 thinking tokens)
+[20:34:43]   prontoqa: 150/300 (last had 0 thinking tokens)

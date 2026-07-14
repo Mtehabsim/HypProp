@@ -1,0 +1,10 @@
+[10:01:33] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa_tree/original [plain]: n=240 cot=0.108 answered=0.025 truncated=1.0 len_p50=23
+[10:01:33] WARNING: deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa_tree [plain]: only 11% of generations look like CoT — the reasoning model may not be in reasoning mode under this regime. Do NOT run H1/H2 on this arm; re-extract with --chat-mode chat first.
+[10:01:33] WARNING: deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa_tree [plain]: 100% of generations truncated at the cap — 'last'-token analyses are contaminated; raise --max-new-tokens or split by the flag.
+[10:05:42] Qwen/Qwen2.5-7B/prontoqa_tree/original [plain]: n=240 cot=0.954 answered=0.0 truncated=1.0 len_p50=23
+[10:05:42] WARNING: Qwen/Qwen2.5-7B/prontoqa_tree [plain]: 100% of generations truncated at the cap — 'last'-token analyses are contaminated; raise --max-new-tokens or split by the flag.
+[10:27:08] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa_tree/original [plain]: n=240 cot=0.108 answered=0.025 truncated=1.0 len_p50=23
+[10:27:08] WARNING: deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa_tree [plain]: only 11% of generations look like CoT — the reasoning model may not be in reasoning mode under this regime. Do NOT run H1/H2 on this arm; re-extract with --chat-mode chat first.
+[10:27:08] WARNING: deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa_tree [plain]: 100% of generations truncated at the cap — 'last'-token analyses are contaminated; raise --max-new-tokens or split by the flag.
+[12:53:02] Qwen/Qwen2.5-7B/prontoqa_tree/original [plain]: n=240 cot=0.954 answered=0.0 truncated=1.0 len_p50=23
+[12:53:02] WARNING: Qwen/Qwen2.5-7B/prontoqa_tree [plain]: 100% of generations truncated at the cap — 'last'-token analyses are contaminated; raise --max-new-tokens or split by the flag.

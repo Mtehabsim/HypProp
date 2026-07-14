@@ -1,0 +1,68 @@
+[09:57:32] extracting 240 samples for deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa_tree
+[09:57:33] loading deepseek-ai/DeepSeek-R1-Distill-Qwen-7B (fp32) on cuda
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:13<00:13, 13.64s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:29<00:00, 14.89s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:29<00:00, 14.70s/it]
+[09:58:11]   deepseek-ai/DeepSeek-R1-Distill-Qwen-7B: chat_template=yes, chat_mode='plain' -> PLAIN prompt
+/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/transformers/generation/configuration_utils.py:590: UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.6` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`.
+  warnings.warn(
+/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/transformers/generation/configuration_utils.py:595: UserWarning: `do_sample` is set to `False`. However, `top_p` is set to `0.95` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_p`.
+  warnings.warn(
+From v4.47 onwards, when a model cache is to be returned, `generate` will return a `Cache` instance instead by default (as opposed to the legacy tuple of tuples format). If you want to keep returning the legacy format, please set `return_legacy_cache=True`.
+[09:58:31]   prontoqa_tree: 25/240 (last had 2 thinking tokens)
+[09:58:50]   prontoqa_tree: 50/240 (last had 1 thinking tokens)
+[09:59:09]   prontoqa_tree: 75/240 (last had 2 thinking tokens)
+[09:59:28]   prontoqa_tree: 100/240 (last had 0 thinking tokens)
+[09:59:47]   prontoqa_tree: 125/240 (last had 0 thinking tokens)
+[10:00:07]   prontoqa_tree: 150/240 (last had 0 thinking tokens)
+[10:00:26]   prontoqa_tree: 175/240 (last had 0 thinking tokens)
+[10:00:46]   prontoqa_tree: 200/240 (last had 2 thinking tokens)
+[10:01:06]   prontoqa_tree: 225/240 (last had 0 thinking tokens)
+[10:01:17] done deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa_tree: wrote 240/240
+[10:01:43] extracting 240 samples for Qwen/Qwen2.5-7B/prontoqa_tree
+[10:01:44] loading Qwen/Qwen2.5-7B (fp32) on cuda
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:06<00:20,  6.88s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:12<00:12,  6.29s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:18<00:06,  6.06s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:24<00:00,  6.03s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:24<00:00,  6.13s/it]
+[10:02:17]   Qwen/Qwen2.5-7B: chat_template=yes, chat_mode='plain' -> PLAIN prompt
+From v4.47 onwards, when a model cache is to be returned, `generate` will return a `Cache` instance instead by default (as opposed to the legacy tuple of tuples format). If you want to keep returning the legacy format, please set `return_legacy_cache=True`.
+[10:02:36]   prontoqa_tree: 25/240 (last had 0 thinking tokens)
+[10:02:56]   prontoqa_tree: 50/240 (last had 0 thinking tokens)
+[10:03:15]   prontoqa_tree: 75/240 (last had 0 thinking tokens)
+[10:03:34]   prontoqa_tree: 100/240 (last had 0 thinking tokens)
+[10:03:53]   prontoqa_tree: 125/240 (last had 0 thinking tokens)
+[10:04:13]   prontoqa_tree: 150/240 (last had 0 thinking tokens)
+[10:04:33]   prontoqa_tree: 175/240 (last had 0 thinking tokens)
+[10:04:53]   prontoqa_tree: 200/240 (last had 1 thinking tokens)
+[10:05:12]   prontoqa_tree: 225/240 (last had 0 thinking tokens)
+[10:05:24] done Qwen/Qwen2.5-7B/prontoqa_tree: wrote 240/240
+[10:23:15] extracting 240 samples for deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa_tree
+[10:23:16] loading deepseek-ai/DeepSeek-R1-Distill-Qwen-7B (fp32) on cuda
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:13<00:13, 13.02s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:23<00:00, 11.71s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:23<00:00, 11.91s/it]
+[10:23:48]   deepseek-ai/DeepSeek-R1-Distill-Qwen-7B: chat_template=yes, chat_mode='plain' -> PLAIN prompt
+/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/transformers/generation/configuration_utils.py:590: UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.6` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`.
+  warnings.warn(
+/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/transformers/generation/configuration_utils.py:595: UserWarning: `do_sample` is set to `False`. However, `top_p` is set to `0.95` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_p`.
+  warnings.warn(
+From v4.47 onwards, when a model cache is to be returned, `generate` will return a `Cache` instance instead by default (as opposed to the legacy tuple of tuples format). If you want to keep returning the legacy format, please set `return_legacy_cache=True`.
+[10:24:08]   prontoqa_tree: 25/240 (last had 2 thinking tokens)
+[10:24:27]   prontoqa_tree: 50/240 (last had 1 thinking tokens)
+[10:24:46]   prontoqa_tree: 75/240 (last had 2 thinking tokens)
+[10:25:05]   prontoqa_tree: 100/240 (last had 0 thinking tokens)
+[10:25:23]   prontoqa_tree: 125/240 (last had 0 thinking tokens)
+[10:25:42]   prontoqa_tree: 150/240 (last had 0 thinking tokens)
+[10:26:01]   prontoqa_tree: 175/240 (last had 0 thinking tokens)
+[10:26:21]   prontoqa_tree: 200/240 (last had 2 thinking tokens)
+[10:26:40]   prontoqa_tree: 225/240 (last had 0 thinking tokens)
+[10:26:51] done deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa_tree: wrote 240/240
+[12:49:00] extracting 240 samples for Qwen/Qwen2.5-7B/prontoqa_tree
+[12:49:01] loading Qwen/Qwen2.5-7B (fp32) on cuda
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:07<00:22,  7.66s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:14<00:14,  7.09s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:20<00:06,  6.59s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:25<00:00,  6.15s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:25<00:00,  6.45s/it]
+[12:49:36]   Qwen/Qwen2.5-7B: chat_template=yes, chat_mode='plain' -> PLAIN prompt
+From v4.47 onwards, when a model cache is to be returned, `generate` will return a `Cache` instance instead by default (as opposed to the legacy tuple of tuples format). If you want to keep returning the legacy format, please set `return_legacy_cache=True`.
+[12:49:58]   prontoqa_tree: 25/240 (last had 0 thinking tokens)
+[12:50:17]   prontoqa_tree: 50/240 (last had 0 thinking tokens)
+[12:50:37]   prontoqa_tree: 75/240 (last had 0 thinking tokens)
+[12:50:56]   prontoqa_tree: 100/240 (last had 0 thinking tokens)
+[12:51:16]   prontoqa_tree: 125/240 (last had 0 thinking tokens)
+[12:51:35]   prontoqa_tree: 150/240 (last had 0 thinking tokens)
+[12:51:55]   prontoqa_tree: 175/240 (last had 0 thinking tokens)
+[12:52:14]   prontoqa_tree: 200/240 (last had 1 thinking tokens)
+[12:52:34]   prontoqa_tree: 225/240 (last had 0 thinking tokens)
+[12:52:46] done Qwen/Qwen2.5-7B/prontoqa_tree: wrote 240/240

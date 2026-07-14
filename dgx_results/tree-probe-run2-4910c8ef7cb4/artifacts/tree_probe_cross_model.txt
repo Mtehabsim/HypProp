@@ -1,0 +1,64 @@
+
+### Qwen_Qwen2.5-7B__plain
+  suitable positions (G1&G2&G3): 53
+    fictional_b1     last     L4   m5   Δ=+0.074 p=0.0156 slope=0.0729 shuffle=-0.001
+    fictional_b1     last     L8   m5   Δ=+0.087 p=0.0156 slope=0.0811 shuffle=-0.003
+    fictional_b1     last     L12  m5   Δ=+0.098 p=0.0156 slope=0.0787 shuffle=-0.023
+    fictional_b1     last     L16  m5   Δ=+0.058 p=0.0156 slope=0.0528 shuffle=+0.007
+    fictional_b1     last     L20  m5   Δ=+0.073 p=0.0156 slope=0.0874 shuffle=-0.005
+    fictional_b1     premise  L4   m5   Δ=+0.073 p=0.0156 slope=0.0629 shuffle=-0.011
+    fictional_b1     premise  L8   m5   Δ=+0.066 p=0.0156 slope=0.0331 shuffle=+0.006
+    fictional_b1     premise  L12  m5   Δ=+0.088 p=0.0156 slope=0.09 shuffle=+0.002
+    fictional_b1     premise  L20  m5   Δ=+0.084 p=0.0156 slope=0.0882 shuffle=-0.006
+    fictional_b2     last     L4   m5   Δ=+0.116 p=0.0156 slope=0.1187 shuffle=-0.004
+    fictional_b2     last     L8   m5   Δ=+0.154 p=0.0156 slope=0.1115 shuffle=-0.007
+    fictional_b2     last     L12  m5   Δ=+0.166 p=0.0156 slope=0.1474 shuffle=-0.000
+    fictional_b2     last     L16  m5   Δ=+0.193 p=0.0156 slope=0.1489 shuffle=-0.031
+    fictional_b2     last     L20  m5   Δ=+0.158 p=0.0156 slope=0.2874 shuffle=-0.031
+    fictional_b2     last     L24  m5   Δ=+0.117 p=0.0156 slope=0.2436 shuffle=-0.020
+    fictional_b2     last     L28  m5   Δ=+0.108 p=0.0156 slope=0.296 shuffle=-0.011
+    fictional_b2     premise  L4   m5   Δ=+0.134 p=0.0156 slope=0.1936 shuffle=-0.017
+    fictional_b2     premise  L8   m5   Δ=+0.159 p=0.0156 slope=0.1773 shuffle=-0.012
+    fictional_b2     premise  L12  m5   Δ=+0.167 p=0.0156 slope=0.1563 shuffle=-0.011
+    fictional_b2     premise  L16  m5   Δ=+0.180 p=0.0156 slope=0.1646 shuffle=-0.008
+  dose-response (Δ by branching 1/2/3):
+    last     [0.0983, 0.1931, 0.1756] monotone=False b1_ok=False POSITIVE=False
+    premise  [0.0877, 0.1842, 0.1611] monotone=False b1_ok=False POSITIVE=False
+  radial norm<->depth:
+    last     bestL=8   ρ=+0.639 passes=True
+    premise  bestL=20  ρ=+0.686 passes=True
+
+### deepseek-ai_DeepSeek-R1-Distill-Qwen-7B__plain
+  suitable positions (G1&G2&G3): 49
+    fictional_b1     last     L8   m5   Δ=+0.093 p=0.0156 slope=0.076 shuffle=+0.001
+    fictional_b1     last     L28  m5   Δ=+0.057 p=0.0156 slope=0.0731 shuffle=+0.003
+    fictional_b1     premise  L4   m5   Δ=+0.069 p=0.0312 slope=0.0606 shuffle=-0.001
+    fictional_b1     premise  L8   m5   Δ=+0.094 p=0.0156 slope=0.0697 shuffle=+0.015
+    fictional_b1     premise  L24  m5   Δ=+0.050 p=0.0156 slope=0.0618 shuffle=-0.011
+    fictional_b1     premise  L28  m5   Δ=+0.066 p=0.0156 slope=0.09 shuffle=-0.002
+    fictional_b2     last     L4   m5   Δ=+0.135 p=0.0156 slope=0.2112 shuffle=-0.009
+    fictional_b2     last     L8   m5   Δ=+0.179 p=0.0156 slope=0.0981 shuffle=-0.026
+    fictional_b2     last     L12  m5   Δ=+0.160 p=0.0156 slope=0.0819 shuffle=-0.007
+    fictional_b2     last     L16  m5   Δ=+0.135 p=0.0156 slope=0.0596 shuffle=-0.021
+    fictional_b2     last     L20  m5   Δ=+0.134 p=0.0156 slope=0.0704 shuffle=-0.021
+    fictional_b2     last     L24  m5   Δ=+0.123 p=0.0156 slope=0.1306 shuffle=-0.027
+    fictional_b2     last     L28  m5   Δ=+0.088 p=0.0156 slope=0.2682 shuffle=-0.009
+    fictional_b2     premise  L4   m5   Δ=+0.149 p=0.0156 slope=0.204 shuffle=-0.012
+    fictional_b2     premise  L8   m5   Δ=+0.191 p=0.0156 slope=0.1676 shuffle=-0.016
+    fictional_b2     premise  L12  m5   Δ=+0.174 p=0.0156 slope=0.0958 shuffle=+0.003
+    fictional_b2     premise  L16  m5   Δ=+0.155 p=0.0156 slope=0.0557 shuffle=-0.027
+    fictional_b2     premise  L20  m5   Δ=+0.151 p=0.0156 slope=0.0938 shuffle=-0.021
+    fictional_b2     premise  L24  m5   Δ=+0.124 p=0.0156 slope=0.1416 shuffle=-0.013
+    fictional_b2     premise  L28  m5   Δ=+0.088 p=0.0156 slope=0.2194 shuffle=-0.009
+  dose-response (Δ by branching 1/2/3):
+    last     [0.0929, 0.1791, 0.1659] monotone=False b1_ok=False POSITIVE=False
+    premise  [0.0938, 0.1905, 0.1874] monotone=False b1_ok=False POSITIVE=False
+  radial norm<->depth:
+    last     bestL=12  ρ=+0.648 passes=True
+    premise  bestL=12  ρ=+0.656 passes=True
+
+INTERPRETATION: a 'suitable position' passing all gates = a (layer,role,dim)
+where hyperbolic geometry recovers the ground-truth tree better than matched
+Euclidean AND the advantage grows at low dim AND survives the shuffled-tree
+null. A positive dose-response (Δ grows with branching, ~0 at b=1) is the
+mechanistic evidence that the model builds a genuine branching hierarchy.

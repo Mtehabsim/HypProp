@@ -1,0 +1,95 @@
+=== tree-probe run (PREREGISTER3) on dgx02 ===
+HF_HOME=/mnt/lab/Mo/hyperbolic1/.hf_cache  LIMIT=240  MAX_NEW_TOKENS=24  SEEDS='0 1 2 3 4 5'
+169.226.65.170:/labs/alhussien_lab   10T  9.9T  195G  99% /mnt/lab
+torch 2.12.1+cu130 cuda True
+=== ensuring hypll is installed (for the Poincare cross-check) ===
+hypll import OK
+=== preparing prontoqa_tree (fictional b1/b2/b3 + real, ground-truth tree) ===
+[09:57:29] prepared prontoqa_tree: 240 samples, 3 classes -> results/data_cache_v3/prontoqa_tree.jsonl
+prepared arms: {('fictional', 2): 60, ('fictional', 3): 60, ('fictional', 1): 60, ('real', 2): 60} total 240
+=== MODEL deepseek-ai/DeepSeek-R1-Distill-Qwen-7B | free disk 195G ===
+--- extract deepseek-ai_DeepSeek-R1-Distill-Qwen-7B__plain ---
+[09:57:32] extracting 240 samples for deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa_tree
+[09:57:33] loading deepseek-ai/DeepSeek-R1-Distill-Qwen-7B (fp32) on cuda
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:13<00:13, 13.64s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:29<00:00, 14.89s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:29<00:00, 14.70s/it]
+[09:58:11]   deepseek-ai/DeepSeek-R1-Distill-Qwen-7B: chat_template=yes, chat_mode='plain' -> PLAIN prompt
+/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/transformers/generation/configuration_utils.py:590: UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.6` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`.
+  warnings.warn(
+/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/transformers/generation/configuration_utils.py:595: UserWarning: `do_sample` is set to `False`. However, `top_p` is set to `0.95` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_p`.
+  warnings.warn(
+From v4.47 onwards, when a model cache is to be returned, `generate` will return a `Cache` instance instead by default (as opposed to the legacy tuple of tuples format). If you want to keep returning the legacy format, please set `return_legacy_cache=True`.
+[09:58:31]   prontoqa_tree: 25/240 (last had 2 thinking tokens)
+[09:58:50]   prontoqa_tree: 50/240 (last had 1 thinking tokens)
+[09:59:09]   prontoqa_tree: 75/240 (last had 2 thinking tokens)
+[09:59:28]   prontoqa_tree: 100/240 (last had 0 thinking tokens)
+[09:59:47]   prontoqa_tree: 125/240 (last had 0 thinking tokens)
+[10:00:07]   prontoqa_tree: 150/240 (last had 0 thinking tokens)
+[10:00:26]   prontoqa_tree: 175/240 (last had 0 thinking tokens)
+[10:00:46]   prontoqa_tree: 200/240 (last had 2 thinking tokens)
+[10:01:06]   prontoqa_tree: 225/240 (last had 0 thinking tokens)
+[10:01:17] done deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa_tree: wrote 240/240
+arm deepseek-ai_DeepSeek-R1-Distill-Qwen-7B__plain activations size: 17G
+--- audit deepseek-ai_DeepSeek-R1-Distill-Qwen-7B__plain ---
+[10:01:33] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa_tree/original [plain]: n=240 cot=0.108 answered=0.025 truncated=1.0 len_p50=23
+[10:01:33] WARNING: deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa_tree [plain]: only 11% of generations look like CoT — the reasoning model may not be in reasoning mode under this regime. Do NOT run H1/H2 on this arm; re-extract with --chat-mode chat first.
+[10:01:33] WARNING: deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa_tree [plain]: 100% of generations truncated at the cap — 'last'-token analyses are contaminated; raise --max-new-tokens or split by the flag.
+audit flagged warnings (see CSV)
+--- tree_probe deepseek-ai_DeepSeek-R1-Distill-Qwen-7B__plain ---
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/mnt/lab/Mo/hyperbolic1/HypProp/hypprobe/geometry/tree_probe.py", line 570, in <module>
+    main()
+  File "/mnt/lab/Mo/hyperbolic1/HypProp/hypprobe/geometry/tree_probe.py", line 563, in main
+    run(args.activations, args.out, dataset=args.dataset, roles=tuple(args.roles),
+  File "/mnt/lab/Mo/hyperbolic1/HypProp/hypprobe/geometry/tree_probe.py", line 266, in run
+    raise RuntimeError(f"Poincare distance mismatch vs HypLL "
+RuntimeError: Poincare distance mismatch vs HypLL (max err 2.57e-02) — fix before running
+tree_probe failed for deepseek-ai_DeepSeek-R1-Distill-Qwen-7B__plain
+--- deleting raw activations for deepseek-ai_DeepSeek-R1-Distill-Qwen-7B__plain to free disk ---
+arm deepseek-ai_DeepSeek-R1-Distill-Qwen-7B__plain done; free disk now 179G
+=== MODEL Qwen/Qwen2.5-7B | free disk 179G ===
+--- extract Qwen_Qwen2.5-7B__plain ---
+[10:01:43] extracting 240 samples for Qwen/Qwen2.5-7B/prontoqa_tree
+[10:01:44] loading Qwen/Qwen2.5-7B (fp32) on cuda
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:06<00:20,  6.88s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:12<00:12,  6.29s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:18<00:06,  6.06s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:24<00:00,  6.03s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:24<00:00,  6.13s/it]
+[10:02:17]   Qwen/Qwen2.5-7B: chat_template=yes, chat_mode='plain' -> PLAIN prompt
+From v4.47 onwards, when a model cache is to be returned, `generate` will return a `Cache` instance instead by default (as opposed to the legacy tuple of tuples format). If you want to keep returning the legacy format, please set `return_legacy_cache=True`.
+[10:02:36]   prontoqa_tree: 25/240 (last had 0 thinking tokens)
+[10:02:56]   prontoqa_tree: 50/240 (last had 0 thinking tokens)
+[10:03:15]   prontoqa_tree: 75/240 (last had 0 thinking tokens)
+[10:03:34]   prontoqa_tree: 100/240 (last had 0 thinking tokens)
+[10:03:53]   prontoqa_tree: 125/240 (last had 0 thinking tokens)
+[10:04:13]   prontoqa_tree: 150/240 (last had 0 thinking tokens)
+[10:04:33]   prontoqa_tree: 175/240 (last had 0 thinking tokens)
+[10:04:53]   prontoqa_tree: 200/240 (last had 1 thinking tokens)
+[10:05:12]   prontoqa_tree: 225/240 (last had 0 thinking tokens)
+[10:05:24] done Qwen/Qwen2.5-7B/prontoqa_tree: wrote 240/240
+arm Qwen_Qwen2.5-7B__plain activations size: 17G
+--- audit Qwen_Qwen2.5-7B__plain ---
+[10:05:42] Qwen/Qwen2.5-7B/prontoqa_tree/original [plain]: n=240 cot=0.954 answered=0.0 truncated=1.0 len_p50=23
+[10:05:42] WARNING: Qwen/Qwen2.5-7B/prontoqa_tree [plain]: 100% of generations truncated at the cap — 'last'-token analyses are contaminated; raise --max-new-tokens or split by the flag.
+audit flagged warnings (see CSV)
+--- tree_probe Qwen_Qwen2.5-7B__plain ---
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/mnt/lab/Mo/hyperbolic1/HypProp/hypprobe/geometry/tree_probe.py", line 570, in <module>
+    main()
+  File "/mnt/lab/Mo/hyperbolic1/HypProp/hypprobe/geometry/tree_probe.py", line 563, in main
+    run(args.activations, args.out, dataset=args.dataset, roles=tuple(args.roles),
+  File "/mnt/lab/Mo/hyperbolic1/HypProp/hypprobe/geometry/tree_probe.py", line 266, in run
+    raise RuntimeError(f"Poincare distance mismatch vs HypLL "
+RuntimeError: Poincare distance mismatch vs HypLL (max err 2.57e-02) — fix before running
+tree_probe failed for Qwen_Qwen2.5-7B__plain
+--- deleting raw activations for Qwen_Qwen2.5-7B__plain to free disk ---
+arm Qwen_Qwen2.5-7B__plain done; free disk now 197G
+=== cross-model tree-probe summary ===
+no tree_probe_verdict.json found
+
+INTERPRETATION: a 'suitable position' passing all gates = a (layer,role,dim)
+where hyperbolic geometry recovers the ground-truth tree better than matched
+Euclidean AND the advantage grows at low dim AND survives the shuffled-tree
+null. A positive dose-response (Δ grows with branching, ~0 at b=1) is the
+mechanistic evidence that the model builds a genuine branching hierarchy.
+=== job complete; artifacts in dgx_results/tree-probe-run1-267ef0116ab7/artifacts ===

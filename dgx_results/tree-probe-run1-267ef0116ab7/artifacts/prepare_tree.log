@@ -1,0 +1,2 @@
+[09:57:29] prepared prontoqa_tree: 240 samples, 3 classes -> results/data_cache_v3/prontoqa_tree.jsonl
+prepared arms: {('fictional', 2): 60, ('fictional', 3): 60, ('fictional', 1): 60, ('real', 2): 60} total 240

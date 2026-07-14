@@ -1,0 +1,20 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/mnt/lab/Mo/hyperbolic1/HypProp/hypprobe/geometry/tree_probe.py", line 570, in <module>
+    main()
+  File "/mnt/lab/Mo/hyperbolic1/HypProp/hypprobe/geometry/tree_probe.py", line 563, in main
+    run(args.activations, args.out, dataset=args.dataset, roles=tuple(args.roles),
+  File "/mnt/lab/Mo/hyperbolic1/HypProp/hypprobe/geometry/tree_probe.py", line 266, in run
+    raise RuntimeError(f"Poincare distance mismatch vs HypLL "
+RuntimeError: Poincare distance mismatch vs HypLL (max err 2.57e-02) — fix before running
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/mnt/lab/Mo/hyperbolic1/HypProp/hypprobe/geometry/tree_probe.py", line 570, in <module>
+    main()
+  File "/mnt/lab/Mo/hyperbolic1/HypProp/hypprobe/geometry/tree_probe.py", line 563, in main
+    run(args.activations, args.out, dataset=args.dataset, roles=tuple(args.roles),
+  File "/mnt/lab/Mo/hyperbolic1/HypProp/hypprobe/geometry/tree_probe.py", line 266, in run
+    raise RuntimeError(f"Poincare distance mismatch vs HypLL "
+RuntimeError: Poincare distance mismatch vs HypLL (max err 2.57e-02) — fix before running

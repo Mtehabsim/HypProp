@@ -1,0 +1,7 @@
+no tree_probe_verdict.json found
+
+INTERPRETATION: a 'suitable position' passing all gates = a (layer,role,dim)
+where hyperbolic geometry recovers the ground-truth tree better than matched
+Euclidean AND the advantage grows at low dim AND survives the shuffled-tree
+null. A positive dose-response (Δ grows with branching, ~0 at b=1) is the
+mechanistic evidence that the model builds a genuine branching hierarchy.

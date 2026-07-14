@@ -1,0 +1,21 @@
+{
+  "stage": "audit_generations",
+  "timestamp": "2026-07-14T10:01:33.830227",
+  "git": {
+    "commit": "17bcac33db8b56d089f503ae197d8d1524ceb2b2",
+    "branch": "main",
+    "dirty": true
+  },
+  "python": "3.12.3",
+  "versions": {
+    "torch": "2.12.1+cu130",
+    "numpy": "1.26.4",
+    "scipy": "1.17.1",
+    "transformers": "4.46.3",
+    "hypll": null
+  },
+  "args": {
+    "activations": "results/activations_v3/deepseek-ai_DeepSeek-R1-Distill-Qwen-7B__plain"
+  },
+  "extra": {}
+}

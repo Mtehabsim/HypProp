@@ -1,0 +1,35 @@
+{
+  "stage": "matched_probe",
+  "timestamp": "2026-07-13T20:13:57.728878",
+  "git": {
+    "commit": "3e02d5b788c299bca90814b62b59ee4ba66af6c6",
+    "branch": "main",
+    "dirty": true
+  },
+  "python": "3.12.3",
+  "versions": {
+    "torch": "2.12.1+cu130",
+    "numpy": "1.26.4",
+    "scipy": "1.17.1",
+    "transformers": "4.46.3",
+    "hypll": null
+  },
+  "args": {
+    "activations": "results/activations_v2/deepseek-ai_DeepSeek-R1-Distill-Qwen-7B__chat",
+    "dataset": "prontoqa",
+    "target": "depth",
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "whiten": true,
+    "proj_dim": 5,
+    "max_epochs": 3000
+  },
+  "extra": {
+    "hypll_check": null
+  }
+}

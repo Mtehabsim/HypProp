@@ -1,0 +1,6 @@
+model,dataset,layer,token_source,metric,edit,delta_rel_base,delta_change,null95,split_half_null,order_power_ceiling,beats_null,is_driver
+deepseek-ai/DeepSeek-R1-Distill-Qwen-7B,prontoqa,28,generated,per_cloud,token_identity,0.1985,-0.0003,0.0225,0.0225,0.0025,False,False
+deepseek-ai/DeepSeek-R1-Distill-Qwen-7B,prontoqa,28,generated,per_cloud,token_order,0.1985,0.0051,0.0225,0.0225,0.0025,False,False
+deepseek-ai/DeepSeek-R1-Distill-Qwen-7B,prontoqa,28,generated,per_cloud,meaning_nonce,0.1985,-0.0009,0.0225,0.0225,0.0025,False,False
+deepseek-ai/DeepSeek-R1-Distill-Qwen-7B,prontoqa,28,generated,per_cloud,meaning_paraphrase,0.1985,0.002,0.0225,0.0225,0.0025,False,False
+deepseek-ai/DeepSeek-R1-Distill-Qwen-7B,prontoqa,28,last,per_cloud,cluster_adjudication,0.1446,0.0286,0.0064,,,True,False

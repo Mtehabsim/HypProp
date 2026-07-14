@@ -1,0 +1,27 @@
+{
+  "stage": "determinants_v2",
+  "timestamp": "2026-07-13T20:23:40.823198",
+  "git": {
+    "commit": "0c4b8a565f59d30fbaf194d139b65d1e7ee104f4",
+    "branch": "main",
+    "dirty": true
+  },
+  "python": "3.12.3",
+  "versions": {
+    "torch": "2.12.1+cu130",
+    "numpy": "1.26.4",
+    "scipy": "1.17.1",
+    "transformers": "4.46.3",
+    "hypll": null
+  },
+  "args": {
+    "activations": "results/activations_v2/deepseek-ai_DeepSeek-R1-Distill-Qwen-7B__chat",
+    "source": "generated",
+    "layer": null,
+    "metric": "per_cloud",
+    "seed": 0,
+    "n_redraws": 20,
+    "n_splits": 20
+  },
+  "extra": {}
+}

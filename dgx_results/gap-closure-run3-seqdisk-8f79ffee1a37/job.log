@@ -238,3 +238,13 @@ make NO tuning-causes-it claim (the v1 design error).
 [20:13:57] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B L27: bare=0.283 cond=0.372 hyp=0.315 | conditioning gap=+0.089 (p=0.062) geometry gap=-0.058 (p=0.188) -> CONDITIONING explains Raj
 [20:13:57] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B L28: bare=0.230 cond=0.323 hyp=0.235 | conditioning gap=+0.093 (p=0.062) geometry gap=-0.088 (p=0.062) -> CONDITIONING explains Raj
 --- determinants_v2 deepseek-ai_DeepSeek-R1-Distill-Qwen-7B__chat ---
+[20:18:50] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa [generated@L28, per_cloud]: base=0.199; NO driver beats its null (report as null result) [CAUTION: order-power ceiling 0.0025 < 2x split-half null 0.0225 -> the order test is underpowered here; 'no order effect' is uninterpretable]
+[20:23:40] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa LAST-token adjudication: delta=0.145, cluster_null=0.173, excess=+0.029 -> exceeds the cluster null (structure beyond classes)
+--- deleting raw activations for deepseek-ai_DeepSeek-R1-Distill-Qwen-7B__chat to free disk ---
+arm deepseek-ai_DeepSeek-R1-Distill-Qwen-7B__chat done; free disk now 274G
+=== ARM Qwen_Qwen2.5-7B__plain | free disk 274G ===
+--- extract Qwen_Qwen2.5-7B__plain ---
+[20:23:54] extracting 300 samples for Qwen/Qwen2.5-7B/prontoqa
+[20:23:55] loading Qwen/Qwen2.5-7B (fp32) on cuda
+Downloading shards:   0%|          | 0/4 [00:00<?, ?it/s]Downloading shards:  25%|██▌       | 1/4 [00:16<00:48, 16.29s/it]Downloading shards:  50%|█████     | 2/4 [00:27<00:26, 13.38s/it]Downloading shards:  75%|███████▌  | 3/4 [00:36<00:11, 11.44s/it]Downloading shards: 100%|██████████| 4/4 [00:46<00:00, 10.79s/it]Downloading shards: 100%|██████████| 4/4 [00:46<00:00, 11.64s/it]
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:21<01:04, 21.56s/it]

@@ -289,3 +289,9 @@ Euclidean ceiling of Eq.5/Eq.6 delta_rel: 0.2929 (analytic, unit square)
 --- rung0_v2 Qwen_Qwen2.5-7B__plain ---
 [20:45:32] rung0_v2 thresholds from PREREGISTER2.md: {'parity_min_plateau': 0.2, 'span_effect_frac': 0.15, 'min_effect_over_floor': 3.0, 'h1_alpha': 0.05, 'gate_a_flat_frac': 0.5, 'gate_a_tree_frac': 0.5}
 [20:46:44] Qwen/Qwen2.5-7B/prontoqa: fitting per-layer balanced backgrounds
+[21:04:16]   Qwen/Qwen2.5-7B/prontoqa: layer 0/29 calibrated
+[21:04:29]   Qwen/Qwen2.5-7B/prontoqa: layer 5/29 calibrated
+[21:04:42]   Qwen/Qwen2.5-7B/prontoqa: layer 10/29 calibrated
+[21:04:55]   Qwen/Qwen2.5-7B/prontoqa: layer 15/29 calibrated
+[21:05:09]   Qwen/Qwen2.5-7B/prontoqa: layer 20/29 calibrated
+[21:05:22]   Qwen/Qwen2.5-7B/prontoqa: layer 25/29 calibrated

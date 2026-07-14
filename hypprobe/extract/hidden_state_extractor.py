@@ -68,6 +68,10 @@ def extract_model_dataset(model_name, dataset, samples, out_dir, logfile,
                    label_path=s.get("label_path", []),
                    variant=s.get("variant", "original"),
                    orig_id=s.get("orig_id", s["sample_id"]),
+                   answer=s.get("answer"),
+                   # ground-truth is-a tree for the tree probe (PREREGISTER3);
+                   # None for datasets that don't carry one.
+                   tree_meta=s.get("tree_meta"),
                    # provenance (per-sample, so it survives file reshuffles)
                    chat_mode=chat_mode, max_new_tokens=max_new_tokens,
                    dtype=dtype)

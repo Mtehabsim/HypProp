@@ -1,17 +1,26 @@
 #!/usr/bin/env bash
-# NAME: gap-closure-run3-seqdisk
+# NAME: tree-probe-run1
 #
 # dgx_agent.sh runs this whenever its content hash changes, with:
 #   $JOB_OUT  = dgx_results/<name>-<hash>/   (ship-back dir; >50 MB quarantined)
 #   $JOB_ID   = the content hash
 #
-# DISK-SAFE architecture (v3): the fp32 all-layer activations are HUGE
-# (~200-450 MB/sample at 1024 tokens) and the lab mount is ~98% full with only
-# ~280 GB free. So instead of extracting all 4 arms up front (peak ~250-550 GB),
-# we process ONE arm at a time: extract -> run every per-arm analysis stage on
-# it -> ship the small artifacts -> DELETE the raw activations before the next
-# arm. Peak disk = one arm (~60 GB). The cross-model H2 note is assembled at the
-# end from the tiny per-arm H1 CSVs (which persist).
+# PREREGISTER3: what makes activations hierarchical + where hyperbolic helps.
+# Replaces the v2 cloud-delta pipeline. The instrument decodes each prompt's
+# RETAINED ground-truth is-a tree (from data/prontoqa_tree.py) from concept-token
+# representations, comparing a hyperbolic decoder against a capacity- and
+# conditioning-matched Euclidean one at several output dimensions, per
+# (layer x role). Validated on a CPU positive control before this run: hyperbolic
+# beats Euclidean at low-mid dim on a genuine branching tree (Δ up to +0.23,
+# monotone in branching), radial-norm tracks depth (ρ=+0.71), noise layer ~0.
+#
+# KEY DESIGN NOTE vs v2: we only need PROMPT-SIDE concept representations
+# (premise/query roles) plus a short answer, so max_new_tokens is small (default
+# 24, not 1024). This shrinks each sample's activation file ~10-40x and makes the
+# disk-safe sequential loop comfortable.
+#
+# DISK-SAFE (inherited from v3): process ONE arm at a time: extract -> tree_probe
+# + audit -> ship small artifacts -> DELETE raw activations before the next arm.
 set -uo pipefail   # NOT -e: a single stage failing must not abort the whole run
 cd "$(git rev-parse --show-toplevel)"
 
@@ -19,22 +28,39 @@ cd "$(git rev-parse --show-toplevel)"
 export HF_HOME="/mnt/lab/Mo/hyperbolic1/.hf_cache"
 mkdir -p "$HF_HOME"
 
-LIMIT="${LIMIT:-300}"
-MAX_NEW_TOKENS="${MAX_NEW_TOKENS:-1024}"
-SEEDS="0 1 2 3 4"
-CACHE="results/data_cache_v2"
+LIMIT="${LIMIT:-240}"                 # prompts per arm cap (dataset has 240 rows)
+MAX_NEW_TOKENS="${MAX_NEW_TOKENS:-24}"  # we read prompt-side reps; only need a short answer
+SEEDS="0 1 2 3 4 5"                   # >=6: one-sided signed-rank floor 1/64 clears 0.05
+CACHE="results/data_cache_v3"
 ART="$JOB_OUT/artifacts"
-mkdir -p "$ART"
+mkdir -p "$ART" results/logs
 
-echo "=== gap-closure v3 (disk-safe, sequential arms) on $(hostname) ==="
-echo "HF_HOME=$HF_HOME  LIMIT=$LIMIT  MAX_NEW_TOKENS=$MAX_NEW_TOKENS"
+echo "=== tree-probe run (PREREGISTER3) on $(hostname) ==="
+echo "HF_HOME=$HF_HOME  LIMIT=$LIMIT  MAX_NEW_TOKENS=$MAX_NEW_TOKENS  SEEDS='$SEEDS'"
 df -h /mnt/lab | tail -1
 python -c "import torch; print('torch', torch.__version__, 'cuda', torch.cuda.is_available())"
 
-# ---- Phase 0.a: prepare data once (variants included; hard-fails if vacuous) ----
-echo "=== preparing prontoqa (+ non-vacuous variants) ==="
-python -m hypprobe.data.prepare --datasets prontoqa --variants --out "$CACHE" \
-  2>&1 | tee -a results/logs/prepare_v3.log
+# ---- optional deps: HypLL (Poincare cross-check) + NLTK (unused here, harmless) ----
+# The tree probe HARD-HALTS if HypLL is present but disagrees with our Poincare
+# distance; if absent it logs and proceeds on the c->0 unit tests. Install so the
+# cross-check actually runs this time (v2 skipped it).
+echo "=== ensuring hypll is installed (for the Poincare cross-check) ==="
+python -c "import hypll" 2>/dev/null && echo "hypll already present" || {
+  pip install --quiet hypll 2>&1 | tail -3 || echo "WARNING: hypll install failed; cross-check will be skipped"
+}
+python -c "import hypll; print('hypll import OK')" 2>&1 | tail -1
+
+# ---- Phase 0: prepare the branching-ontology dataset (tree retained) ----
+echo "=== preparing prontoqa_tree (fictional b1/b2/b3 + real, ground-truth tree) ==="
+python -m hypprobe.data.prepare --datasets prontoqa_tree --out "$CACHE" \
+  2>&1 | tee -a results/logs/prepare_tree.log
+python - <<'PY' 2>&1 | tee -a results/logs/prepare_tree.log
+import json, collections
+rows=[json.loads(l) for l in open("results/data_cache_v3/prontoqa_tree.jsonl")]
+arms=collections.Counter((r["tree_meta"]["naming"], r["tree_meta"]["branching"]) for r in rows)
+print("prepared arms:", dict(arms), "total", len(rows))
+assert rows and all("tree_meta" in r for r in rows), "tree_meta missing — abort"
+PY
 
 collect() {   # copy small artifacts from a results subtree into $ART
   local subtree="$1"
@@ -44,96 +70,90 @@ collect() {   # copy small artifacts from a results subtree into $ART
     dst="$ART/${f#results/}"; mkdir -p "$(dirname "$dst")"; cp "$f" "$dst"
   done
 }
-
 disk_free_gb() { df -BG /mnt/lab | tail -1 | awk '{gsub(/G/,"",$4); print $4}'; }
 
-# ---- per-arm loop: extract -> analyze -> ship -> delete ----
+# ---- per-model loop: extract (plain) -> tree_probe -> ship -> delete ----
+# One prompt scaffolding only (plain): the tree lives in the prompt text, so the
+# chat template is not needed and would just add a scaffolding confound. Both a
+# reasoning-distilled model and a base model are run so a hyperbolic advantage
+# can be checked for reasoning-specificity (as in v2, where the effect appeared
+# in the base model too).
 MODELS=("deepseek-ai/DeepSeek-R1-Distill-Qwen-7B" "Qwen/Qwen2.5-7B")
 for model in "${MODELS[@]}"; do
   msafe="$(echo "$model" | tr '/' '_')"
-  for mode in plain chat; do
-    cm="$mode"; [ "$mode" = "chat" ] && cm="auto"   # base model w/o template -> falls back loudly
-    arm="${msafe}__${mode}"
-    ACT="results/activations_v2/$arm"
-    GEO="results/geometry_v2/$arm"
-    DET="results/determinants_v2/$arm"
-    mkdir -p "$GEO" "$DET"
+  arm="${msafe}__plain"
+  ACT="results/activations_v3/$arm"
+  GEO="results/tree_probe_v3/$arm"
+  mkdir -p "$GEO"
 
-    free="$(disk_free_gb)"
-    echo "=== ARM $arm | free disk ${free}G ==="
-    if [ "${free:-0}" -lt 70 ]; then
-      echo "WARNING: only ${free}G free before extracting $arm; proceeding but watch for ENOSPC"
-    fi
+  free="$(disk_free_gb)"
+  echo "=== MODEL $model | free disk ${free}G ==="
 
-    # Stage 0: extract this arm only
-    echo "--- extract $arm ---"
-    python -m hypprobe.extract.hidden_state_extractor --model "$model" \
-      --datasets prontoqa --dtype fp32 --device cuda --limit "$LIMIT" \
-      --chat-mode "$cm" --max-new-tokens "$MAX_NEW_TOKENS" \
-      --cache "$CACHE" --out "$ACT" 2>&1 | tee -a results/logs/extract_v3.log
-    if [ ! -d "$ACT" ] || [ -z "$(find "$ACT" -name '*.pt' 2>/dev/null | head -1)" ]; then
-      echo "ARM $arm: no activations produced; skipping analysis for this arm"
-      rm -rf "$ACT"; continue
-    fi
-    echo "arm $arm activations size: $(du -sh "$ACT" 2>/dev/null | cut -f1)"
+  # Stage 0: extract prompt-side reps (+ short answer). Small max_new_tokens.
+  echo "--- extract $arm ---"
+  python -m hypprobe.extract.hidden_state_extractor --model "$model" \
+    --datasets prontoqa_tree --dtype fp32 --device cuda --limit "$LIMIT" \
+    --chat-mode plain --max-new-tokens "$MAX_NEW_TOKENS" \
+    --cache "$CACHE" --out "$ACT" 2>&1 | tee -a results/logs/extract_tree.log
+  if [ ! -d "$ACT" ] || [ -z "$(find "$ACT" -name '*.pt' 2>/dev/null | head -1)" ]; then
+    echo "MODEL $arm: no activations produced; skipping analysis"
+    rm -rf "$ACT"; continue
+  fi
+  echo "arm $arm activations size: $(du -sh "$ACT" 2>/dev/null | cut -f1)"
 
-    # Stage 1: generation audit (never aborts the arm; records warnings)
-    echo "--- audit $arm ---"
-    python -m hypprobe.extract.audit_generations --activations "$ACT" --out "$GEO" \
-      2>&1 | tee -a results/logs/audit_v3.log || echo "audit flagged warnings (see CSV)"
+  # Stage 1: generation audit (records warnings; never aborts the arm)
+  echo "--- audit $arm ---"
+  python -m hypprobe.extract.audit_generations --activations "$ACT" --out "$GEO" \
+    2>&1 | tee -a results/logs/audit_tree.log || echo "audit flagged warnings (see CSV)"
 
-    # Stage 2: Atlas forensics (ceiling + candidate sweep)
-    echo "--- atlas_forensics $arm ---"
-    python -m hypprobe.geometry.atlas_forensics --activations "$ACT" --out "$GEO" \
-      2>&1 | tee -a results/logs/forensics_v3.log || echo "forensics failed for $arm"
+  # Stage 2: THE tree probe (concept alignment + matched-capacity decode + dim
+  # sweep + radial fingerprint + shuffled-tree null + 4-gate verdict)
+  echo "--- tree_probe $arm ---"
+  python -m hypprobe.geometry.tree_probe --activations "$ACT" --out "$GEO" \
+    --dataset prontoqa_tree --roles premise query last \
+    --dims 2 3 5 8 16 --seeds $SEEDS --layer-stride 4 \
+    2>&1 | tee -a results/logs/tree_probe.log || echo "tree_probe failed for $arm"
 
-    # Stage 3: rung0_v2 (calibration, balanced background, span-relative, paired H1)
-    echo "--- rung0_v2 $arm ---"
-    python -m hypprobe.geometry.rung0_v2 --activations "$ACT" --out "$GEO" \
-      --project-root . 2>&1 | tee -a results/logs/rung0_v3.log || echo "rung0_v2 failed for $arm"
-
-    # Stage 4: matched-conditioning probe (THE decisive one)
-    echo "--- matched_probe $arm ---"
-    python -m hypprobe.geometry.matched_probe --activations "$ACT" --out "$GEO" \
-      --dataset prontoqa --target depth --seeds $SEEDS \
-      2>&1 | tee -a results/logs/matched_probe_v3.log || echo "matched_probe failed for $arm"
-
-    # Stage 5: determinants v2 (real nulls, powered order test, last-token adj.)
-    echo "--- determinants_v2 $arm ---"
-    python -m hypprobe.geometry.determinants_v2 --activations "$ACT" --out "$DET" \
-      --source generated 2>&1 | tee -a results/logs/determinants_v3.log \
-      || echo "determinants_v2 failed for $arm"
-
-    # ship this arm's small artifacts, then FREE the disk before the next arm
-    collect "$GEO"; collect "$DET"
-    echo "--- deleting raw activations for $arm to free disk ---"
-    rm -rf "$ACT"
-    echo "arm $arm done; free disk now $(disk_free_gb)G"
-  done
+  # ship this arm's small artifacts, then FREE the disk before the next model
+  collect "$GEO"
+  echo "--- deleting raw activations for $arm to free disk ---"
+  rm -rf "$ACT"
+  echo "arm $arm done; free disk now $(disk_free_gb)G"
 done
 
-# ---- cross-arm H2: direction consistency from the persisted H1 CSVs ----
-echo "=== cross-arm H2 summary (from per-arm h1_paired_v2.csv) ==="
-python - <<'PY' 2>&1 | tee "$ART/h2_cross_arm_summary.txt" || true
-import csv, glob, os
-rows = []
-for f in glob.glob("results/geometry_v2/*/h1_paired_v2.csv"):
+# ---- cross-model summary: suitable positions + dose-response, per model ----
+echo "=== cross-model tree-probe summary ==="
+python - <<'PY' 2>&1 | tee "$ART/tree_probe_cross_model.txt" || true
+import json, glob, os
+files = glob.glob("results/tree_probe_v3/*/tree_probe_verdict.json")
+if not files:
+    print("no tree_probe_verdict.json found")
+for f in sorted(files):
     arm = os.path.basename(os.path.dirname(f))
-    for r in csv.DictReader(open(f)):
-        r["arm"] = arm
-        rows.append(r)
-if not rows:
-    print("no h1_paired_v2.csv found")
-else:
-    print(f"{'arm':40s} {'model':45s} {'median_diff':>12s} {'wilcoxon_p':>12s} verdict")
-    for r in sorted(rows, key=lambda x: x["arm"]):
-        print(f"{r.get('arm',''):40s} {r.get('model',''):45s} "
-              f"{str(r.get('median_diff','')):>12s} {str(r.get('wilcoxon_p','')):>12s} "
-              f"{r.get('verdict','')}")
-    print("\nH2 (per PREREGISTER2): reasoning-model gap should exceed base-model gap.")
-    print("With one reasoning/base pair per chat regime, report DIRECTION only; a")
-    print("causal 'tuning amplifies compression' claim needs >=2 consistent pairs.")
+    v = json.load(open(f))
+    print(f"\n### {arm}")
+    pos = v.get("positions", [])
+    print(f"  suitable positions (G1&G2&G3): {len(pos)}")
+    for p in pos[:20]:
+        print(f"    {p['arm']:16s} {p['role']:8s} L{p['layer']:<3} m{p['dim']:<3} "
+              f"Δ={p['mean_delta']:+.3f} p={p.get('wilcoxon_p')} slope={p.get('slope')} "
+              f"shuffle={p.get('shuffle_rho'):+.3f}")
+    print("  dose-response (Δ by branching 1/2/3):")
+    for d in v.get("dose_response", []):
+        print(f"    {d['role']:8s} {d['max_delta_by_branching']} "
+              f"monotone={d['monotone_nondecreasing']} b1_ok={d['negative_control_b1_ok']} "
+              f"POSITIVE={d['dose_response_positive']}")
+    print("  radial norm<->depth:")
+    for r in v.get("radial", []):
+        print(f"    {r['role']:8s} bestL={r['best_layer']:<3} ρ={r['radial_depth_rho']:+.3f} "
+              f"passes={r['passes']}")
+print("\nINTERPRETATION: a 'suitable position' passing all gates = a (layer,role,dim)")
+print("where hyperbolic geometry recovers the ground-truth tree better than matched")
+print("Euclidean AND the advantage grows at low dim AND survives the shuffled-tree")
+print("null. A positive dose-response (Δ grows with branching, ~0 at b=1) is the")
+print("mechanistic evidence that the model builds a genuine branching hierarchy.")
 PY
 
-cp results/logs/*_v3.log "$ART/" 2>/dev/null || true
+cp results/logs/*_tree.log "$ART/" 2>/dev/null || true
+cp results/logs/tree_probe.log "$ART/" 2>/dev/null || true
 echo "=== job complete; artifacts in $JOB_OUT/artifacts ==="

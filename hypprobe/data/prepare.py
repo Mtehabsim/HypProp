@@ -178,9 +178,16 @@ def _load_real_dataset(name: str, raw_dir: str) -> list[dict]:
         f"'wordnet_control' for a local smoke test.")
 
 
+def build_prontoqa_tree_dataset() -> list[dict]:
+    """PREREGISTER3 branching-ontology set (fictional b1/b2/b3 + real), tree retained."""
+    from .prontoqa_tree import build_prontoqa_tree_all
+    return build_prontoqa_tree_all()
+
+
 BUILDERS = {"wordnet_control": build_wordnet_control,
             "flat_control": build_flat_control,
-            "prontoqa": build_prontoqa}
+            "prontoqa": build_prontoqa,
+            "prontoqa_tree": build_prontoqa_tree_dataset}
 REAL = {"ailuminate", "aegis", "harmbench", "advbench", "wos"}
 
 

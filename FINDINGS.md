@@ -47,6 +47,13 @@ One line per confirmed result. Newest at top. δ = hyperbolic advantage
   **flat_set (star, no hierarchy) Δ=+0.05, ρ_hyp=0.03** → rig recovers real
   relational trees and correctly finds ~nothing in a flat set. Trustworthy.
 
+## Offline deep-dive (run2 CSVs, no DGX) — WHY sharpened, two distinct layer-signatures
+- **Assembled (fictional)**: emergence curve rises from ρ=−0.05@L0, crosses 50%-peak
+  by L4, PEAKS L8(DeepSeek)/L16(Qwen), decays to ~67% by L28 → tree BUILT in first
+  third, held mid-stack, overwritten late. **Retrieved (real)**: flat-high all layers
+  (0.92→0.85, spread .07) → present at L0, not built. Same in both models (onset L4
+  identical) ⇒ representation-not-reasoning, reinforced. Read-out head → L8-16.
+
 ## Campaign results (run3)
 - **Phase B — relation generality + neg control (Qwen2.5-7B, real activations, per-seed verified):**
   hierarchy is GENERAL to structured relations, not is-a-specific. is_a Δ=+0.17,

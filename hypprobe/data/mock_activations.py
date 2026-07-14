@@ -183,7 +183,7 @@ def _bpe_tokens(word, rng, split_prob=0.5):
 
 def generate_prontoqa_tree(out_dir, model="mock/tree-7b", n_prompts=24,
                            n_nodes=15, n_layers=8, hidden=64, signal_layer=5,
-                           noise=0.15, seed=0):
+                           noise=0.15, seed=0, rows=None, dataset="prontoqa_tree"):
     """Mock activation store for the tree probe (CPU positive control).
 
     Uses the real branching-ontology generator (so ``tree_meta`` is genuine) and
@@ -192,11 +192,17 @@ def generate_prontoqa_tree(out_dir, model="mock/tree-7b", n_prompts=24,
     multi-sub-token concepts) so the alignment path is exercised as on real data.
     Concept tree structure is present in ``signal_layer`` -> the instrument SHOULD
     recover it there and NOT in the noise layers (a within-store negative check).
+
+    Pass ``rows`` (a list of tree records with tree_meta) + ``dataset`` to mock
+    any tree dataset — e.g. relation_trees, whose flat_set arm has a STAR
+    tree_meta so the layout is degenerate (all depth 1) and the probe must read
+    Δ≈0 there (negative control), while is_a/part_of/causes recover structure.
     """
     from .prontoqa_tree import build_prontoqa_tree_all
     ensure_dir(out_dir)
     rng = np.random.default_rng(seed)
-    rows = build_prontoqa_tree_all(n_prompts=n_prompts, n_nodes=n_nodes, seed=seed)
+    if rows is None:
+        rows = build_prontoqa_tree_all(n_prompts=n_prompts, n_nodes=n_nodes, seed=seed)
     count = 0
     for r in rows:
         tm = r["tree_meta"]
@@ -248,12 +254,12 @@ def generate_prontoqa_tree(out_dir, model="mock/tree-7b", n_prompts=24,
             positions=torch.arange(n_tok),
             is_generated=torch.zeros(n_tok, dtype=torch.bool),
             is_thinking=torch.zeros(n_tok, dtype=torch.bool),
-            text="mock", model=model, dataset="prontoqa_tree",
+            text="mock", model=model, dataset=dataset,
             sample_id=r["sample_id"], label=r["label"], label_path=r["label_path"],
             variant="original", orig_id=r["sample_id"],
             answer=r.get("answer"), tree_meta=tm, prompt_len=prompt_len,
         )
-        torch.save(rec, sample_path(out_dir, model, "prontoqa_tree", r["sample_id"]))
+        torch.save(rec, sample_path(out_dir, model, dataset, r["sample_id"]))
         count += 1
     return count
 

@@ -184,10 +184,17 @@ def build_prontoqa_tree_dataset() -> list[dict]:
     return build_prontoqa_tree_all()
 
 
+def build_relation_trees_dataset() -> list[dict]:
+    """Relation-type generality: is_a / part_of / causes / flat_set (negative control)."""
+    from .relation_trees import build_relation_trees
+    return build_relation_trees()
+
+
 BUILDERS = {"wordnet_control": build_wordnet_control,
             "flat_control": build_flat_control,
             "prontoqa": build_prontoqa,
-            "prontoqa_tree": build_prontoqa_tree_dataset}
+            "prontoqa_tree": build_prontoqa_tree_dataset,
+            "relation_trees": build_relation_trees_dataset}
 REAL = {"ailuminate", "aegis", "harmbench", "advbench", "wos"}
 
 

@@ -54,6 +54,13 @@ One line per confirmed result. Newest at top. δ = hyperbolic advantage
   (0.92→0.85, spread .07) → present at L0, not built. Same in both models (onset L4
   identical) ⇒ representation-not-reasoning, reinforced. Read-out head → L8-16.
 
+- **Two INDEPENDENT signals co-localize (run2 CSVs)**: radial-norm↔depth (training-free)
+  peaks mid-stack (DeepSeek L12 ρ=.64, Qwen L20 ρ=.69) at the SAME band where tree-
+  decodability peaks (L8-16), both decaying by L28. Convergence of a fit-based and a
+  fit-free measure ⇒ hierarchy is a real property of the representation, not a probe
+  artifact. (Aside: radial dips at L4 while decodability already rises — depth-order
+  and full-tree-geometry consolidate at slightly different rates.)
+
 ## Campaign results (run3)
 - **Phase B — relation generality + neg control (Qwen2.5-7B, real activations, per-seed verified):**
   hierarchy is GENERAL to structured relations, not is-a-specific. is_a Δ=+0.17,

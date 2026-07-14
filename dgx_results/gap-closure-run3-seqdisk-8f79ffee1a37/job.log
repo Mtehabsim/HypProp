@@ -374,3 +374,32 @@ From v4.47 onwards, when a model cache is to be returned, `generate` will return
 [21:22:24]   prontoqa: 200/300 (last had 3 thinking tokens)
 [21:23:44]   prontoqa: 225/300 (last had 0 thinking tokens)
 [21:25:00]   prontoqa: 250/300 (last had 0 thinking tokens)
+[21:26:55]   prontoqa: 275/300 (last had 1 thinking tokens)
+[21:28:02]   prontoqa: 300/300 (last had 0 thinking tokens)
+[21:28:02] done Qwen/Qwen2.5-7B/prontoqa: wrote 300/300
+arm Qwen_Qwen2.5-7B__chat activations size: 26G
+--- audit Qwen_Qwen2.5-7B__chat ---
+[21:28:24] Qwen/Qwen2.5-7B/prontoqa/nonce [chat]: n=100 cot=1.0 answered=0.99 truncated=0.01 len_p50=155
+[21:28:24] Qwen/Qwen2.5-7B/prontoqa/original [chat]: n=100 cot=1.0 answered=0.99 truncated=0.0 len_p50=149
+[21:28:24] Qwen/Qwen2.5-7B/prontoqa/paraphrase [chat]: n=100 cot=0.48 answered=1.0 truncated=0.0 len_p50=1
+[21:28:24] audit clean: reasoning present, truncation low
+--- atlas_forensics Qwen_Qwen2.5-7B__chat ---
+[21:29:46] atlas_forensics done
+ATLAS FORENSICS
+===============
+Euclidean ceiling of Eq.5/Eq.6 delta_rel: 0.2929 (analytic, unit square)
+  numeric check: worst over 60k random 4-point configs = 0.2855; unit square = 0.2929
+  => any Euclidean cloud satisfies delta_rel <= 0.2929; the Atlas's reported ~0.995 medians are unattainable under their own printed formula. Our measured ~0.08 is ~27% of the true ceiling.
+
+[Qwen/Qwen2.5-7B] candidate-statistic sweep (median across prompts):
+  eq56_delta_rel            : plateau=   0.061 final=   0.114
+  one_minus_delta_rel       : plateau=   0.939 final=   0.886
+  max_gromov_over_diam      : plateau=   0.690 final=   0.816
+  defect_over_meddist       : plateau=   0.125 final=   0.203
+  defect_over_mindist       : plateau=   0.645 final=   1.387
+  minform_over_maxgromov    : plateau=   0.087 final=   0.141
+  defect_unnorm             : plateau=   8.455 final=  67.292
+
+--- rung0_v2 Qwen_Qwen2.5-7B__chat ---
+[21:29:48] rung0_v2 thresholds from PREREGISTER2.md: {'parity_min_plateau': 0.2, 'span_effect_frac': 0.15, 'min_effect_over_floor': 3.0, 'h1_alpha': 0.05, 'gate_a_flat_frac': 0.5, 'gate_a_tree_frac': 0.5}
+[21:31:03] Qwen/Qwen2.5-7B/prontoqa: fitting per-layer balanced backgrounds

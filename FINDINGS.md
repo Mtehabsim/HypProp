@@ -3,7 +3,13 @@
 One line per confirmed result. Newest at top. δ = hyperbolic advantage
 (ρ_hyp − ρ_cond_euclidean) on the ground-truth tree, matched capacity+conditioning.
 
-## Headline (as of run2, DeepSeek-R1-Distill-Qwen-7B; Qwen-7B pending)
+## Reasoning-specific? NO (run2 complete: DeepSeek-distill vs Qwen-base, verified per-seed)
+- Qwen2.5-7B **base** reproduces DeepSeek-R1-distill almost exactly: real ρ_hyp=0.92
+  from L0; fictional −0.05@L0 → +0.27@L8-12; dim-collapse (peak m5, negative by m16);
+  radial ρ≈0.69. ⇒ the hierarchy is a property of **representation, not reasoning**
+  (as v2 found for conditioning). Both fail the strict branching dose-response.
+
+## Headline (run2, DeepSeek-R1-Distill-Qwen-7B; confirmed on Qwen-7B base)
 - **WHERE**: hyperbolic beats matched Euclidean at **low dim (m=3–5)** on concept
   tokens (premise/query), **collapses to ~0 by m=16** → curvature substitutes for
   dimension (the real "why hyperbolic"). Strongest **mid-stack L8–12**.

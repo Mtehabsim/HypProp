@@ -1,0 +1,140 @@
+=== hierarchy campaign (run3) on dgx02 ===
+LIMIT=240 MAX_NEW_TOKENS=16 SEEDS='0 1 2 3 4 5'
+169.226.65.170:/labs/alhussien_lab   10T  9.9T  196G  99% /mnt/lab
+torch 2.12.1+cu130 cuda True
+hypll import OK
+=== pre-flight: Poincare distance correctness gate ===
+closed-form gate: True err 2.00e-15
+=== preparing datasets ===
+[15:29:04] prepared prontoqa_tree: 240 samples, 3 classes -> results/data_cache_v3/prontoqa_tree.jsonl
+[15:29:04] prepared relation_trees: 240 samples, 4 classes -> results/data_cache_v3/relation_trees.jsonl
+########## PHASE B: RELATION TYPES (incl. flat_set negative control) ##########
+=== ARM relations__Qwen2.5-7B (Qwen/Qwen2.5-7B on relation_trees) | free 196G ===
+[15:29:07] extracting 240 samples for Qwen/Qwen2.5-7B/relation_trees
+[15:29:08] loading Qwen/Qwen2.5-7B (fp32) on cuda
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:07<00:22,  7.54s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:13<00:13,  6.68s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:19<00:06,  6.32s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:24<00:00,  5.95s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:24<00:00,  6.23s/it]
+[15:29:41]   Qwen/Qwen2.5-7B: chat_template=yes, chat_mode='plain' -> PLAIN prompt
+From v4.47 onwards, when a model cache is to be returned, `generate` will return a `Cache` instance instead by default (as opposed to the legacy tuple of tuples format). If you want to keep returning the legacy format, please set `return_legacy_cache=True`.
+[15:29:57]   relation_trees: 25/240 (last had 0 thinking tokens)
+[15:30:11]   relation_trees: 50/240 (last had 0 thinking tokens)
+[15:30:27]   relation_trees: 75/240 (last had 0 thinking tokens)
+[15:30:41]   relation_trees: 100/240 (last had 1 thinking tokens)
+[15:30:55]   relation_trees: 125/240 (last had 0 thinking tokens)
+[15:31:10]   relation_trees: 150/240 (last had 0 thinking tokens)
+[15:31:25]   relation_trees: 175/240 (last had 0 thinking tokens)
+[15:31:39]   relation_trees: 200/240 (last had 0 thinking tokens)
+[15:31:54]   relation_trees: 225/240 (last had 0 thinking tokens)
+[15:32:02] done Qwen/Qwen2.5-7B/relation_trees: wrote 240/240
+arm relations__Qwen2.5-7B size: 17G
+[15:32:20] Qwen/Qwen2.5-7B/relation_trees/original [plain]: n=240 cot=0.263 answered=0.142 truncated=1.0 len_p50=15
+[15:32:20] WARNING: Qwen/Qwen2.5-7B/relation_trees [plain]: 100% of generations truncated at the cap — 'last'-token analyses are contaminated; raise --max-new-tokens or split by the flag.
+audit warnings (see CSV)
+[15:32:23] Poincare distance matches the textbook closed form (max err 2.00e-15)
+[15:32:23] NOTE: HypLL differs under all tested conventions (best c/2: 1.76e-02); proceeding on the closed-form gate (our dist is proven correct vs the textbook form).
+[15:34:28] Qwen/Qwen2.5-7B [causes_b2] premise L0: 6s x 5d done (60 prompts w/ >=4 concepts)
+[15:36:25] Qwen/Qwen2.5-7B [causes_b2] premise L4: 6s x 5d done (60 prompts w/ >=4 concepts)
+[15:38:03] Qwen/Qwen2.5-7B [causes_b2] premise L8: 6s x 5d done (60 prompts w/ >=4 concepts)
+[15:39:47] Qwen/Qwen2.5-7B [causes_b2] premise L12: 6s x 5d done (60 prompts w/ >=4 concepts)
+[15:41:29] Qwen/Qwen2.5-7B [causes_b2] premise L16: 6s x 5d done (60 prompts w/ >=4 concepts)
+[15:43:13] Qwen/Qwen2.5-7B [causes_b2] premise L20: 6s x 5d done (60 prompts w/ >=4 concepts)
+[15:44:50] Qwen/Qwen2.5-7B [causes_b2] premise L24: 6s x 5d done (60 prompts w/ >=4 concepts)
+[15:46:22] Qwen/Qwen2.5-7B [causes_b2] premise L28: 6s x 5d done (60 prompts w/ >=4 concepts)
+[15:48:04] Qwen/Qwen2.5-7B [causes_b2] last L0: 6s x 5d done (60 prompts w/ >=4 concepts)
+[15:49:41] Qwen/Qwen2.5-7B [causes_b2] last L4: 6s x 5d done (60 prompts w/ >=4 concepts)
+[15:51:18] Qwen/Qwen2.5-7B [causes_b2] last L8: 6s x 5d done (60 prompts w/ >=4 concepts)
+[15:52:55] Qwen/Qwen2.5-7B [causes_b2] last L12: 6s x 5d done (60 prompts w/ >=4 concepts)
+[15:54:36] Qwen/Qwen2.5-7B [causes_b2] last L16: 6s x 5d done (60 prompts w/ >=4 concepts)
+[15:56:16] Qwen/Qwen2.5-7B [causes_b2] last L20: 6s x 5d done (60 prompts w/ >=4 concepts)
+[15:57:59] Qwen/Qwen2.5-7B [causes_b2] last L24: 6s x 5d done (60 prompts w/ >=4 concepts)
+[15:59:44] Qwen/Qwen2.5-7B [causes_b2] last L28: 6s x 5d done (60 prompts w/ >=4 concepts)
+[16:01:20] Qwen/Qwen2.5-7B [flat_set_b2] premise L0: 6s x 5d done (60 prompts w/ >=4 concepts)
+[16:03:19] Qwen/Qwen2.5-7B [flat_set_b2] premise L4: 6s x 5d done (60 prompts w/ >=4 concepts)
+[16:05:13] Qwen/Qwen2.5-7B [flat_set_b2] premise L8: 6s x 5d done (60 prompts w/ >=4 concepts)
+[16:07:00] Qwen/Qwen2.5-7B [flat_set_b2] premise L12: 6s x 5d done (60 prompts w/ >=4 concepts)
+[16:09:02] Qwen/Qwen2.5-7B [flat_set_b2] premise L16: 6s x 5d done (60 prompts w/ >=4 concepts)
+[16:10:53] Qwen/Qwen2.5-7B [flat_set_b2] premise L20: 6s x 5d done (60 prompts w/ >=4 concepts)
+[16:12:54] Qwen/Qwen2.5-7B [flat_set_b2] premise L24: 6s x 5d done (60 prompts w/ >=4 concepts)
+[16:14:40] Qwen/Qwen2.5-7B [flat_set_b2] premise L28: 6s x 5d done (60 prompts w/ >=4 concepts)
+[16:16:12] Qwen/Qwen2.5-7B [flat_set_b2] last L0: 6s x 5d done (60 prompts w/ >=4 concepts)
+[16:18:05] Qwen/Qwen2.5-7B [flat_set_b2] last L4: 6s x 5d done (60 prompts w/ >=4 concepts)
+[16:19:53] Qwen/Qwen2.5-7B [flat_set_b2] last L8: 6s x 5d done (60 prompts w/ >=4 concepts)
+[16:21:55] Qwen/Qwen2.5-7B [flat_set_b2] last L12: 6s x 5d done (60 prompts w/ >=4 concepts)
+[16:23:43] Qwen/Qwen2.5-7B [flat_set_b2] last L16: 6s x 5d done (60 prompts w/ >=4 concepts)
+[16:25:50] Qwen/Qwen2.5-7B [flat_set_b2] last L20: 6s x 5d done (60 prompts w/ >=4 concepts)
+[16:27:41] Qwen/Qwen2.5-7B [flat_set_b2] last L24: 6s x 5d done (60 prompts w/ >=4 concepts)
+[16:29:35] Qwen/Qwen2.5-7B [flat_set_b2] last L28: 6s x 5d done (60 prompts w/ >=4 concepts)
+[16:31:12] Qwen/Qwen2.5-7B [is_a_b2] premise L0: 6s x 5d done (60 prompts w/ >=4 concepts)
+[16:32:57] Qwen/Qwen2.5-7B [is_a_b2] premise L4: 6s x 5d done (60 prompts w/ >=4 concepts)
+[16:35:05] Qwen/Qwen2.5-7B [is_a_b2] premise L8: 6s x 5d done (60 prompts w/ >=4 concepts)
+[16:37:04] Qwen/Qwen2.5-7B [is_a_b2] premise L12: 6s x 5d done (60 prompts w/ >=4 concepts)
+[16:39:11] Qwen/Qwen2.5-7B [is_a_b2] premise L16: 6s x 5d done (60 prompts w/ >=4 concepts)
+[16:41:10] Qwen/Qwen2.5-7B [is_a_b2] premise L20: 6s x 5d done (60 prompts w/ >=4 concepts)
+[16:43:06] Qwen/Qwen2.5-7B [is_a_b2] premise L24: 6s x 5d done (60 prompts w/ >=4 concepts)
+[16:45:08] Qwen/Qwen2.5-7B [is_a_b2] premise L28: 6s x 5d done (60 prompts w/ >=4 concepts)
+[16:47:06] Qwen/Qwen2.5-7B [is_a_b2] last L0: 6s x 5d done (60 prompts w/ >=4 concepts)
+[16:49:05] Qwen/Qwen2.5-7B [is_a_b2] last L4: 6s x 5d done (60 prompts w/ >=4 concepts)
+[16:51:11] Qwen/Qwen2.5-7B [is_a_b2] last L8: 6s x 5d done (60 prompts w/ >=4 concepts)
+[16:53:22] Qwen/Qwen2.5-7B [is_a_b2] last L12: 6s x 5d done (60 prompts w/ >=4 concepts)
+[16:55:06] Qwen/Qwen2.5-7B [is_a_b2] last L16: 6s x 5d done (60 prompts w/ >=4 concepts)
+[16:56:55] Qwen/Qwen2.5-7B [is_a_b2] last L20: 6s x 5d done (60 prompts w/ >=4 concepts)
+[16:58:40] Qwen/Qwen2.5-7B [is_a_b2] last L24: 6s x 5d done (60 prompts w/ >=4 concepts)
+[17:00:33] Qwen/Qwen2.5-7B [is_a_b2] last L28: 6s x 5d done (60 prompts w/ >=4 concepts)
+[17:02:13] Qwen/Qwen2.5-7B [part_of_b2] premise L0: 6s x 5d done (60 prompts w/ >=4 concepts)
+[17:03:55] Qwen/Qwen2.5-7B [part_of_b2] premise L4: 6s x 5d done (60 prompts w/ >=4 concepts)
+[17:05:39] Qwen/Qwen2.5-7B [part_of_b2] premise L8: 6s x 5d done (60 prompts w/ >=4 concepts)
+[17:07:19] Qwen/Qwen2.5-7B [part_of_b2] premise L12: 6s x 5d done (60 prompts w/ >=4 concepts)
+[17:09:06] Qwen/Qwen2.5-7B [part_of_b2] premise L16: 6s x 5d done (60 prompts w/ >=4 concepts)
+[17:10:55] Qwen/Qwen2.5-7B [part_of_b2] premise L20: 6s x 5d done (60 prompts w/ >=4 concepts)
+[17:12:40] Qwen/Qwen2.5-7B [part_of_b2] premise L24: 6s x 5d done (60 prompts w/ >=4 concepts)
+[17:14:23] Qwen/Qwen2.5-7B [part_of_b2] premise L28: 6s x 5d done (60 prompts w/ >=4 concepts)
+[17:16:00] Qwen/Qwen2.5-7B [part_of_b2] last L0: 6s x 5d done (60 prompts w/ >=4 concepts)
+[17:17:54] Qwen/Qwen2.5-7B [part_of_b2] last L4: 6s x 5d done (60 prompts w/ >=4 concepts)
+[17:19:31] Qwen/Qwen2.5-7B [part_of_b2] last L8: 6s x 5d done (60 prompts w/ >=4 concepts)
+[17:21:14] Qwen/Qwen2.5-7B [part_of_b2] last L12: 6s x 5d done (60 prompts w/ >=4 concepts)
+[17:23:07] Qwen/Qwen2.5-7B [part_of_b2] last L16: 6s x 5d done (60 prompts w/ >=4 concepts)
+[17:24:55] Qwen/Qwen2.5-7B [part_of_b2] last L20: 6s x 5d done (60 prompts w/ >=4 concepts)
+[17:26:42] Qwen/Qwen2.5-7B [part_of_b2] last L24: 6s x 5d done (60 prompts w/ >=4 concepts)
+[17:28:28] Qwen/Qwen2.5-7B [part_of_b2] last L28: 6s x 5d done (60 prompts w/ >=4 concepts)
+[17:28:34] VERDICT: 42 suitable position(s) passed G1-G3; 0/0 dose-response curves positive; 2/2 radial fingerprints pass
+arm relations__Qwen2.5-7B done; free 179G
+########## PHASE A: SCALE LADDER ##########
+=== ARM scaleladder__Qwen_Qwen2.5-1.5B (Qwen/Qwen2.5-1.5B on prontoqa_tree) | free 179G ===
+[17:28:44] extracting 240 samples for Qwen/Qwen2.5-1.5B/prontoqa_tree
+[17:28:44] loading Qwen/Qwen2.5-1.5B (fp32) on cuda
+[17:29:17]   Qwen/Qwen2.5-1.5B: chat_template=yes, chat_mode='plain' -> PLAIN prompt
+From v4.47 onwards, when a model cache is to be returned, `generate` will return a `Cache` instance instead by default (as opposed to the legacy tuple of tuples format). If you want to keep returning the legacy format, please set `return_legacy_cache=True`.
+[17:29:28]   prontoqa_tree: 25/240 (last had 0 thinking tokens)
+[17:29:39]   prontoqa_tree: 50/240 (last had 0 thinking tokens)
+[17:29:50]   prontoqa_tree: 75/240 (last had 0 thinking tokens)
+[17:30:01]   prontoqa_tree: 100/240 (last had 0 thinking tokens)
+[17:30:11]   prontoqa_tree: 125/240 (last had 0 thinking tokens)
+[17:30:22]   prontoqa_tree: 150/240 (last had 0 thinking tokens)
+[17:30:33]   prontoqa_tree: 175/240 (last had 0 thinking tokens)
+[17:30:43]   prontoqa_tree: 200/240 (last had 0 thinking tokens)
+[17:30:54]   prontoqa_tree: 225/240 (last had 0 thinking tokens)
+[17:31:01] done Qwen/Qwen2.5-1.5B/prontoqa_tree: wrote 240/240
+arm scaleladder__Qwen_Qwen2.5-1.5B size: 6.7G
+[17:31:06] Qwen/Qwen2.5-1.5B/prontoqa_tree/original [plain]: n=240 cot=0.942 answered=0.004 truncated=1.0 len_p50=15
+[17:31:06] WARNING: Qwen/Qwen2.5-1.5B/prontoqa_tree [plain]: 100% of generations truncated at the cap — 'last'-token analyses are contaminated; raise --max-new-tokens or split by the flag.
+audit warnings (see CSV)
+[17:31:09] Poincare distance matches the textbook closed form (max err 2.00e-15)
+[17:31:09] NOTE: HypLL differs under all tested conventions (best c/2: 1.76e-02); proceeding on the closed-form gate (our dist is proven correct vs the textbook form).
+[17:32:46] Qwen/Qwen2.5-1.5B [fictional_b1] premise L0: 6s x 5d done (60 prompts w/ >=4 concepts)
+[17:34:48] Qwen/Qwen2.5-1.5B [fictional_b1] premise L4: 6s x 5d done (60 prompts w/ >=4 concepts)
+[17:36:54] Qwen/Qwen2.5-1.5B [fictional_b1] premise L8: 6s x 5d done (60 prompts w/ >=4 concepts)
+[17:39:03] Qwen/Qwen2.5-1.5B [fictional_b1] premise L12: 6s x 5d done (60 prompts w/ >=4 concepts)
+[17:41:05] Qwen/Qwen2.5-1.5B [fictional_b1] premise L16: 6s x 5d done (60 prompts w/ >=4 concepts)
+[17:43:13] Qwen/Qwen2.5-1.5B [fictional_b1] premise L20: 6s x 5d done (60 prompts w/ >=4 concepts)
+[17:45:23] Qwen/Qwen2.5-1.5B [fictional_b1] premise L24: 6s x 5d done (60 prompts w/ >=4 concepts)
+[17:47:11] Qwen/Qwen2.5-1.5B [fictional_b1] premise L28: 6s x 5d done (60 prompts w/ >=4 concepts)
+[17:48:49] Qwen/Qwen2.5-1.5B [fictional_b1] last L0: 6s x 5d done (60 prompts w/ >=4 concepts)
+[17:50:59] Qwen/Qwen2.5-1.5B [fictional_b1] last L4: 6s x 5d done (60 prompts w/ >=4 concepts)
+[17:53:08] Qwen/Qwen2.5-1.5B [fictional_b1] last L8: 6s x 5d done (60 prompts w/ >=4 concepts)
+[17:55:14] Qwen/Qwen2.5-1.5B [fictional_b1] last L12: 6s x 5d done (60 prompts w/ >=4 concepts)
+[17:57:22] Qwen/Qwen2.5-1.5B [fictional_b1] last L16: 6s x 5d done (60 prompts w/ >=4 concepts)
+[17:59:33] Qwen/Qwen2.5-1.5B [fictional_b1] last L20: 6s x 5d done (60 prompts w/ >=4 concepts)
+[18:01:30] Qwen/Qwen2.5-1.5B [fictional_b1] last L24: 6s x 5d done (60 prompts w/ >=4 concepts)
+[18:03:39] Qwen/Qwen2.5-1.5B [fictional_b1] last L28: 6s x 5d done (60 prompts w/ >=4 concepts)
+[18:05:17] Qwen/Qwen2.5-1.5B [fictional_b2] premise L0: 6s x 5d done (60 prompts w/ >=4 concepts)
+[18:07:08] Qwen/Qwen2.5-1.5B [fictional_b2] premise L4: 6s x 5d done (60 prompts w/ >=4 concepts)
+[18:08:50] Qwen/Qwen2.5-1.5B [fictional_b2] premise L8: 6s x 5d done (60 prompts w/ >=4 concepts)

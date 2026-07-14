@@ -1,0 +1,34 @@
+{
+  "stage": "rung0_v2",
+  "timestamp": "2026-07-13T21:50:16.891831",
+  "git": {
+    "commit": "f1aaa1d2237ffcf54c2b0770f85746538a8d7e34",
+    "branch": "main",
+    "dirty": true
+  },
+  "python": "3.12.3",
+  "versions": {
+    "torch": "2.12.1+cu130",
+    "numpy": "1.26.4",
+    "scipy": "1.17.1",
+    "transformers": "4.46.3",
+    "hypll": null
+  },
+  "args": {
+    "activations": "results/activations_v2/Qwen_Qwen2.5-7B__chat",
+    "seed": 0,
+    "n_bootstrap": 25,
+    "pca_cap": 256
+  },
+  "extra": {
+    "thresholds": {
+      "parity_min_plateau": 0.2,
+      "span_effect_frac": 0.15,
+      "min_effect_over_floor": 3.0,
+      "h1_alpha": 0.05,
+      "gate_a_flat_frac": 0.5,
+      "gate_a_tree_frac": 0.5
+    },
+    "thresholds_source": "PREREGISTER2.md"
+  }
+}

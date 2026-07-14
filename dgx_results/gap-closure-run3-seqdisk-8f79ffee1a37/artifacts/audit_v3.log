@@ -1,0 +1,16 @@
+[17:21:23] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa/nonce [plain]: n=100 cot=1.0 answered=0.9 truncated=0.46 len_p50=881
+[17:21:23] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa/original [plain]: n=100 cot=1.0 answered=0.98 truncated=0.3 len_p50=709
+[17:21:23] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa/paraphrase [plain]: n=100 cot=1.0 answered=1.0 truncated=0.09 len_p50=577
+[17:21:23] WARNING: deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa [plain]: 30% of generations truncated at the cap — 'last'-token analyses are contaminated; raise --max-new-tokens or split by the flag.
+[19:34:02] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa/nonce [chat]: n=100 cot=1.0 answered=0.98 truncated=0.08 len_p50=596
+[19:34:02] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa/original [chat]: n=100 cot=1.0 answered=1.0 truncated=0.0 len_p50=486
+[19:34:02] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa/paraphrase [chat]: n=100 cot=1.0 answered=1.0 truncated=0.0 len_p50=438
+[19:34:02] audit clean: reasoning present, truncation low
+[20:44:09] Qwen/Qwen2.5-7B/prontoqa/nonce [plain]: n=100 cot=1.0 answered=0.97 truncated=0.0 len_p50=217
+[20:44:09] Qwen/Qwen2.5-7B/prontoqa/original [plain]: n=100 cot=1.0 answered=1.0 truncated=0.0 len_p50=206
+[20:44:09] Qwen/Qwen2.5-7B/prontoqa/paraphrase [plain]: n=100 cot=0.0 answered=1.0 truncated=0.0 len_p50=1
+[20:44:09] audit clean: reasoning present, truncation low
+[21:28:24] Qwen/Qwen2.5-7B/prontoqa/nonce [chat]: n=100 cot=1.0 answered=0.99 truncated=0.01 len_p50=155
+[21:28:24] Qwen/Qwen2.5-7B/prontoqa/original [chat]: n=100 cot=1.0 answered=0.99 truncated=0.0 len_p50=149
+[21:28:24] Qwen/Qwen2.5-7B/prontoqa/paraphrase [chat]: n=100 cot=0.48 answered=1.0 truncated=0.0 len_p50=1
+[21:28:24] audit clean: reasoning present, truncation low

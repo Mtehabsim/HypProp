@@ -1,0 +1,27 @@
+{
+  "stage": "atlas_forensics",
+  "timestamp": "2026-07-13T21:29:46.115306",
+  "git": {
+    "commit": "4a0ea30fb1f9d3d7d0f86681648e407267463db3",
+    "branch": "main",
+    "dirty": true
+  },
+  "python": "3.12.3",
+  "versions": {
+    "torch": "2.12.1+cu130",
+    "numpy": "1.26.4",
+    "scipy": "1.17.1",
+    "transformers": "4.46.3",
+    "hypll": null
+  },
+  "args": {
+    "activations": "results/activations_v2/Qwen_Qwen2.5-7B__chat",
+    "seed": 0,
+    "n_quadruples": 1500,
+    "max_prompts": 150
+  },
+  "extra": {
+    "euclidean_ceiling": 0.29289321881345254,
+    "numeric_worst": 0.2854834480622824
+  }
+}

@@ -1,0 +1,204 @@
+[17:29:03] rung0_v2 thresholds from PREREGISTER2.md: {'parity_min_plateau': 0.2, 'span_effect_frac': 0.15, 'min_effect_over_floor': 3.0, 'h1_alpha': 0.05, 'gate_a_flat_frac': 0.5, 'gate_a_tree_frac': 0.5}
+[17:35:02] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa: fitting per-layer balanced backgrounds
+[18:10:03]   deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa: layer 0/29 calibrated
+[18:10:16]   deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa: layer 5/29 calibrated
+[18:10:29]   deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa: layer 10/29 calibrated
+[18:10:43]   deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa: layer 15/29 calibrated
+[18:10:56]   deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa: layer 20/29 calibrated
+[18:11:09]   deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa: layer 25/29 calibrated
+[18:11:49] rung0_v2 verdict written
+# Rung 0 v2 verdict
+
+Thresholds source: **PREREGISTER2.md**
+`{"parity_min_plateau": 0.2, "span_effect_frac": 0.15, "min_effect_over_floor": 3.0, "h1_alpha": 0.05, "gate_a_flat_frac": 0.5, "gate_a_tree_frac": 0.5}`
+
+## deepseek-ai/DeepSeek-R1-Distill-Qwen-7B / prontoqa
+
+**Gate 0 (Atlas-object raw plateau)**: 0.023 (threshold 0.2; Euclidean-formula ceiling is 0.293 — see atlas_forensics) -> **OBJECT/EXTRACTION MISMATCH**
+
+**Gate A (regime-matched anchors keep the span open under every metric)**: **FAIL**
+  - L0/input/raw: span collapsed (flat <= tree)
+  - L0/generated/raw: span collapsed (flat <= tree)
+  - L0/thinking/raw: span collapsed (flat <= tree)
+  - L0/last/raw: span collapsed (flat <= tree)
+  - L0/all/raw: span collapsed (flat <= tree)
+  - L1/input/raw: span collapsed (flat <= tree)
+  - L1/generated/raw: span collapsed (flat <= tree)
+  - L1/thinking/raw: span collapsed (flat <= tree)
+
+**Gate B (span-relative drop, per source x metric)**
+
+- input/background: plateau_score=-1.335 final_score=-1.815 drop=-0.480 (floor 0.096, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- input/per_cloud: plateau_score=+0.204 final_score=+0.082 drop=-0.121 (floor 0.057, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- generated/background: plateau_score=+0.114 final_score=+0.029 drop=-0.085 (floor 0.442, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- generated/per_cloud: plateau_score=+0.439 final_score=+0.349 drop=-0.090 (floor 0.110, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- thinking/background: plateau_score=-0.206 final_score=-0.792 drop=-0.586 (floor 0.188, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- thinking/per_cloud: plateau_score=+0.548 final_score=+0.413 drop=-0.134 (floor 0.066, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- last/background: plateau_score=-0.194 final_score=+0.774 drop=+0.969 (floor 0.297, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- last/per_cloud: plateau_score=+1.095 final_score=+1.017 drop=-0.078 (floor 0.056, beats_cluster=True) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- all/background: plateau_score=+0.156 final_score=-0.013 drop=-0.168 (floor 0.477, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- all/per_cloud: plateau_score=+0.447 final_score=+0.351 drop=-0.096 (floor 0.117, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+
+**H1 paired (per-prompt, matched token counts, raw, final layer)**: {'n': 100, 'median_diff': 0.0177, 'frac_positive': 0.81, 'wilcoxon_p': 2.3129702605871595e-12, 'verdict': 'PASS(generated more tree-like)', 'model': 'deepseek-ai/DeepSeek-R1-Distill-Qwen-7B', 'dataset': 'prontoqa'}
+
+## H2 v2 (direction consistency across models)
+
+- deepseek-ai/DeepSeek-R1-Distill-Qwen-7B: PASS(generated more tree-like) (median_diff=0.0177, p=2.3129702605871595e-12)
+
+H2 requires >= 2 reasoning/base model PAIRS showing the same
+ordering of median_diff; with a single pair report direction only,
+make NO tuning-causes-it claim (the v1 design error).
+
+[19:38:28] rung0_v2 thresholds from PREREGISTER2.md: {'parity_min_plateau': 0.2, 'span_effect_frac': 0.15, 'min_effect_over_floor': 3.0, 'h1_alpha': 0.05, 'gate_a_flat_frac': 0.5, 'gate_a_tree_frac': 0.5}
+[19:42:25] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa: fitting per-layer balanced backgrounds
+[20:08:25]   deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa: layer 0/29 calibrated
+[20:08:38]   deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa: layer 5/29 calibrated
+[20:08:51]   deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa: layer 10/29 calibrated
+[20:09:04]   deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa: layer 15/29 calibrated
+[20:09:17]   deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa: layer 20/29 calibrated
+[20:09:30]   deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa: layer 25/29 calibrated
+[20:10:08] rung0_v2 verdict written
+# Rung 0 v2 verdict
+
+Thresholds source: **PREREGISTER2.md**
+`{"parity_min_plateau": 0.2, "span_effect_frac": 0.15, "min_effect_over_floor": 3.0, "h1_alpha": 0.05, "gate_a_flat_frac": 0.5, "gate_a_tree_frac": 0.5}`
+
+## deepseek-ai/DeepSeek-R1-Distill-Qwen-7B / prontoqa
+
+**Gate 0 (Atlas-object raw plateau)**: 0.067 (threshold 0.2; Euclidean-formula ceiling is 0.293 — see atlas_forensics) -> **OBJECT/EXTRACTION MISMATCH**
+
+**Gate A (regime-matched anchors keep the span open under every metric)**: **FAIL**
+  - L0/input/raw: span collapsed (flat <= tree)
+  - L0/generated/raw: span collapsed (flat <= tree)
+  - L0/thinking/raw: span collapsed (flat <= tree)
+  - L0/last/raw: span collapsed (flat <= tree)
+  - L0/all/raw: span collapsed (flat <= tree)
+  - L1/input/raw: span collapsed (flat <= tree)
+  - L1/generated/raw: span collapsed (flat <= tree)
+  - L1/thinking/raw: span collapsed (flat <= tree)
+
+**Gate B (span-relative drop, per source x metric)**
+
+- input/background: plateau_score=-1.241 final_score=-1.164 drop=+0.077 (floor 0.070, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- input/per_cloud: plateau_score=+0.167 final_score=+0.096 drop=-0.071 (floor 0.072, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- generated/background: plateau_score=-1.134 final_score=-0.500 drop=+0.634 (floor 0.077, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- generated/per_cloud: plateau_score=+0.263 final_score=+0.121 drop=-0.142 (floor 0.039, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- thinking/background: plateau_score=-0.719 final_score=-0.498 drop=+0.221 (floor 0.108, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- thinking/per_cloud: plateau_score=+0.531 final_score=+0.299 drop=-0.231 (floor 0.058, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- last/background: plateau_score=-0.349 final_score=-1.065 drop=-0.716 (floor 0.231, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- last/per_cloud: plateau_score=+0.832 final_score=+0.691 drop=-0.141 (floor 0.061, beats_cluster=True) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- all/background: plateau_score=-1.085 final_score=-0.561 drop=+0.524 (floor 0.073, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- all/per_cloud: plateau_score=+0.262 final_score=+0.119 drop=-0.142 (floor 0.046, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+
+**H1 paired (per-prompt, matched token counts, raw, final layer)**: {'n': 100, 'median_diff': 0.0179, 'frac_positive': 0.79, 'wilcoxon_p': 1.30808185424902e-10, 'verdict': 'PASS(generated more tree-like)', 'model': 'deepseek-ai/DeepSeek-R1-Distill-Qwen-7B', 'dataset': 'prontoqa'}
+
+## H2 v2 (direction consistency across models)
+
+- deepseek-ai/DeepSeek-R1-Distill-Qwen-7B: PASS(generated more tree-like) (median_diff=0.0179, p=1.30808185424902e-10)
+
+H2 requires >= 2 reasoning/base model PAIRS showing the same
+ordering of median_diff; with a single pair report direction only,
+make NO tuning-causes-it claim (the v1 design error).
+
+[20:45:32] rung0_v2 thresholds from PREREGISTER2.md: {'parity_min_plateau': 0.2, 'span_effect_frac': 0.15, 'min_effect_over_floor': 3.0, 'h1_alpha': 0.05, 'gate_a_flat_frac': 0.5, 'gate_a_tree_frac': 0.5}
+[20:46:44] Qwen/Qwen2.5-7B/prontoqa: fitting per-layer balanced backgrounds
+[21:04:16]   Qwen/Qwen2.5-7B/prontoqa: layer 0/29 calibrated
+[21:04:29]   Qwen/Qwen2.5-7B/prontoqa: layer 5/29 calibrated
+[21:04:42]   Qwen/Qwen2.5-7B/prontoqa: layer 10/29 calibrated
+[21:04:55]   Qwen/Qwen2.5-7B/prontoqa: layer 15/29 calibrated
+[21:05:09]   Qwen/Qwen2.5-7B/prontoqa: layer 20/29 calibrated
+[21:05:22]   Qwen/Qwen2.5-7B/prontoqa: layer 25/29 calibrated
+[21:05:43] rung0_v2 verdict written
+# Rung 0 v2 verdict
+
+Thresholds source: **PREREGISTER2.md**
+`{"parity_min_plateau": 0.2, "span_effect_frac": 0.15, "min_effect_over_floor": 3.0, "h1_alpha": 0.05, "gate_a_flat_frac": 0.5, "gate_a_tree_frac": 0.5}`
+
+## Qwen/Qwen2.5-7B / prontoqa
+
+**Gate 0 (Atlas-object raw plateau)**: 0.080 (threshold 0.2; Euclidean-formula ceiling is 0.293 — see atlas_forensics) -> **OBJECT/EXTRACTION MISMATCH**
+
+**Gate A (regime-matched anchors keep the span open under every metric)**: **FAIL**
+  - L0/input/raw: span collapsed (flat <= tree)
+  - L0/generated/raw: span collapsed (flat <= tree)
+  - L0/thinking/raw: span collapsed (flat <= tree)
+  - L0/last/raw: span collapsed (flat <= tree)
+  - L0/all/raw: span collapsed (flat <= tree)
+  - L1/input/raw: span collapsed (flat <= tree)
+  - L1/generated/raw: span collapsed (flat <= tree)
+  - L1/thinking/raw: span collapsed (flat <= tree)
+
+**Gate B (span-relative drop, per source x metric)**
+
+- input/background: plateau_score=-1.513 final_score=-1.503 drop=+0.011 (floor 0.100, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- input/per_cloud: plateau_score=+0.211 final_score=+0.150 drop=-0.061 (floor 0.043, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- generated/background: plateau_score=-1.142 final_score=-1.388 drop=-0.245 (floor 0.107, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- generated/per_cloud: plateau_score=+0.373 final_score=+0.175 drop=-0.198 (floor 0.056, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- thinking/background: plateau_score=-1.136 final_score=-1.548 drop=-0.412 (floor 0.176, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- thinking/per_cloud: plateau_score=+0.806 final_score=+0.500 drop=-0.306 (floor 0.074, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- last/background: plateau_score=+0.284 final_score=+1.079 drop=+0.795 (floor 0.093, beats_cluster=True) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- last/per_cloud: plateau_score=+0.695 final_score=+0.624 drop=-0.072 (floor 0.087, beats_cluster=True) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- all/background: plateau_score=-1.087 final_score=-1.484 drop=-0.397 (floor 0.114, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- all/per_cloud: plateau_score=+0.253 final_score=+0.125 drop=-0.128 (floor 0.055, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+
+**H1 paired (per-prompt, matched token counts, raw, final layer)**: {'n': 100, 'median_diff': 0.0138, 'frac_positive': 0.75, 'wilcoxon_p': 8.94981124911862e-10, 'verdict': 'PASS(generated more tree-like)', 'model': 'Qwen/Qwen2.5-7B', 'dataset': 'prontoqa'}
+
+## H2 v2 (direction consistency across models)
+
+- Qwen/Qwen2.5-7B: PASS(generated more tree-like) (median_diff=0.0138, p=8.94981124911862e-10)
+
+H2 requires >= 2 reasoning/base model PAIRS showing the same
+ordering of median_diff; with a single pair report direction only,
+make NO tuning-causes-it claim (the v1 design error).
+
+[21:29:48] rung0_v2 thresholds from PREREGISTER2.md: {'parity_min_plateau': 0.2, 'span_effect_frac': 0.15, 'min_effect_over_floor': 3.0, 'h1_alpha': 0.05, 'gate_a_flat_frac': 0.5, 'gate_a_tree_frac': 0.5}
+[21:31:03] Qwen/Qwen2.5-7B/prontoqa: fitting per-layer balanced backgrounds
+[21:48:50]   Qwen/Qwen2.5-7B/prontoqa: layer 0/29 calibrated
+[21:49:02]   Qwen/Qwen2.5-7B/prontoqa: layer 5/29 calibrated
+[21:49:15]   Qwen/Qwen2.5-7B/prontoqa: layer 10/29 calibrated
+[21:49:28]   Qwen/Qwen2.5-7B/prontoqa: layer 15/29 calibrated
+[21:49:41]   Qwen/Qwen2.5-7B/prontoqa: layer 20/29 calibrated
+[21:49:54]   Qwen/Qwen2.5-7B/prontoqa: layer 25/29 calibrated
+[21:50:16] rung0_v2 verdict written
+# Rung 0 v2 verdict
+
+Thresholds source: **PREREGISTER2.md**
+`{"parity_min_plateau": 0.2, "span_effect_frac": 0.15, "min_effect_over_floor": 3.0, "h1_alpha": 0.05, "gate_a_flat_frac": 0.5, "gate_a_tree_frac": 0.5}`
+
+## Qwen/Qwen2.5-7B / prontoqa
+
+**Gate 0 (Atlas-object raw plateau)**: 0.058 (threshold 0.2; Euclidean-formula ceiling is 0.293 — see atlas_forensics) -> **OBJECT/EXTRACTION MISMATCH**
+
+**Gate A (regime-matched anchors keep the span open under every metric)**: **FAIL**
+  - L0/input/raw: span collapsed (flat <= tree)
+  - L0/generated/raw: span collapsed (flat <= tree)
+  - L0/thinking/raw: span collapsed (flat <= tree)
+  - L0/last/raw: span collapsed (flat <= tree)
+  - L0/all/raw: span collapsed (flat <= tree)
+  - L1/input/raw: span collapsed (flat <= tree)
+  - L1/generated/raw: span collapsed (flat <= tree)
+  - L1/thinking/raw: span collapsed (flat <= tree)
+
+**Gate B (span-relative drop, per source x metric)**
+
+- input/background: plateau_score=-1.476 final_score=-1.763 drop=-0.287 (floor 0.115, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- input/per_cloud: plateau_score=+0.099 final_score=+0.093 drop=-0.006 (floor 0.044, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- generated/background: plateau_score=-0.853 final_score=-1.605 drop=-0.751 (floor 0.093, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- generated/per_cloud: plateau_score=+0.446 final_score=+0.108 drop=-0.338 (floor 0.044, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- thinking/background: plateau_score=-1.533 final_score=-1.473 drop=+0.060 (floor 0.222, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- thinking/per_cloud: plateau_score=+0.806 final_score=+0.610 drop=-0.196 (floor 0.062, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- last/background: plateau_score=-0.342 final_score=-1.667 drop=-1.326 (floor 0.427, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- last/per_cloud: plateau_score=+0.919 final_score=+0.604 drop=-0.315 (floor 0.070, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- all/background: plateau_score=-0.804 final_score=-1.601 drop=-0.796 (floor 0.109, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- all/per_cloud: plateau_score=+0.287 final_score=+0.135 drop=-0.152 (floor 0.044, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+
+**H1 paired (per-prompt, matched token counts, raw, final layer)**: {'n': 100, 'median_diff': -0.0013, 'frac_positive': 0.46, 'wilcoxon_p': 0.2536519936353009, 'verdict': 'NULL(no paired difference)', 'model': 'Qwen/Qwen2.5-7B', 'dataset': 'prontoqa'}
+
+## H2 v2 (direction consistency across models)
+
+- Qwen/Qwen2.5-7B: NULL(no paired difference) (median_diff=-0.0013, p=0.2536519936353009)
+
+H2 requires >= 2 reasoning/base model PAIRS showing the same
+ordering of median_diff; with a single pair report direction only,
+make NO tuning-causes-it claim (the v1 design error).
+

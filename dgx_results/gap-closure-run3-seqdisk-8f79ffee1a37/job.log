@@ -403,3 +403,82 @@ Euclidean ceiling of Eq.5/Eq.6 delta_rel: 0.2929 (analytic, unit square)
 --- rung0_v2 Qwen_Qwen2.5-7B__chat ---
 [21:29:48] rung0_v2 thresholds from PREREGISTER2.md: {'parity_min_plateau': 0.2, 'span_effect_frac': 0.15, 'min_effect_over_floor': 3.0, 'h1_alpha': 0.05, 'gate_a_flat_frac': 0.5, 'gate_a_tree_frac': 0.5}
 [21:31:03] Qwen/Qwen2.5-7B/prontoqa: fitting per-layer balanced backgrounds
+[21:48:50]   Qwen/Qwen2.5-7B/prontoqa: layer 0/29 calibrated
+[21:49:02]   Qwen/Qwen2.5-7B/prontoqa: layer 5/29 calibrated
+[21:49:15]   Qwen/Qwen2.5-7B/prontoqa: layer 10/29 calibrated
+[21:49:28]   Qwen/Qwen2.5-7B/prontoqa: layer 15/29 calibrated
+[21:49:41]   Qwen/Qwen2.5-7B/prontoqa: layer 20/29 calibrated
+[21:49:54]   Qwen/Qwen2.5-7B/prontoqa: layer 25/29 calibrated
+[21:50:16] rung0_v2 verdict written
+# Rung 0 v2 verdict
+
+Thresholds source: **PREREGISTER2.md**
+`{"parity_min_plateau": 0.2, "span_effect_frac": 0.15, "min_effect_over_floor": 3.0, "h1_alpha": 0.05, "gate_a_flat_frac": 0.5, "gate_a_tree_frac": 0.5}`
+
+## Qwen/Qwen2.5-7B / prontoqa
+
+**Gate 0 (Atlas-object raw plateau)**: 0.058 (threshold 0.2; Euclidean-formula ceiling is 0.293 — see atlas_forensics) -> **OBJECT/EXTRACTION MISMATCH**
+
+**Gate A (regime-matched anchors keep the span open under every metric)**: **FAIL**
+  - L0/input/raw: span collapsed (flat <= tree)
+  - L0/generated/raw: span collapsed (flat <= tree)
+  - L0/thinking/raw: span collapsed (flat <= tree)
+  - L0/last/raw: span collapsed (flat <= tree)
+  - L0/all/raw: span collapsed (flat <= tree)
+  - L1/input/raw: span collapsed (flat <= tree)
+  - L1/generated/raw: span collapsed (flat <= tree)
+  - L1/thinking/raw: span collapsed (flat <= tree)
+
+**Gate B (span-relative drop, per source x metric)**
+
+- input/background: plateau_score=-1.476 final_score=-1.763 drop=-0.287 (floor 0.115, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- input/per_cloud: plateau_score=+0.099 final_score=+0.093 drop=-0.006 (floor 0.044, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- generated/background: plateau_score=-0.853 final_score=-1.605 drop=-0.751 (floor 0.093, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- generated/per_cloud: plateau_score=+0.446 final_score=+0.108 drop=-0.338 (floor 0.044, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- thinking/background: plateau_score=-1.533 final_score=-1.473 drop=+0.060 (floor 0.222, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- thinking/per_cloud: plateau_score=+0.806 final_score=+0.610 drop=-0.196 (floor 0.062, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- last/background: plateau_score=-0.342 final_score=-1.667 drop=-1.326 (floor 0.427, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- last/per_cloud: plateau_score=+0.919 final_score=+0.604 drop=-0.315 (floor 0.070, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- all/background: plateau_score=-0.804 final_score=-1.601 drop=-0.796 (floor 0.109, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- all/per_cloud: plateau_score=+0.287 final_score=+0.135 drop=-0.152 (floor 0.044, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+
+**H1 paired (per-prompt, matched token counts, raw, final layer)**: {'n': 100, 'median_diff': -0.0013, 'frac_positive': 0.46, 'wilcoxon_p': 0.2536519936353009, 'verdict': 'NULL(no paired difference)', 'model': 'Qwen/Qwen2.5-7B', 'dataset': 'prontoqa'}
+
+## H2 v2 (direction consistency across models)
+
+- Qwen/Qwen2.5-7B: NULL(no paired difference) (median_diff=-0.0013, p=0.2536519936353009)
+
+H2 requires >= 2 reasoning/base model PAIRS showing the same
+ordering of median_diff; with a single pair report direction only,
+make NO tuning-causes-it claim (the v1 design error).
+
+--- matched_probe Qwen_Qwen2.5-7B__chat ---
+[21:50:20] HypLL not installed -> skipping cross-check (pip install hypll to enable)
+[21:51:12] Qwen/Qwen2.5-7B/prontoqa L0: 5 seeds x 3 arms done
+[21:51:31] Qwen/Qwen2.5-7B/prontoqa L7: 5 seeds x 3 arms done
+[21:51:47] Qwen/Qwen2.5-7B/prontoqa L14: 5 seeds x 3 arms done
+[21:52:03] Qwen/Qwen2.5-7B/prontoqa L21: 5 seeds x 3 arms done
+[21:52:15] Qwen/Qwen2.5-7B/prontoqa L27: 5 seeds x 3 arms done
+[21:52:27] Qwen/Qwen2.5-7B/prontoqa L28: 5 seeds x 3 arms done
+[21:52:34] Qwen/Qwen2.5-7B L0: bare=0.074 cond=0.068 hyp=0.071 | conditioning gap=-0.006 (p=0.625) geometry gap=+0.003 (p=1.000) -> inconclusive at this layer
+[21:52:34] Qwen/Qwen2.5-7B L7: bare=0.638 cond=0.674 hyp=0.666 | conditioning gap=+0.036 (p=0.312) geometry gap=-0.008 (p=0.625) -> inconclusive at this layer
+[21:52:34] Qwen/Qwen2.5-7B L14: bare=0.638 cond=0.670 hyp=0.612 | conditioning gap=+0.032 (p=1.000) geometry gap=-0.058 (p=0.125) -> inconclusive at this layer
+[21:52:34] Qwen/Qwen2.5-7B L21: bare=0.716 cond=0.714 hyp=0.687 | conditioning gap=-0.002 (p=1.000) geometry gap=-0.027 (p=0.438) -> inconclusive at this layer
+[21:52:34] Qwen/Qwen2.5-7B L27: bare=0.520 cond=0.528 hyp=0.505 | conditioning gap=+0.008 (p=1.000) geometry gap=-0.023 (p=0.312) -> inconclusive at this layer
+[21:52:34] Qwen/Qwen2.5-7B L28: bare=0.620 cond=0.658 hyp=0.632 | conditioning gap=+0.038 (p=0.438) geometry gap=-0.027 (p=0.312) -> inconclusive at this layer
+--- determinants_v2 Qwen_Qwen2.5-7B__chat ---
+[21:54:19] Qwen/Qwen2.5-7B/prontoqa [generated@L28, per_cloud]: base=0.195; driver = meaning_paraphrase (delta +0.0482, null95 0.0184) [CAUTION: order-power ceiling 0.0056 < 2x split-half null 0.0184 -> the order test is underpowered here; 'no order effect' is uninterpretable]
+[21:55:02] Qwen/Qwen2.5-7B/prontoqa LAST-token adjudication: delta=0.154, cluster_null=0.128, excess=-0.025 -> EXPLAINED BY CLASS CLUSTERING (star tree, no hierarchy)
+--- deleting raw activations for Qwen_Qwen2.5-7B__chat to free disk ---
+arm Qwen_Qwen2.5-7B__chat done; free disk now 222G
+=== cross-arm H2 summary (from per-arm h1_paired_v2.csv) ===
+arm                                      model                                          median_diff   wilcoxon_p verdict
+Qwen_Qwen2.5-7B__chat                    Qwen/Qwen2.5-7B                                    -0.0013 0.2536519936353009 NULL(no paired difference)
+Qwen_Qwen2.5-7B__plain                   Qwen/Qwen2.5-7B                                     0.0138 8.94981124911862e-10 PASS(generated more tree-like)
+deepseek-ai_DeepSeek-R1-Distill-Qwen-7B__chat deepseek-ai/DeepSeek-R1-Distill-Qwen-7B             0.0179 1.30808185424902e-10 PASS(generated more tree-like)
+deepseek-ai_DeepSeek-R1-Distill-Qwen-7B__plain deepseek-ai/DeepSeek-R1-Distill-Qwen-7B             0.0177 2.3129702605871595e-12 PASS(generated more tree-like)
+
+H2 (per PREREGISTER2): reasoning-model gap should exceed base-model gap.
+With one reasoning/base pair per chat regime, report DIRECTION only; a
+causal 'tuning amplifies compression' claim needs >=2 consistent pairs.
+=== job complete; artifacts in dgx_results/gap-closure-run3-seqdisk-8f79ffee1a37/artifacts ===

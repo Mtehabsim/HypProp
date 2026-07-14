@@ -1,0 +1,2 @@
+[15:44:56] prepared prontoqa: 300 samples, 5 classes -> results/data_cache_v2/prontoqa.jsonl
+[15:44:56]   + variants: prontoqa now 900 rows (original+nonce+paraphrase)

@@ -1,0 +1,9 @@
+arm                                      model                                          median_diff   wilcoxon_p verdict
+Qwen_Qwen2.5-7B__chat                    Qwen/Qwen2.5-7B                                    -0.0013 0.2536519936353009 NULL(no paired difference)
+Qwen_Qwen2.5-7B__plain                   Qwen/Qwen2.5-7B                                     0.0138 8.94981124911862e-10 PASS(generated more tree-like)
+deepseek-ai_DeepSeek-R1-Distill-Qwen-7B__chat deepseek-ai/DeepSeek-R1-Distill-Qwen-7B             0.0179 1.30808185424902e-10 PASS(generated more tree-like)
+deepseek-ai_DeepSeek-R1-Distill-Qwen-7B__plain deepseek-ai/DeepSeek-R1-Distill-Qwen-7B             0.0177 2.3129702605871595e-12 PASS(generated more tree-like)
+
+H2 (per PREREGISTER2): reasoning-model gap should exceed base-model gap.
+With one reasoning/base pair per chat regime, report DIRECTION only; a
+causal 'tuning amplifies compression' claim needs >=2 consistent pairs.

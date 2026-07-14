@@ -1,0 +1,52 @@
+[18:11:53] HypLL not installed -> skipping cross-check (pip install hypll to enable)
+[18:14:15] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa L0: 5 seeds x 3 arms done
+[18:14:31] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa L7: 5 seeds x 3 arms done
+[18:14:45] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa L14: 5 seeds x 3 arms done
+[18:15:01] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa L21: 5 seeds x 3 arms done
+[18:15:19] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa L27: 5 seeds x 3 arms done
+[18:15:34] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa L28: 5 seeds x 3 arms done
+[18:15:40] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B L0: bare=0.093 cond=0.098 hyp=0.078 | conditioning gap=+0.006 (p=0.625) geometry gap=-0.020 (p=0.312) -> inconclusive at this layer
+[18:15:40] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B L7: bare=0.137 cond=0.172 hyp=0.189 | conditioning gap=+0.035 (p=0.188) geometry gap=+0.018 (p=0.812) -> inconclusive at this layer
+[18:15:40] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B L14: bare=0.187 cond=0.198 hyp=0.159 | conditioning gap=+0.011 (p=0.812) geometry gap=-0.039 (p=0.125) -> inconclusive at this layer
+[18:15:40] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B L21: bare=0.206 cond=0.219 hyp=0.233 | conditioning gap=+0.012 (p=0.625) geometry gap=+0.014 (p=0.812) -> inconclusive at this layer
+[18:15:40] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B L27: bare=0.157 cond=0.302 hyp=0.272 | conditioning gap=+0.145 (p=0.062) geometry gap=-0.029 (p=0.812) -> CONDITIONING explains Raj
+[18:15:40] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B L28: bare=0.120 cond=0.265 hyp=0.214 | conditioning gap=+0.145 (p=0.062) geometry gap=-0.051 (p=0.188) -> CONDITIONING explains Raj
+[20:10:12] HypLL not installed -> skipping cross-check (pip install hypll to enable)
+[20:12:10] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa L0: 5 seeds x 3 arms done
+[20:12:31] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa L7: 5 seeds x 3 arms done
+[20:12:56] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa L14: 5 seeds x 3 arms done
+[20:13:20] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa L21: 5 seeds x 3 arms done
+[20:13:36] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa L27: 5 seeds x 3 arms done
+[20:13:50] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa L28: 5 seeds x 3 arms done
+[20:13:57] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B L0: bare=0.008 cond=0.002 hyp=0.005 | conditioning gap=-0.006 (p=0.812) geometry gap=+0.003 (p=0.312) -> inconclusive at this layer
+[20:13:57] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B L7: bare=0.310 cond=0.357 hyp=0.416 | conditioning gap=+0.047 (p=0.312) geometry gap=+0.059 (p=0.125) -> inconclusive at this layer
+[20:13:57] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B L14: bare=0.462 cond=0.563 hyp=0.542 | conditioning gap=+0.101 (p=0.188) geometry gap=-0.021 (p=0.812) -> CONDITIONING explains Raj
+[20:13:57] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B L21: bare=0.456 cond=0.494 hyp=0.402 | conditioning gap=+0.038 (p=0.625) geometry gap=-0.092 (p=0.062) -> inconclusive at this layer
+[20:13:57] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B L27: bare=0.283 cond=0.372 hyp=0.315 | conditioning gap=+0.089 (p=0.062) geometry gap=-0.058 (p=0.188) -> CONDITIONING explains Raj
+[20:13:57] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B L28: bare=0.230 cond=0.323 hyp=0.235 | conditioning gap=+0.093 (p=0.062) geometry gap=-0.088 (p=0.062) -> CONDITIONING explains Raj
+[21:05:46] HypLL not installed -> skipping cross-check (pip install hypll to enable)
+[21:06:32] Qwen/Qwen2.5-7B/prontoqa L0: 5 seeds x 3 arms done
+[21:06:47] Qwen/Qwen2.5-7B/prontoqa L7: 5 seeds x 3 arms done
+[21:07:03] Qwen/Qwen2.5-7B/prontoqa L14: 5 seeds x 3 arms done
+[21:07:23] Qwen/Qwen2.5-7B/prontoqa L21: 5 seeds x 3 arms done
+[21:07:41] Qwen/Qwen2.5-7B/prontoqa L27: 5 seeds x 3 arms done
+[21:07:59] Qwen/Qwen2.5-7B/prontoqa L28: 5 seeds x 3 arms done
+[21:08:05] Qwen/Qwen2.5-7B L0: bare=0.131 cond=0.135 hyp=0.125 | conditioning gap=+0.004 (p=1.000) geometry gap=-0.010 (p=0.062) -> inconclusive at this layer
+[21:08:05] Qwen/Qwen2.5-7B L7: bare=0.457 cond=0.399 hyp=0.435 | conditioning gap=-0.058 (p=0.062) geometry gap=+0.036 (p=0.312) -> inconclusive at this layer
+[21:08:05] Qwen/Qwen2.5-7B L14: bare=0.529 cond=0.534 hyp=0.509 | conditioning gap=+0.004 (p=0.625) geometry gap=-0.024 (p=0.625) -> inconclusive at this layer
+[21:08:05] Qwen/Qwen2.5-7B L21: bare=0.518 cond=0.533 hyp=0.483 | conditioning gap=+0.015 (p=0.812) geometry gap=-0.050 (p=0.312) -> inconclusive at this layer
+[21:08:05] Qwen/Qwen2.5-7B L27: bare=0.486 cond=0.514 hyp=0.532 | conditioning gap=+0.028 (p=0.625) geometry gap=+0.018 (p=0.125) -> inconclusive at this layer
+[21:08:05] Qwen/Qwen2.5-7B L28: bare=0.363 cond=0.506 hyp=0.454 | conditioning gap=+0.143 (p=0.062) geometry gap=-0.052 (p=0.812) -> CONDITIONING explains Raj
+[21:50:20] HypLL not installed -> skipping cross-check (pip install hypll to enable)
+[21:51:12] Qwen/Qwen2.5-7B/prontoqa L0: 5 seeds x 3 arms done
+[21:51:31] Qwen/Qwen2.5-7B/prontoqa L7: 5 seeds x 3 arms done
+[21:51:47] Qwen/Qwen2.5-7B/prontoqa L14: 5 seeds x 3 arms done
+[21:52:03] Qwen/Qwen2.5-7B/prontoqa L21: 5 seeds x 3 arms done
+[21:52:15] Qwen/Qwen2.5-7B/prontoqa L27: 5 seeds x 3 arms done
+[21:52:27] Qwen/Qwen2.5-7B/prontoqa L28: 5 seeds x 3 arms done
+[21:52:34] Qwen/Qwen2.5-7B L0: bare=0.074 cond=0.068 hyp=0.071 | conditioning gap=-0.006 (p=0.625) geometry gap=+0.003 (p=1.000) -> inconclusive at this layer
+[21:52:34] Qwen/Qwen2.5-7B L7: bare=0.638 cond=0.674 hyp=0.666 | conditioning gap=+0.036 (p=0.312) geometry gap=-0.008 (p=0.625) -> inconclusive at this layer
+[21:52:34] Qwen/Qwen2.5-7B L14: bare=0.638 cond=0.670 hyp=0.612 | conditioning gap=+0.032 (p=1.000) geometry gap=-0.058 (p=0.125) -> inconclusive at this layer
+[21:52:34] Qwen/Qwen2.5-7B L21: bare=0.716 cond=0.714 hyp=0.687 | conditioning gap=-0.002 (p=1.000) geometry gap=-0.027 (p=0.438) -> inconclusive at this layer
+[21:52:34] Qwen/Qwen2.5-7B L27: bare=0.520 cond=0.528 hyp=0.505 | conditioning gap=+0.008 (p=1.000) geometry gap=-0.023 (p=0.312) -> inconclusive at this layer
+[21:52:34] Qwen/Qwen2.5-7B L28: bare=0.620 cond=0.658 hyp=0.632 | conditioning gap=+0.038 (p=0.438) geometry gap=-0.027 (p=0.312) -> inconclusive at this layer

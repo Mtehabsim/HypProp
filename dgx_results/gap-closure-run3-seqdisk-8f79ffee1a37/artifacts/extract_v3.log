@@ -1,0 +1,81 @@
+[15:44:59] extracting 300 samples for deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa
+[15:45:00] loading deepseek-ai/DeepSeek-R1-Distill-Qwen-7B (fp32) on cuda
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:37<00:37, 37.26s/it]Loading checkpoint shards: 100%|██████████| 2/2 [01:10<00:00, 34.92s/it]Loading checkpoint shards: 100%|██████████| 2/2 [01:10<00:00, 35.27s/it]
+[15:46:23]   deepseek-ai/DeepSeek-R1-Distill-Qwen-7B: chat_template=yes, chat_mode='plain' -> PLAIN prompt
+/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/transformers/generation/configuration_utils.py:590: UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.6` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`.
+  warnings.warn(
+/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/transformers/generation/configuration_utils.py:595: UserWarning: `do_sample` is set to `False`. However, `top_p` is set to `0.95` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_p`.
+  warnings.warn(
+From v4.47 onwards, when a model cache is to be returned, `generate` will return a `Cache` instance instead by default (as opposed to the legacy tuple of tuples format). If you want to keep returning the legacy format, please set `return_legacy_cache=True`.
+[15:53:50]   prontoqa: 25/300 (last had 51 thinking tokens)
+[16:01:09]   prontoqa: 50/300 (last had 38 thinking tokens)
+[16:08:34]   prontoqa: 75/300 (last had 20 thinking tokens)
+[16:16:38]   prontoqa: 100/300 (last had 34 thinking tokens)
+[16:24:13]   prontoqa: 125/300 (last had 34 thinking tokens)
+[16:31:41]   prontoqa: 150/300 (last had 19 thinking tokens)
+[16:39:30]   prontoqa: 175/300 (last had 5 thinking tokens)
+[16:47:53]   prontoqa: 200/300 (last had 21 thinking tokens)
+[16:55:56]   prontoqa: 225/300 (last had 10 thinking tokens)
+[17:03:14]   prontoqa: 250/300 (last had 26 thinking tokens)
+[17:10:36]   prontoqa: 275/300 (last had 39 thinking tokens)
+[17:18:25]   prontoqa: 300/300 (last had 40 thinking tokens)
+[17:18:25] done deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa: wrote 300/300
+[18:25:21] extracting 300 samples for deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa
+[18:25:22] loading deepseek-ai/DeepSeek-R1-Distill-Qwen-7B (fp32) on cuda
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:17<00:17, 17.35s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:42<00:00, 21.89s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:42<00:00, 21.21s/it]
+[18:26:14]   deepseek-ai/DeepSeek-R1-Distill-Qwen-7B: chat_template=yes, chat_mode='auto' -> chat template
+/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/transformers/generation/configuration_utils.py:590: UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.6` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`.
+  warnings.warn(
+/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/transformers/generation/configuration_utils.py:595: UserWarning: `do_sample` is set to `False`. However, `top_p` is set to `0.95` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_p`.
+  warnings.warn(
+From v4.47 onwards, when a model cache is to be returned, `generate` will return a `Cache` instance instead by default (as opposed to the legacy tuple of tuples format). If you want to keep returning the legacy format, please set `return_legacy_cache=True`.
+[18:31:39]   prontoqa: 25/300 (last had 14 thinking tokens)
+[18:36:44]   prontoqa: 50/300 (last had 12 thinking tokens)
+[18:42:26]   prontoqa: 75/300 (last had 13 thinking tokens)
+[18:47:51]   prontoqa: 100/300 (last had 17 thinking tokens)
+[18:53:49]   prontoqa: 125/300 (last had 38 thinking tokens)
+[18:59:22]   prontoqa: 150/300 (last had 10 thinking tokens)
+[19:05:10]   prontoqa: 175/300 (last had 14 thinking tokens)
+[19:10:31]   prontoqa: 200/300 (last had 17 thinking tokens)
+[19:15:41]   prontoqa: 225/300 (last had 10 thinking tokens)
+[19:21:31]   prontoqa: 250/300 (last had 16 thinking tokens)
+[19:27:31]   prontoqa: 275/300 (last had 17 thinking tokens)
+[19:33:07]   prontoqa: 300/300 (last had 20 thinking tokens)
+[19:33:07] done deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa: wrote 300/300
+[20:23:54] extracting 300 samples for Qwen/Qwen2.5-7B/prontoqa
+[20:23:55] loading Qwen/Qwen2.5-7B (fp32) on cuda
+Downloading shards:   0%|          | 0/4 [00:00<?, ?it/s]Downloading shards:  25%|██▌       | 1/4 [00:16<00:48, 16.29s/it]Downloading shards:  50%|█████     | 2/4 [00:27<00:26, 13.38s/it]Downloading shards:  75%|███████▌  | 3/4 [00:36<00:11, 11.44s/it]Downloading shards: 100%|██████████| 4/4 [00:46<00:00, 10.79s/it]Downloading shards: 100%|██████████| 4/4 [00:46<00:00, 11.64s/it]
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:21<01:04, 21.56s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:37<00:36, 18.35s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:51<00:16, 16.40s/it]Loading checkpoint shards: 100%|██████████| 4/4 [01:02<00:00, 14.33s/it]Loading checkpoint shards: 100%|██████████| 4/4 [01:02<00:00, 15.73s/it]
+[20:25:54]   Qwen/Qwen2.5-7B: chat_template=yes, chat_mode='plain' -> PLAIN prompt
+From v4.47 onwards, when a model cache is to be returned, `generate` will return a `Cache` instance instead by default (as opposed to the legacy tuple of tuples format). If you want to keep returning the legacy format, please set `return_legacy_cache=True`.
+[20:27:21]   prontoqa: 25/300 (last had 5 thinking tokens)
+[20:28:42]   prontoqa: 50/300 (last had 1 thinking tokens)
+[20:30:06]   prontoqa: 75/300 (last had 0 thinking tokens)
+[20:31:46]   prontoqa: 100/300 (last had 7 thinking tokens)
+[20:33:11]   prontoqa: 125/300 (last had 3 thinking tokens)
+[20:34:43]   prontoqa: 150/300 (last had 0 thinking tokens)
+[20:36:22]   prontoqa: 175/300 (last had 6 thinking tokens)
+[20:37:54]   prontoqa: 200/300 (last had 6 thinking tokens)
+[20:39:22]   prontoqa: 225/300 (last had 0 thinking tokens)
+[20:40:52]   prontoqa: 250/300 (last had 1 thinking tokens)
+[20:42:24]   prontoqa: 275/300 (last had 3 thinking tokens)
+[20:43:49]   prontoqa: 300/300 (last had 0 thinking tokens)
+[20:43:49] done Qwen/Qwen2.5-7B/prontoqa: wrote 300/300
+[21:10:42] extracting 300 samples for Qwen/Qwen2.5-7B/prontoqa
+[21:10:43] loading Qwen/Qwen2.5-7B (fp32) on cuda
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:06<00:20,  6.74s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:12<00:12,  6.39s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:20<00:06,  6.84s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:26<00:00,  6.44s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:26<00:00,  6.52s/it]
+[21:11:17]   Qwen/Qwen2.5-7B: chat_template=yes, chat_mode='auto' -> chat template
+From v4.47 onwards, when a model cache is to be returned, `generate` will return a `Cache` instance instead by default (as opposed to the legacy tuple of tuples format). If you want to keep returning the legacy format, please set `return_legacy_cache=True`.
+[21:12:38]   prontoqa: 25/300 (last had 2 thinking tokens)
+[21:13:55]   prontoqa: 50/300 (last had 3 thinking tokens)
+[21:15:11]   prontoqa: 75/300 (last had 4 thinking tokens)
+[21:16:28]   prontoqa: 100/300 (last had 6 thinking tokens)
+[21:18:03]   prontoqa: 125/300 (last had 4 thinking tokens)
+[21:19:18]   prontoqa: 150/300 (last had 0 thinking tokens)
+[21:21:03]   prontoqa: 175/300 (last had 0 thinking tokens)
+[21:22:24]   prontoqa: 200/300 (last had 3 thinking tokens)
+[21:23:44]   prontoqa: 225/300 (last had 0 thinking tokens)
+[21:25:00]   prontoqa: 250/300 (last had 0 thinking tokens)
+[21:26:55]   prontoqa: 275/300 (last had 1 thinking tokens)
+[21:28:02]   prontoqa: 300/300 (last had 0 thinking tokens)
+[21:28:02] done Qwen/Qwen2.5-7B/prontoqa: wrote 300/300

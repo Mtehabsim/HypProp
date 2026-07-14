@@ -1,0 +1,27 @@
+{
+  "stage": "determinants_v2",
+  "timestamp": "2026-07-13T21:55:03.463395",
+  "git": {
+    "commit": "f1aaa1d2237ffcf54c2b0770f85746538a8d7e34",
+    "branch": "main",
+    "dirty": true
+  },
+  "python": "3.12.3",
+  "versions": {
+    "torch": "2.12.1+cu130",
+    "numpy": "1.26.4",
+    "scipy": "1.17.1",
+    "transformers": "4.46.3",
+    "hypll": null
+  },
+  "args": {
+    "activations": "results/activations_v2/Qwen_Qwen2.5-7B__chat",
+    "source": "generated",
+    "layer": null,
+    "metric": "per_cloud",
+    "seed": 0,
+    "n_redraws": 20,
+    "n_splits": 20
+  },
+  "extra": {}
+}

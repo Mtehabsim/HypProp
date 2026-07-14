@@ -181,3 +181,16 @@ audit warnings (see CSV)
 [19:33:22] Qwen/Qwen2.5-1.5B [real_b2] last L12: 6s x 5d done (60 prompts w/ >=4 concepts)
 [19:36:26] Qwen/Qwen2.5-1.5B [real_b2] last L16: 6s x 5d done (60 prompts w/ >=4 concepts)
 [19:39:28] Qwen/Qwen2.5-1.5B [real_b2] last L20: 6s x 5d done (60 prompts w/ >=4 concepts)
+[19:42:28] Qwen/Qwen2.5-1.5B [real_b2] last L24: 6s x 5d done (60 prompts w/ >=4 concepts)
+[19:45:00] Qwen/Qwen2.5-1.5B [real_b2] last L28: 6s x 5d done (60 prompts w/ >=4 concepts)
+[19:45:07] VERDICT: 52 suitable position(s) passed G1-G3; 0/2 dose-response curves positive; 2/2 radial fingerprints pass
+arm scaleladder__Qwen_Qwen2.5-1.5B done; free 204G
+=== ARM scaleladder__Qwen_Qwen2.5-14B (Qwen/Qwen2.5-14B on prontoqa_tree) | free 204G ===
+[19:45:13] extracting 240 samples for Qwen/Qwen2.5-14B/prontoqa_tree
+[19:45:13] loading Qwen/Qwen2.5-14B (fp32) on cuda
+Downloading shards:   0%|          | 0/8 [00:00<?, ?it/s]Downloading shards:  12%|█▎        | 1/8 [00:09<01:06,  9.45s/it]Downloading shards:  25%|██▌       | 2/8 [00:18<00:54,  9.04s/it]Downloading shards:  38%|███▊      | 3/8 [00:28<00:49,  9.80s/it]Downloading shards:  50%|█████     | 4/8 [00:38<00:38,  9.59s/it]Downloading shards:  62%|██████▎   | 5/8 [00:48<00:29,  9.73s/it]Downloading shards:  75%|███████▌  | 6/8 [00:58<00:19,  9.92s/it]Downloading shards:  88%|████████▊ | 7/8 [01:07<00:09,  9.76s/it]Downloading shards: 100%|██████████| 8/8 [01:14<00:00,  8.65s/it]Downloading shards: 100%|██████████| 8/8 [01:14<00:00,  9.27s/it]
+Loading checkpoint shards:   0%|          | 0/8 [00:00<?, ?it/s]Loading checkpoint shards:  12%|█▎        | 1/8 [00:13<01:32, 13.25s/it]Loading checkpoint shards:  25%|██▌       | 2/8 [00:25<01:15, 12.61s/it]Loading checkpoint shards:  38%|███▊      | 3/8 [00:37<01:02, 12.58s/it]Loading checkpoint shards:  50%|█████     | 4/8 [00:50<00:49, 12.45s/it]Loading checkpoint shards:  62%|██████▎   | 5/8 [01:02<00:36, 12.28s/it]Loading checkpoint shards:  75%|███████▌  | 6/8 [01:14<00:24, 12.34s/it]Loading checkpoint shards:  88%|████████▊ | 7/8 [01:26<00:12, 12.32s/it]Loading checkpoint shards: 100%|██████████| 8/8 [01:32<00:00, 10.12s/it]Loading checkpoint shards: 100%|██████████| 8/8 [01:32<00:00, 11.54s/it]
+[19:48:09]   Qwen/Qwen2.5-14B: chat_template=yes, chat_mode='plain' -> PLAIN prompt
+From v4.47 onwards, when a model cache is to be returned, `generate` will return a `Cache` instance instead by default (as opposed to the legacy tuple of tuples format). If you want to keep returning the legacy format, please set `return_legacy_cache=True`.
+[19:48:40]   prontoqa_tree: 25/240 (last had 0 thinking tokens)
+[19:49:10]   prontoqa_tree: 50/240 (last had 0 thinking tokens)

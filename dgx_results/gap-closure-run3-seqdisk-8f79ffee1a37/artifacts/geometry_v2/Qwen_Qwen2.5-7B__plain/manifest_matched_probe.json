@@ -1,0 +1,35 @@
+{
+  "stage": "matched_probe",
+  "timestamp": "2026-07-13T21:08:06.066866",
+  "git": {
+    "commit": "e59fca61d55969ba925530d58237f78e47f29f93",
+    "branch": "main",
+    "dirty": true
+  },
+  "python": "3.12.3",
+  "versions": {
+    "torch": "2.12.1+cu130",
+    "numpy": "1.26.4",
+    "scipy": "1.17.1",
+    "transformers": "4.46.3",
+    "hypll": null
+  },
+  "args": {
+    "activations": "results/activations_v2/Qwen_Qwen2.5-7B__plain",
+    "dataset": "prontoqa",
+    "target": "depth",
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "whiten": true,
+    "proj_dim": 5,
+    "max_epochs": 3000
+  },
+  "extra": {
+    "hypll_check": null
+  }
+}

@@ -1,0 +1,5 @@
+model,dataset,layer,token_source,metric,edit,delta_rel_base,delta_change,null95,split_half_null,order_power_ceiling,beats_null,is_driver
+Qwen/Qwen2.5-7B,prontoqa,28,generated,per_cloud,token_identity,0.1833,-0.0027,0.0156,0.0156,0.001,False,False
+Qwen/Qwen2.5-7B,prontoqa,28,generated,per_cloud,token_order,0.1833,0.018,0.0156,0.0156,0.001,True,True
+Qwen/Qwen2.5-7B,prontoqa,28,generated,per_cloud,meaning_nonce,0.1833,-0.0133,0.0156,0.0156,0.001,False,False
+Qwen/Qwen2.5-7B,prontoqa,28,last,per_cloud,cluster_adjudication,0.1516,0.0367,0.0091,,,True,False

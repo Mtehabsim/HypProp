@@ -1,0 +1,21 @@
+{
+  "stage": "audit_generations",
+  "timestamp": "2026-07-13T20:44:09.667776",
+  "git": {
+    "commit": "3419b4beaa6052edeab40c3280cafdf6f24c78c2",
+    "branch": "main",
+    "dirty": true
+  },
+  "python": "3.12.3",
+  "versions": {
+    "torch": "2.12.1+cu130",
+    "numpy": "1.26.4",
+    "scipy": "1.17.1",
+    "transformers": "4.46.3",
+    "hypll": null
+  },
+  "args": {
+    "activations": "results/activations_v2/Qwen_Qwen2.5-7B__plain"
+  },
+  "extra": {}
+}

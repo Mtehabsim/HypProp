@@ -1,0 +1,4 @@
+model,dataset,variant,chat_regime,n,cot_frac,answered_frac,truncated_frac,gen_len_p10,gen_len_p50,gen_len_p90
+Qwen/Qwen2.5-7B,prontoqa,nonce,plain,100,1.0,0.97,0.0,182,217,291
+Qwen/Qwen2.5-7B,prontoqa,original,plain,100,1.0,1.0,0.0,136,206,268
+Qwen/Qwen2.5-7B,prontoqa,paraphrase,plain,100,0.0,1.0,0.0,1,1,1

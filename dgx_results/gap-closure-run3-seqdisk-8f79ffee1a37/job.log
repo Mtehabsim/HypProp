@@ -295,3 +295,75 @@ Euclidean ceiling of Eq.5/Eq.6 delta_rel: 0.2929 (analytic, unit square)
 [21:04:55]   Qwen/Qwen2.5-7B/prontoqa: layer 15/29 calibrated
 [21:05:09]   Qwen/Qwen2.5-7B/prontoqa: layer 20/29 calibrated
 [21:05:22]   Qwen/Qwen2.5-7B/prontoqa: layer 25/29 calibrated
+[21:05:43] rung0_v2 verdict written
+# Rung 0 v2 verdict
+
+Thresholds source: **PREREGISTER2.md**
+`{"parity_min_plateau": 0.2, "span_effect_frac": 0.15, "min_effect_over_floor": 3.0, "h1_alpha": 0.05, "gate_a_flat_frac": 0.5, "gate_a_tree_frac": 0.5}`
+
+## Qwen/Qwen2.5-7B / prontoqa
+
+**Gate 0 (Atlas-object raw plateau)**: 0.080 (threshold 0.2; Euclidean-formula ceiling is 0.293 — see atlas_forensics) -> **OBJECT/EXTRACTION MISMATCH**
+
+**Gate A (regime-matched anchors keep the span open under every metric)**: **FAIL**
+  - L0/input/raw: span collapsed (flat <= tree)
+  - L0/generated/raw: span collapsed (flat <= tree)
+  - L0/thinking/raw: span collapsed (flat <= tree)
+  - L0/last/raw: span collapsed (flat <= tree)
+  - L0/all/raw: span collapsed (flat <= tree)
+  - L1/input/raw: span collapsed (flat <= tree)
+  - L1/generated/raw: span collapsed (flat <= tree)
+  - L1/thinking/raw: span collapsed (flat <= tree)
+
+**Gate B (span-relative drop, per source x metric)**
+
+- input/background: plateau_score=-1.513 final_score=-1.503 drop=+0.011 (floor 0.100, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- input/per_cloud: plateau_score=+0.211 final_score=+0.150 drop=-0.061 (floor 0.043, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- generated/background: plateau_score=-1.142 final_score=-1.388 drop=-0.245 (floor 0.107, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- generated/per_cloud: plateau_score=+0.373 final_score=+0.175 drop=-0.198 (floor 0.056, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- thinking/background: plateau_score=-1.136 final_score=-1.548 drop=-0.412 (floor 0.176, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- thinking/per_cloud: plateau_score=+0.806 final_score=+0.500 drop=-0.306 (floor 0.074, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- last/background: plateau_score=+0.284 final_score=+1.079 drop=+0.795 (floor 0.093, beats_cluster=True) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- last/per_cloud: plateau_score=+0.695 final_score=+0.624 drop=-0.072 (floor 0.087, beats_cluster=True) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- all/background: plateau_score=-1.087 final_score=-1.484 drop=-0.397 (floor 0.114, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- all/per_cloud: plateau_score=+0.253 final_score=+0.125 drop=-0.128 (floor 0.055, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+
+**H1 paired (per-prompt, matched token counts, raw, final layer)**: {'n': 100, 'median_diff': 0.0138, 'frac_positive': 0.75, 'wilcoxon_p': 8.94981124911862e-10, 'verdict': 'PASS(generated more tree-like)', 'model': 'Qwen/Qwen2.5-7B', 'dataset': 'prontoqa'}
+
+## H2 v2 (direction consistency across models)
+
+- Qwen/Qwen2.5-7B: PASS(generated more tree-like) (median_diff=0.0138, p=8.94981124911862e-10)
+
+H2 requires >= 2 reasoning/base model PAIRS showing the same
+ordering of median_diff; with a single pair report direction only,
+make NO tuning-causes-it claim (the v1 design error).
+
+--- matched_probe Qwen_Qwen2.5-7B__plain ---
+[21:05:46] HypLL not installed -> skipping cross-check (pip install hypll to enable)
+[21:06:32] Qwen/Qwen2.5-7B/prontoqa L0: 5 seeds x 3 arms done
+[21:06:47] Qwen/Qwen2.5-7B/prontoqa L7: 5 seeds x 3 arms done
+[21:07:03] Qwen/Qwen2.5-7B/prontoqa L14: 5 seeds x 3 arms done
+[21:07:23] Qwen/Qwen2.5-7B/prontoqa L21: 5 seeds x 3 arms done
+[21:07:41] Qwen/Qwen2.5-7B/prontoqa L27: 5 seeds x 3 arms done
+[21:07:59] Qwen/Qwen2.5-7B/prontoqa L28: 5 seeds x 3 arms done
+[21:08:05] Qwen/Qwen2.5-7B L0: bare=0.131 cond=0.135 hyp=0.125 | conditioning gap=+0.004 (p=1.000) geometry gap=-0.010 (p=0.062) -> inconclusive at this layer
+[21:08:05] Qwen/Qwen2.5-7B L7: bare=0.457 cond=0.399 hyp=0.435 | conditioning gap=-0.058 (p=0.062) geometry gap=+0.036 (p=0.312) -> inconclusive at this layer
+[21:08:05] Qwen/Qwen2.5-7B L14: bare=0.529 cond=0.534 hyp=0.509 | conditioning gap=+0.004 (p=0.625) geometry gap=-0.024 (p=0.625) -> inconclusive at this layer
+[21:08:05] Qwen/Qwen2.5-7B L21: bare=0.518 cond=0.533 hyp=0.483 | conditioning gap=+0.015 (p=0.812) geometry gap=-0.050 (p=0.312) -> inconclusive at this layer
+[21:08:05] Qwen/Qwen2.5-7B L27: bare=0.486 cond=0.514 hyp=0.532 | conditioning gap=+0.028 (p=0.625) geometry gap=+0.018 (p=0.125) -> inconclusive at this layer
+[21:08:05] Qwen/Qwen2.5-7B L28: bare=0.363 cond=0.506 hyp=0.454 | conditioning gap=+0.143 (p=0.062) geometry gap=-0.052 (p=0.812) -> CONDITIONING explains Raj
+--- determinants_v2 Qwen_Qwen2.5-7B__plain ---
+[21:09:46] Qwen/Qwen2.5-7B/prontoqa [generated@L28, per_cloud]: base=0.183; driver = token_order (delta +0.018, null95 0.0156) [CAUTION: order-power ceiling 0.0010 < 2x split-half null 0.0156 -> the order test is underpowered here; 'no order effect' is uninterpretable]
+[21:10:35] Qwen/Qwen2.5-7B/prontoqa LAST-token adjudication: delta=0.152, cluster_null=0.188, excess=+0.037 -> exceeds the cluster null (structure beyond classes)
+--- deleting raw activations for Qwen_Qwen2.5-7B__plain to free disk ---
+arm Qwen_Qwen2.5-7B__plain done; free disk now 248G
+=== ARM Qwen_Qwen2.5-7B__chat | free disk 248G ===
+--- extract Qwen_Qwen2.5-7B__chat ---
+[21:10:42] extracting 300 samples for Qwen/Qwen2.5-7B/prontoqa
+[21:10:43] loading Qwen/Qwen2.5-7B (fp32) on cuda
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:06<00:20,  6.74s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:12<00:12,  6.39s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:20<00:06,  6.84s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:26<00:00,  6.44s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:26<00:00,  6.52s/it]
+[21:11:17]   Qwen/Qwen2.5-7B: chat_template=yes, chat_mode='auto' -> chat template
+From v4.47 onwards, when a model cache is to be returned, `generate` will return a `Cache` instance instead by default (as opposed to the legacy tuple of tuples format). If you want to keep returning the legacy format, please set `return_legacy_cache=True`.
+[21:12:38]   prontoqa: 25/300 (last had 2 thinking tokens)
+[21:13:55]   prontoqa: 50/300 (last had 3 thinking tokens)
+[21:15:11]   prontoqa: 75/300 (last had 4 thinking tokens)

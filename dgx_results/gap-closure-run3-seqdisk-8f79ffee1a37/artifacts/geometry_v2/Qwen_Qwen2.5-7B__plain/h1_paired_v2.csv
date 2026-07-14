@@ -1,0 +1,2 @@
+n,median_diff,frac_positive,wilcoxon_p,verdict,model,dataset
+100,0.0138,0.75,8.94981124911862e-10,PASS(generated more tree-like),Qwen/Qwen2.5-7B,prontoqa

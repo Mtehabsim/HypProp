@@ -256,3 +256,17 @@ From v4.47 onwards, when a model cache is to be returned, `generate` will return
 [20:31:46]   prontoqa: 100/300 (last had 7 thinking tokens)
 [20:33:11]   prontoqa: 125/300 (last had 3 thinking tokens)
 [20:34:43]   prontoqa: 150/300 (last had 0 thinking tokens)
+[20:36:22]   prontoqa: 175/300 (last had 6 thinking tokens)
+[20:37:54]   prontoqa: 200/300 (last had 6 thinking tokens)
+[20:39:22]   prontoqa: 225/300 (last had 0 thinking tokens)
+[20:40:52]   prontoqa: 250/300 (last had 1 thinking tokens)
+[20:42:24]   prontoqa: 275/300 (last had 3 thinking tokens)
+[20:43:49]   prontoqa: 300/300 (last had 0 thinking tokens)
+[20:43:49] done Qwen/Qwen2.5-7B/prontoqa: wrote 300/300
+arm Qwen_Qwen2.5-7B__plain activations size: 25G
+--- audit Qwen_Qwen2.5-7B__plain ---
+[20:44:09] Qwen/Qwen2.5-7B/prontoqa/nonce [plain]: n=100 cot=1.0 answered=0.97 truncated=0.0 len_p50=217
+[20:44:09] Qwen/Qwen2.5-7B/prontoqa/original [plain]: n=100 cot=1.0 answered=1.0 truncated=0.0 len_p50=206
+[20:44:09] Qwen/Qwen2.5-7B/prontoqa/paraphrase [plain]: n=100 cot=0.0 answered=1.0 truncated=0.0 len_p50=1
+[20:44:09] audit clean: reasoning present, truncation low
+--- atlas_forensics Qwen_Qwen2.5-7B__plain ---

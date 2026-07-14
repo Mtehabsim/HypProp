@@ -21,12 +21,19 @@ One line per confirmed result. Newest at top. δ = hyperbolic advantage
 - **CAVEAT**: strict branching dose-response did NOT cleanly pass (b1 path not
   quite 0 at m≥5; b2≈b3). Lead with the dimension-collapse fingerprint instead.
 
-## ⚠️ run3 HUNG (2026-07-15 ~01:00) on Qwen2.5-1.5B tree_probe cell (fictional_b1
-   last L16): child stopped logging >60min, agent still heartbeating, campaign
-   blocked. run4 staged (per-stage `timeout` + resumable skip-shipped-arms). run4
-   CANNOT start until run3's stuck process is killed on the DGX (agent runs one
-   job at a time). ON RETURN: `pkill -f tree_probe` (or the run3 python) on the
-   DGX; the agent then auto-launches run4 which resumes from Phase A.
+## ⚠️ CAMPAIGN STALLED — needs a 1-line DGX action on return
+- run3 hung on a Qwen2.5-1.5B tree_probe cell (fictional_b1 last L16); then the
+  DGX AGENT itself stopped (last heartbeat 210m @ 18:59 EDT, none since — process
+  killed / session dropped / network). Origin frozen; can't resolve via git.
+- **ON RETURN, on the DGX:** `pkill -f tree_probe; pkill -f hidden_state_extractor`
+  then restart the agent: `./dgx_agent.sh` (or `nohup ./dgx_agent.sh &`). It will
+  pull, see hierarchy-campaign-run4 (current job.sh), and launch it. run4 is
+  timeout-hardened (no cell can wedge it) + resumable (imports run3's shipped
+  verdicts, skips Phase B, resumes at Phase A scale ladder). If a stale
+  `.dgx_agent.pid` blocks start, `rm .dgx_agent.pid` first.
+- **RESULTS ARE SAFE regardless:** run2 (reasoning-specificity) + Phase B relation
+  generality + negative control are shipped, committed, and recorded below. Only
+  the confirmatory scale-ladder + cross-family remain.
 
 ## Campaign (run3, 18h) — questions & status
 - [ ] Phase B relation types: is δ is-a-specific or generic? **flat_set must give δ≈0** (neg control).

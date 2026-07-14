@@ -174,3 +174,67 @@ Euclidean ceiling of Eq.5/Eq.6 delta_rel: 0.2929 (analytic, unit square)
 --- rung0_v2 deepseek-ai_DeepSeek-R1-Distill-Qwen-7B__chat ---
 [19:38:28] rung0_v2 thresholds from PREREGISTER2.md: {'parity_min_plateau': 0.2, 'span_effect_frac': 0.15, 'min_effect_over_floor': 3.0, 'h1_alpha': 0.05, 'gate_a_flat_frac': 0.5, 'gate_a_tree_frac': 0.5}
 [19:42:25] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa: fitting per-layer balanced backgrounds
+[20:08:25]   deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa: layer 0/29 calibrated
+[20:08:38]   deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa: layer 5/29 calibrated
+[20:08:51]   deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa: layer 10/29 calibrated
+[20:09:04]   deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa: layer 15/29 calibrated
+[20:09:17]   deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa: layer 20/29 calibrated
+[20:09:30]   deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa: layer 25/29 calibrated
+[20:10:08] rung0_v2 verdict written
+# Rung 0 v2 verdict
+
+Thresholds source: **PREREGISTER2.md**
+`{"parity_min_plateau": 0.2, "span_effect_frac": 0.15, "min_effect_over_floor": 3.0, "h1_alpha": 0.05, "gate_a_flat_frac": 0.5, "gate_a_tree_frac": 0.5}`
+
+## deepseek-ai/DeepSeek-R1-Distill-Qwen-7B / prontoqa
+
+**Gate 0 (Atlas-object raw plateau)**: 0.067 (threshold 0.2; Euclidean-formula ceiling is 0.293 — see atlas_forensics) -> **OBJECT/EXTRACTION MISMATCH**
+
+**Gate A (regime-matched anchors keep the span open under every metric)**: **FAIL**
+  - L0/input/raw: span collapsed (flat <= tree)
+  - L0/generated/raw: span collapsed (flat <= tree)
+  - L0/thinking/raw: span collapsed (flat <= tree)
+  - L0/last/raw: span collapsed (flat <= tree)
+  - L0/all/raw: span collapsed (flat <= tree)
+  - L1/input/raw: span collapsed (flat <= tree)
+  - L1/generated/raw: span collapsed (flat <= tree)
+  - L1/thinking/raw: span collapsed (flat <= tree)
+
+**Gate B (span-relative drop, per source x metric)**
+
+- input/background: plateau_score=-1.241 final_score=-1.164 drop=+0.077 (floor 0.070, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- input/per_cloud: plateau_score=+0.167 final_score=+0.096 drop=-0.071 (floor 0.072, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- generated/background: plateau_score=-1.134 final_score=-0.500 drop=+0.634 (floor 0.077, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- generated/per_cloud: plateau_score=+0.263 final_score=+0.121 drop=-0.142 (floor 0.039, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- thinking/background: plateau_score=-0.719 final_score=-0.498 drop=+0.221 (floor 0.108, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- thinking/per_cloud: plateau_score=+0.531 final_score=+0.299 drop=-0.231 (floor 0.058, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- last/background: plateau_score=-0.349 final_score=-1.065 drop=-0.716 (floor 0.231, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- last/per_cloud: plateau_score=+0.832 final_score=+0.691 drop=-0.141 (floor 0.061, beats_cluster=True) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- all/background: plateau_score=-1.085 final_score=-0.561 drop=+0.524 (floor 0.073, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+- all/per_cloud: plateau_score=+0.262 final_score=+0.119 drop=-0.142 (floor 0.046, beats_cluster=False) -> **NO_RAW_EFFECT(nothing to adjudicate)**
+
+**H1 paired (per-prompt, matched token counts, raw, final layer)**: {'n': 100, 'median_diff': 0.0179, 'frac_positive': 0.79, 'wilcoxon_p': 1.30808185424902e-10, 'verdict': 'PASS(generated more tree-like)', 'model': 'deepseek-ai/DeepSeek-R1-Distill-Qwen-7B', 'dataset': 'prontoqa'}
+
+## H2 v2 (direction consistency across models)
+
+- deepseek-ai/DeepSeek-R1-Distill-Qwen-7B: PASS(generated more tree-like) (median_diff=0.0179, p=1.30808185424902e-10)
+
+H2 requires >= 2 reasoning/base model PAIRS showing the same
+ordering of median_diff; with a single pair report direction only,
+make NO tuning-causes-it claim (the v1 design error).
+
+--- matched_probe deepseek-ai_DeepSeek-R1-Distill-Qwen-7B__chat ---
+[20:10:12] HypLL not installed -> skipping cross-check (pip install hypll to enable)
+[20:12:10] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa L0: 5 seeds x 3 arms done
+[20:12:31] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa L7: 5 seeds x 3 arms done
+[20:12:56] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa L14: 5 seeds x 3 arms done
+[20:13:20] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa L21: 5 seeds x 3 arms done
+[20:13:36] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa L27: 5 seeds x 3 arms done
+[20:13:50] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa L28: 5 seeds x 3 arms done
+[20:13:57] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B L0: bare=0.008 cond=0.002 hyp=0.005 | conditioning gap=-0.006 (p=0.812) geometry gap=+0.003 (p=0.312) -> inconclusive at this layer
+[20:13:57] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B L7: bare=0.310 cond=0.357 hyp=0.416 | conditioning gap=+0.047 (p=0.312) geometry gap=+0.059 (p=0.125) -> inconclusive at this layer
+[20:13:57] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B L14: bare=0.462 cond=0.563 hyp=0.542 | conditioning gap=+0.101 (p=0.188) geometry gap=-0.021 (p=0.812) -> CONDITIONING explains Raj
+[20:13:57] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B L21: bare=0.456 cond=0.494 hyp=0.402 | conditioning gap=+0.038 (p=0.625) geometry gap=-0.092 (p=0.062) -> inconclusive at this layer
+[20:13:57] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B L27: bare=0.283 cond=0.372 hyp=0.315 | conditioning gap=+0.089 (p=0.062) geometry gap=-0.058 (p=0.188) -> CONDITIONING explains Raj
+[20:13:57] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B L28: bare=0.230 cond=0.323 hyp=0.235 | conditioning gap=+0.093 (p=0.062) geometry gap=-0.088 (p=0.062) -> CONDITIONING explains Raj
+--- determinants_v2 deepseek-ai_DeepSeek-R1-Distill-Qwen-7B__chat ---

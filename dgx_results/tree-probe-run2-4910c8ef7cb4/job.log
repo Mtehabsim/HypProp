@@ -1,0 +1,45 @@
+=== tree-probe run (PREREGISTER3) on dgx02 ===
+HF_HOME=/mnt/lab/Mo/hyperbolic1/.hf_cache  LIMIT=240  MAX_NEW_TOKENS=24  SEEDS='0 1 2 3 4 5'
+169.226.65.170:/labs/alhussien_lab   10T  9.9T  197G  99% /mnt/lab
+torch 2.12.1+cu130 cuda True
+=== ensuring hypll is installed (for the Poincare cross-check) ===
+hypll already present
+hypll import OK
+=== pre-flight: Poincare distance correctness gate ===
+closed-form gate: True err 2.00e-15
+hypll: None 
+=== preparing prontoqa_tree (fictional b1/b2/b3 + real, ground-truth tree) ===
+[10:23:12] prepared prontoqa_tree: 240 samples, 3 classes -> results/data_cache_v3/prontoqa_tree.jsonl
+prepared arms: {('fictional', 2): 60, ('fictional', 3): 60, ('fictional', 1): 60, ('real', 2): 60} total 240
+=== MODEL deepseek-ai/DeepSeek-R1-Distill-Qwen-7B | free disk 197G ===
+--- extract deepseek-ai_DeepSeek-R1-Distill-Qwen-7B__plain ---
+[10:23:15] extracting 240 samples for deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa_tree
+[10:23:16] loading deepseek-ai/DeepSeek-R1-Distill-Qwen-7B (fp32) on cuda
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:13<00:13, 13.02s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:23<00:00, 11.71s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:23<00:00, 11.91s/it]
+[10:23:48]   deepseek-ai/DeepSeek-R1-Distill-Qwen-7B: chat_template=yes, chat_mode='plain' -> PLAIN prompt
+/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/transformers/generation/configuration_utils.py:590: UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.6` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`.
+  warnings.warn(
+/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/transformers/generation/configuration_utils.py:595: UserWarning: `do_sample` is set to `False`. However, `top_p` is set to `0.95` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_p`.
+  warnings.warn(
+From v4.47 onwards, when a model cache is to be returned, `generate` will return a `Cache` instance instead by default (as opposed to the legacy tuple of tuples format). If you want to keep returning the legacy format, please set `return_legacy_cache=True`.
+[10:24:08]   prontoqa_tree: 25/240 (last had 2 thinking tokens)
+[10:24:27]   prontoqa_tree: 50/240 (last had 1 thinking tokens)
+[10:24:46]   prontoqa_tree: 75/240 (last had 2 thinking tokens)
+[10:25:05]   prontoqa_tree: 100/240 (last had 0 thinking tokens)
+[10:25:23]   prontoqa_tree: 125/240 (last had 0 thinking tokens)
+[10:25:42]   prontoqa_tree: 150/240 (last had 0 thinking tokens)
+[10:26:01]   prontoqa_tree: 175/240 (last had 0 thinking tokens)
+[10:26:21]   prontoqa_tree: 200/240 (last had 2 thinking tokens)
+[10:26:40]   prontoqa_tree: 225/240 (last had 0 thinking tokens)
+[10:26:51] done deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa_tree: wrote 240/240
+arm deepseek-ai_DeepSeek-R1-Distill-Qwen-7B__plain activations size: 17G
+--- audit deepseek-ai_DeepSeek-R1-Distill-Qwen-7B__plain ---
+[10:27:08] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa_tree/original [plain]: n=240 cot=0.108 answered=0.025 truncated=1.0 len_p50=23
+[10:27:08] WARNING: deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa_tree [plain]: only 11% of generations look like CoT — the reasoning model may not be in reasoning mode under this regime. Do NOT run H1/H2 on this arm; re-extract with --chat-mode chat first.
+[10:27:08] WARNING: deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/prontoqa_tree [plain]: 100% of generations truncated at the cap — 'last'-token analyses are contaminated; raise --max-new-tokens or split by the flag.
+audit flagged warnings (see CSV)
+--- tree_probe deepseek-ai_DeepSeek-R1-Distill-Qwen-7B__plain ---
+[10:27:11] Poincare distance matches the textbook closed form (max err 2.00e-15)
+[10:27:11] NOTE: HypLL differs under all tested conventions (best c/2: 1.76e-02); proceeding on the closed-form gate (our dist is proven correct vs the textbook form).
+[10:29:17] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B [fictional_b1] premise L0: 6s x 5d done (60 prompts w/ >=4 concepts)
+[10:31:28] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B [fictional_b1] premise L4: 6s x 5d done (60 prompts w/ >=4 concepts)

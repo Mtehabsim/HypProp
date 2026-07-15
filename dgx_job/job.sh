@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
-# NAME: hierarchy-campaign-run4
+# NAME: hierarchy-campaign-run4b
+#
+# run4b = run4 + reordered scale ladder (14B, 3B, then the flaky 1.5B LAST) so the
+# informative rungs land before the rung that hung run3. Content hash differs from
+# the earlier run4 push, so the agent treats this as the current job.
 #
 # run4 = run3 + hang-proofing. run3 completed Phase B (relations, all shipped)
 # but then HUNG on a single Qwen2.5-1.5B tree_probe cell (fictional_b1 last L16):
@@ -135,10 +139,12 @@ echo "########## PHASE B: RELATION TYPES (incl. flat_set negative control) #####
 run_arm "Qwen/Qwen2.5-7B" relation_trees "relations__Qwen2.5-7B" premise last
 
 # ---- Phase A: SCALE LADDER (Qwen2.5 family) on prontoqa_tree ----
-# Endpoints first (1.5B, 14B) so the biggest scale contrast lands even if the
-# campaign is cut short; 3B fills the middle; 7B skipped (in run2).
-echo "########## PHASE A: SCALE LADDER ##########"
-for m in "Qwen/Qwen2.5-1.5B" "Qwen/Qwen2.5-14B" "Qwen/Qwen2.5-3B"; do
+# ORDER: 14B first (biggest scale contrast vs the 7B run2 baseline), then 3B,
+# then 1.5B LAST — 1.5B is the rung that hung run3 (fictional_b1 last L16), so if
+# it re-hangs its per-stage timeout kills only IT, after the informative rungs are
+# already banked. (run4 is resumable, so a re-run only redoes unshipped arms.)
+echo "########## PHASE A: SCALE LADDER (14B, 3B, then flaky 1.5B last) ##########"
+for m in "Qwen/Qwen2.5-14B" "Qwen/Qwen2.5-3B" "Qwen/Qwen2.5-1.5B"; do
   msafe="$(echo "$m" | tr '/' '_')"
   run_arm "$m" prontoqa_tree "scaleladder__${msafe}" premise last
 done

@@ -310,3 +310,31 @@ audit warnings (see CSV)
 [00:30:35] Qwen/Qwen2.5-14B [real_b2] last L32: 6s x 5d done (60 prompts w/ >=4 concepts)
 [00:34:15] Qwen/Qwen2.5-14B [real_b2] last L36: 6s x 5d done (60 prompts w/ >=4 concepts)
 [00:37:47] Qwen/Qwen2.5-14B [real_b2] last L40: 6s x 5d done (60 prompts w/ >=4 concepts)
+[00:41:22] Qwen/Qwen2.5-14B [real_b2] last L44: 6s x 5d done (60 prompts w/ >=4 concepts)
+[00:44:42] Qwen/Qwen2.5-14B [real_b2] last L48: 6s x 5d done (60 prompts w/ >=4 concepts)
+[00:44:49] VERDICT: 92 suitable position(s) passed G1-G3; 0/2 dose-response curves positive; 2/2 radial fingerprints pass
+arm scaleladder__Qwen_Qwen2.5-14B done; free 139G
+=== ARM scaleladder__Qwen_Qwen2.5-3B (Qwen/Qwen2.5-3B on prontoqa_tree) | free 139G ===
+[00:45:03] extracting 240 samples for Qwen/Qwen2.5-3B/prontoqa_tree
+[00:45:04] loading Qwen/Qwen2.5-3B (fp32) on cuda
+Downloading shards:   0%|          | 0/2 [00:00<?, ?it/s]Downloading shards:  50%|█████     | 1/2 [00:08<00:08,  8.52s/it]Downloading shards: 100%|██████████| 2/2 [00:15<00:00,  7.71s/it]Downloading shards: 100%|██████████| 2/2 [00:15<00:00,  7.83s/it]
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:12<00:12, 12.19s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:19<00:00,  9.35s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:19<00:00,  9.77s/it]
+[00:45:48]   Qwen/Qwen2.5-3B: chat_template=yes, chat_mode='plain' -> PLAIN prompt
+From v4.47 onwards, when a model cache is to be returned, `generate` will return a `Cache` instance instead by default (as opposed to the legacy tuple of tuples format). If you want to keep returning the legacy format, please set `return_legacy_cache=True`.
+[00:46:04]   prontoqa_tree: 25/240 (last had 0 thinking tokens)
+[00:46:18]   prontoqa_tree: 50/240 (last had 1 thinking tokens)
+[00:46:33]   prontoqa_tree: 75/240 (last had 0 thinking tokens)
+[00:46:48]   prontoqa_tree: 100/240 (last had 0 thinking tokens)
+[00:47:03]   prontoqa_tree: 125/240 (last had 0 thinking tokens)
+[00:47:19]   prontoqa_tree: 150/240 (last had 0 thinking tokens)
+[00:47:34]   prontoqa_tree: 175/240 (last had 0 thinking tokens)
+[00:47:49]   prontoqa_tree: 200/240 (last had 0 thinking tokens)
+[00:48:04]   prontoqa_tree: 225/240 (last had 0 thinking tokens)
+[00:48:13] done Qwen/Qwen2.5-3B/prontoqa_tree: wrote 240/240
+arm scaleladder__Qwen_Qwen2.5-3B size: 12G
+[00:48:25] Qwen/Qwen2.5-3B/prontoqa_tree/original [plain]: n=240 cot=0.517 answered=0.025 truncated=1.0 len_p50=15
+[00:48:25] WARNING: Qwen/Qwen2.5-3B/prontoqa_tree [plain]: 100% of generations truncated at the cap — 'last'-token analyses are contaminated; raise --max-new-tokens or split by the flag.
+audit warnings (see CSV)
+[00:48:29] Poincare distance matches the textbook closed form (max err 2.00e-15)
+[00:48:29] NOTE: HypLL differs under all tested conventions (best c/2: 1.76e-02); proceeding on the closed-form gate (our dist is proven correct vs the textbook form).
+[00:50:22] Qwen/Qwen2.5-3B [fictional_b1] premise L0: 6s x 5d done (60 prompts w/ >=4 concepts)

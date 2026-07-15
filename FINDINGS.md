@@ -27,9 +27,10 @@ One line per confirmed result. Newest at top. δ = hyperbolic advantage
   killed / session dropped / network). Origin frozen; can't resolve via git.
 - **ON RETURN, on the DGX:** `pkill -f tree_probe; pkill -f hidden_state_extractor`
   then restart the agent: `./dgx_agent.sh` (or `nohup ./dgx_agent.sh &`). It will
-  pull, see hierarchy-campaign-run4 (current job.sh), and launch it. run4 is
+  pull, see hierarchy-campaign-run4b (current job.sh), and launch it. run4b is
   timeout-hardened (no cell can wedge it) + resumable (imports run3's shipped
-  verdicts, skips Phase B, resumes at Phase A scale ladder). If a stale
+  verdicts, skips Phase B) + scale ladder reordered 14B→3B→1.5B so the flaky 1.5B
+  rung runs LAST and can't block the informative rungs. If a stale
   `.dgx_agent.pid` blocks start, `rm .dgx_agent.pid` first.
 - **RESULTS ARE SAFE regardless:** run2 (reasoning-specificity) + Phase B relation
   generality + negative control are shipped, committed, and recorded below. Only

@@ -36,11 +36,12 @@ One line per confirmed result. Newest at top. δ = hyperbolic advantage
   generality + negative control are shipped, committed, and recorded below. Only
   the confirmatory scale-ladder + cross-family remain.
 
-## Campaign (run3, 18h) — questions & status
-- [ ] Phase B relation types: is δ is-a-specific or generic? **flat_set must give δ≈0** (neg control).
-- [ ] Phase A scale ladder Qwen2.5 {1.5B,3B,7B,14B}: does δ sharpen / shift layer with scale?
-- [ ] Phase C cross-family Llama-3.1-8B, Mistral-7B: does L8–12 / low-dim fingerprint replicate?
-- [ ] Reasoning-specific? DeepSeek(distill) vs Qwen(base) — from run2 once Qwen ships.
+## Campaign questions & status
+- [x] Reasoning-specific? NO — Qwen base ≈ DeepSeek distill (run2, above).
+- [x] Relation generality? YES generic — is_a/part_of/causes recover, flat_set≈0 (run3 Phase B, above).
+- [~] Scale ladder Qwen2.5 {1.5B,3B,14B}: BLOCKED on DGX restart → run4b resumes it.
+- [~] Cross-family Llama/Mistral: BLOCKED on DGX restart → run4b (Llama may skip as gated).
+Note: [~] items are CONFIRMATORY (robustness). The load-bearing findings are done.
 
 ## Pre-flight validations (CPU mock, before spending DGX time)
 - **Negative control PASSES (relation_trees mock)**: same prompt shape, vary the

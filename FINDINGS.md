@@ -91,6 +91,21 @@ Note: [~] items are CONFIRMATORY (robustness). The load-bearing findings are don
   (star) Δ=+0.003, ρ_hyp=−0.007** — same prompt shape, no relation → no hierarchy.
   Clean discriminator on real data: the rig measures structure, not tokens.
 
+## run5 verified (per-seed, from shipped CSVs) + one honest negative
+- **CROSS-FAMILY CONFIRMED per-seed**: Mistral-7B fictional_b2 premise L12 all 6 seeds
+  +0.13..+0.23 (mean +0.188, shuffle ≈0). Independent architecture → fingerprint is
+  real. 'Not reasoning-specific' now per-seed-upheld (no longer downgraded).
+- **SCALE LADDER CONFIRMED**: peak Δ rises 1.5B +0.177 → 3B +0.180 → 7B +0.184 →
+  14B +0.221. Magnitude monotone in size; %-depth of peak noisy (28/55/71/41%).
+- **WHY (additive-shrinking-cone) NOT SUPPORTED**: predicted edges shrink with depth
+  (shrink_rho<0) at mid-stack; real shrink_rho is +0.08..+0.10 (fictional), only
+  dips to −0.02 at L16-20 (real). Edges do NOT consistently shrink → the specific
+  'sum of shrinking edges' generative story is falsified on real activations, EVEN
+  THOUGH radial-norm↔depth is strong. Tension to resolve: the cloud is cone-like by
+  tree-probe/radial, but edge-vectors aren't shrinking. Mechanism of 'how hyperbolic
+  forms' remains OPEN — the additive hypothesis was too specific. (shrink_rho metric
+  itself is validated: ranks additive<cone<random on mocks.)
+
 ## Method caveats (found while building the causal-WHY tests — matter for the paper)
 - **MDR asymmetry**: the hyperbolic arm applies MDR (tanh norm cap) before expmap0;
   cond_euclidean doesn't. At c→0 expmap0=identity but MDR still runs, so the c→0

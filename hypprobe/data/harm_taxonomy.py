@@ -77,11 +77,21 @@ def _leaf_id(leafcat: str) -> int:
     return _LEAF_IDS[leafcat]
 
 
+def _safe_id(sid: str) -> str:
+    """Filesystem-safe sample_id: category names contain '/' and spaces (e.g.
+    'Controlled/Regulated Substances') which broke sample_path (it built a
+    nonexistent nested dir and the extractor crashed). Collapse to [A-Za-z0-9_-]."""
+    out = []
+    for ch in str(sid):
+        out.append(ch if (ch.isalnum() or ch in "_-") else "_")
+    return "".join(out)
+
+
 def _row(sid, text, supercat, leafcat, answer):
     supers = _SUPERS
     sup_id = supers.index(supercat) if supercat in supers else len(supers) - 1
     return {
-        "sample_id": sid,
+        "sample_id": _safe_id(sid),
         "prompt": _prompt_text(text),
         "label": answer,                    # binary safe(0)/unsafe(1) — the flat view
         "label_path": [sup_id, _leaf_id(leafcat)],  # [super, leaf] — the taxonomy view

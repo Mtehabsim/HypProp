@@ -106,6 +106,19 @@ Note: [~] items are CONFIRMATORY (robustness). The load-bearing findings are don
   forms' remains OPEN — the additive hypothesis was too specific. (shrink_rho metric
   itself is validated: ranks additive<cone<random on mocks.)
 
+## HARM VERDICT (run6, Aegis 2.0 real data, per-seed verified) — prediction SUPPORTED
+- **Hyperbolic helps harm detection iff the label space is hierarchical.** Hazard
+  TAXONOMY target: geometry gap (hyp−cond_euc) = +0.041/+0.058/+0.047 at L0/L7/L14,
+  **6/6 seeds positive** each (p=.031), fading late. BINARY safe/unsafe control:
+  gaps ≈0 (−.018..+.021, never 6/6, n.s.). Source=aegis2.0 (917 rows, not fallback).
+- Bonus: taxonomy signal peaks EARLY (L0-L14) = the RETRIEVED signature — hazard
+  categories are pretrained semantic knowledge (like dog→mammal), not assembled.
+  Caveats: absolute ρ modest (hyp ~0.13-0.21 — taxonomy is decodable but not
+  strongly); reps read at last token with uniform 8-tok truncation (class-uniform,
+  not a confound, but a richer-pooling replication would firm it).
+- USAGE: harm classifiers should probe the hazard TAXONOMY with a low-dim
+  hyperbolic head at early-mid layers, not binary-classify the last layer.
+
 ## Method caveats (found while building the causal-WHY tests — matter for the paper)
 - **MDR asymmetry**: the hyperbolic arm applies MDR (tanh norm cap) before expmap0;
   cond_euclidean doesn't. At c→0 expmap0=identity but MDR still runs, so the c→0

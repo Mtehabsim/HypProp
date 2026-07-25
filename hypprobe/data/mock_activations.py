@@ -122,6 +122,39 @@ def _edge_prototypes(parent, dim, rng, decay=0.6):
     return 0.9 * proto / mx
 
 
+def _additive_layout(parent, depth, dim, seed=12345, decay=0.65):
+    """Layout built by ADDITIVE COMPOSITION: node = parent + shrinking edge.
+
+    This is the generative model the composition test targets (distinct from the
+    cone layout): each tree EDGE at depth d gets a fixed random near-orthogonal
+    direction scaled by ``decay**d``, and a node's rep is the SUM of edge vectors
+    along its root->node path. Consequences the test should detect: (a) edges at
+    the same depth that descend via the same branch share direction; (b) edge
+    norms shrink with depth; (c) child ≈ parent + edge exactly. Used ONLY to
+    validate composition_test.py has a true positive control (the cone mock does
+    NOT compose additively, which is why the test read flat on it).
+    """
+    rng = np.random.default_rng(seed)
+    n = len(parent)
+    # one shared direction per (depth) so same-depth edges are consistent, plus a
+    # small per-edge jitter so it's not degenerate.
+    depth_dir = {}
+    pos = np.zeros((n, dim))
+    order = sorted(range(n), key=lambda i: depth[i])
+    for i in order:
+        p = parent[i]
+        if p < 0:
+            continue
+        d = depth[i]
+        if d not in depth_dir:
+            v = rng.standard_normal(dim); v /= np.linalg.norm(v)
+            depth_dir[d] = v
+        jitter = 0.15 * rng.standard_normal(dim)
+        edge = (decay ** d) * (depth_dir[d] + jitter)
+        pos[i] = pos[p] + edge
+    return pos
+
+
 def _hyperbolic_cone_layout(parent, depth, dim, seed=12345, radial_rate=0.7):
     """Shared hyperbolic-cone embedding of a tree, lifted to ``dim``.
 

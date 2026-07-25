@@ -1,0 +1,75 @@
+{
+  "stage": "tree_probe",
+  "timestamp": "2026-07-14T17:28:35.264915",
+  "git": {
+    "commit": "9ed81be673d8ac12886b820251b5009019e5ea2f",
+    "branch": "main",
+    "dirty": true
+  },
+  "python": "3.12.3",
+  "versions": {
+    "torch": "2.12.1+cu130",
+    "numpy": "1.26.4",
+    "scipy": "1.17.1",
+    "transformers": "4.46.3",
+    "hypll": null
+  },
+  "args": {
+    "activations": "results/activations_v3/Qwen_Qwen2.5-7B__relation_trees",
+    "dataset": "relation_trees",
+    "roles": [
+      "premise",
+      "last"
+    ],
+    "dims": [
+      2,
+      3,
+      5,
+      8,
+      16
+    ],
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "curvature": 0.5,
+    "layer_stride": 4,
+    "max_epochs": 1000
+  },
+  "extra": {
+    "hypll_check": {
+      "closed_form_max_abs_err": 2e-15,
+      "closed_form_ok": true,
+      "ok": true,
+      "hypll_best_convention": "c/2",
+      "hypll_max_abs_err": 0.017550076124475344,
+      "hypll_ok": false
+    },
+    "thresholds": {
+      "delta_margin": 0.05,
+      "slope_margin": 0.03,
+      "shuffle_ceiling": 0.1,
+      "radial_depth_rho_min": 0.3,
+      "positive_control_radial_min": 0.5,
+      "n_seeds": 6,
+      "wilcoxon_alpha": 0.05,
+      "decode_dims": [
+        2,
+        3,
+        5,
+        8,
+        16
+      ],
+      "branching_levels": [
+        1,
+        2,
+        3
+      ],
+      "curvature": 0.5
+    }
+  }
+}

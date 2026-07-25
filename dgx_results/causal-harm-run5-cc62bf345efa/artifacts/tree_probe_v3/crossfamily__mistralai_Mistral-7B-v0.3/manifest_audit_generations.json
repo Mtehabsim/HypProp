@@ -1,0 +1,21 @@
+{
+  "stage": "audit_generations",
+  "timestamp": "2026-07-15T03:42:13.336550",
+  "git": {
+    "commit": "2aa6796d301253c98665c2d2df2211a1384b17f3",
+    "branch": "main",
+    "dirty": true
+  },
+  "python": "3.12.3",
+  "versions": {
+    "torch": "2.12.1+cu130",
+    "numpy": "1.26.4",
+    "scipy": "1.17.1",
+    "transformers": "4.46.3",
+    "hypll": null
+  },
+  "args": {
+    "activations": "results/activations_v3/mistralai_Mistral-7B-v0.3__prontoqa_tree"
+  },
+  "extra": {}
+}

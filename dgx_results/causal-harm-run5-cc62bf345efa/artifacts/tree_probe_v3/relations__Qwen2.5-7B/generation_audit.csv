@@ -1,0 +1,2 @@
+model,dataset,variant,chat_regime,n,cot_frac,answered_frac,truncated_frac,gen_len_p10,gen_len_p50,gen_len_p90
+Qwen/Qwen2.5-7B,relation_trees,original,plain,240,0.263,0.142,1.0,15,15,15

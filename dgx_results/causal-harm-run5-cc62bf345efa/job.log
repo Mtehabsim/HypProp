@@ -1,0 +1,71 @@
+=== causal-harm run5 on dgx16 ===
+169.226.65.170:/labs/alhussien_lab   10T  9.9T  148G  99% /mnt/lab
+torch 2.12.1+cu130 cuda True
+hypll ok
+closed-form gate: True err 2.00e-15
+########## SHIP: rescuing run3 local CSVs ##########
+shipped Qwen_Qwen2.5-7B__plain
+no files for crossfamily__meta-llama_Llama-3.1-8B
+shipped crossfamily__mistralai_Mistral-7B-v0.3
+shipped deepseek-ai_DeepSeek-R1-Distill-Qwen-7B__plain
+no files for logs
+shipped relations__Qwen2.5-7B
+shipped scaleladder__Qwen_Qwen2.5-1.5B
+shipped scaleladder__Qwen_Qwen2.5-14B
+shipped scaleladder__Qwen_Qwen2.5-3B
+########## prepare ##########
+[15:23:25] prepared prontoqa_tree: 240 samples, 3 classes -> results/data_cache_v3/prontoqa_tree.jsonl
+--- preparing harm_taxonomy (Aegis 2.0; BeaverTails fallback) ---
+Generating train split:   0%|          | 0/30007 [00:00<?, ? examples/s]Generating train split:  83%|████████▎ | 25007/30007 [00:00<00:00, 47079.54 examples/s]Generating train split: 100%|██████████| 30007/30007 [00:00<00:00, 48015.17 examples/s]
+Generating validation split:   0%|          | 0/1445 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 1445/1445 [00:00<00:00, 41611.87 examples/s]
+Generating test split:   0%|          | 0/1964 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 1964/1964 [00:00<00:00, 67124.18 examples/s]
+[harm_taxonomy] source=aegis2.0 rows=917
+[15:23:49] prepared harm_taxonomy: 917 samples, 2 classes -> results/data_cache_v3/harm_taxonomy.jsonl
+########## WHY: composition (shrink_rho) ##########
+[15:23:52] extracting 240 samples for Qwen/Qwen2.5-7B/prontoqa_tree
+[15:23:52] loading Qwen/Qwen2.5-7B (fp32) on cuda
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:23<01:09, 23.03s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:45<00:45, 22.92s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [01:10<00:23, 23.80s/it]Loading checkpoint shards: 100%|██████████| 4/4 [01:30<00:00, 22.36s/it]Loading checkpoint shards: 100%|██████████| 4/4 [01:30<00:00, 22.72s/it]
+[15:25:37]   Qwen/Qwen2.5-7B: chat_template=yes, chat_mode='plain' -> PLAIN prompt
+From v4.47 onwards, when a model cache is to be returned, `generate` will return a `Cache` instance instead by default (as opposed to the legacy tuple of tuples format). If you want to keep returning the legacy format, please set `return_legacy_cache=True`.
+[15:25:52]   prontoqa_tree: 25/240 (last had 0 thinking tokens)
+[15:26:06]   prontoqa_tree: 50/240 (last had 0 thinking tokens)
+[15:26:20]   prontoqa_tree: 75/240 (last had 0 thinking tokens)
+[15:26:33]   prontoqa_tree: 100/240 (last had 0 thinking tokens)
+[15:26:47]   prontoqa_tree: 125/240 (last had 0 thinking tokens)
+[15:27:01]   prontoqa_tree: 150/240 (last had 0 thinking tokens)
+[15:27:15]   prontoqa_tree: 175/240 (last had 0 thinking tokens)
+[15:27:29]   prontoqa_tree: 200/240 (last had 1 thinking tokens)
+[15:27:43]   prontoqa_tree: 225/240 (last had 0 thinking tokens)
+[15:27:51] done Qwen/Qwen2.5-7B/prontoqa_tree: wrote 240/240
+[15:28:34] Qwen/Qwen2.5-7B [fictional_b1] premise: composition metrics over 9 layers
+[15:28:53] Qwen/Qwen2.5-7B [fictional_b2] premise: composition metrics over 9 layers
+[15:29:13] Qwen/Qwen2.5-7B [fictional_b3] premise: composition metrics over 9 layers
+[15:29:30] Qwen/Qwen2.5-7B [real_b2] premise: composition metrics over 9 layers
+free after WHY: 133G
+########## HARM: taxonomy vs binary ##########
+[15:29:37] extracting 600 samples for Qwen/Qwen2.5-7B/harm_taxonomy
+[15:29:38] loading Qwen/Qwen2.5-7B (fp32) on cuda
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:06<00:20,  6.99s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:14<00:14,  7.26s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:20<00:06,  6.75s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:26<00:00,  6.56s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:26<00:00,  6.71s/it]
+[15:30:13]   Qwen/Qwen2.5-7B: chat_template=yes, chat_mode='plain' -> PLAIN prompt
+From v4.47 onwards, when a model cache is to be returned, `generate` will return a `Cache` instance instead by default (as opposed to the legacy tuple of tuples format). If you want to keep returning the legacy format, please set `return_legacy_cache=True`.
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/mnt/lab/Mo/hyperbolic1/HypProp/hypprobe/extract/hidden_state_extractor.py", line 226, in <module>
+    main()
+  File "/mnt/lab/Mo/hyperbolic1/HypProp/hypprobe/extract/hidden_state_extractor.py", line 219, in main
+    extract_model_dataset(args.model, ds, samples, args.out, logfile,
+  File "/mnt/lab/Mo/hyperbolic1/HypProp/hypprobe/extract/hidden_state_extractor.py", line 78, in extract_model_dataset
+    torch.save(rec, sample_path(out_dir, model_name, dataset, s["sample_id"]))
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/torch/serialization.py", line 1003, in save
+    with _open_zipfile_writer(f) as opened_zipfile:
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/torch/serialization.py", line 865, in _open_zipfile_writer
+    return container(name_or_buffer)  # type: ignore[arg-type]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/torch/serialization.py", line 829, in __init__
+    torch._C.PyTorchFileWriter(
+RuntimeError: Parent directory results/activations_v3/Qwen_Qwen2.5-7B__harm/Qwen_Qwen2.5-7B/harm_taxonomy/aegis_PhysicalHarm_Controlled does not exist.
+harm extract produced nothing — SKIP
+free after HARM: 157G
+=== run5 complete; artifacts in dgx_results/causal-harm-run5-cc62bf345efa/artifacts ===

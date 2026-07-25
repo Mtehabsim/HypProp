@@ -1,0 +1,15 @@
+[15:23:52] extracting 240 samples for Qwen/Qwen2.5-7B/prontoqa_tree
+[15:23:52] loading Qwen/Qwen2.5-7B (fp32) on cuda
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:23<01:09, 23.03s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:45<00:45, 22.92s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [01:10<00:23, 23.80s/it]Loading checkpoint shards: 100%|██████████| 4/4 [01:30<00:00, 22.36s/it]Loading checkpoint shards: 100%|██████████| 4/4 [01:30<00:00, 22.72s/it]
+[15:25:37]   Qwen/Qwen2.5-7B: chat_template=yes, chat_mode='plain' -> PLAIN prompt
+From v4.47 onwards, when a model cache is to be returned, `generate` will return a `Cache` instance instead by default (as opposed to the legacy tuple of tuples format). If you want to keep returning the legacy format, please set `return_legacy_cache=True`.
+[15:25:52]   prontoqa_tree: 25/240 (last had 0 thinking tokens)
+[15:26:06]   prontoqa_tree: 50/240 (last had 0 thinking tokens)
+[15:26:20]   prontoqa_tree: 75/240 (last had 0 thinking tokens)
+[15:26:33]   prontoqa_tree: 100/240 (last had 0 thinking tokens)
+[15:26:47]   prontoqa_tree: 125/240 (last had 0 thinking tokens)
+[15:27:01]   prontoqa_tree: 150/240 (last had 0 thinking tokens)
+[15:27:15]   prontoqa_tree: 175/240 (last had 0 thinking tokens)
+[15:27:29]   prontoqa_tree: 200/240 (last had 1 thinking tokens)
+[15:27:43]   prontoqa_tree: 225/240 (last had 0 thinking tokens)
+[15:27:51] done Qwen/Qwen2.5-7B/prontoqa_tree: wrote 240/240

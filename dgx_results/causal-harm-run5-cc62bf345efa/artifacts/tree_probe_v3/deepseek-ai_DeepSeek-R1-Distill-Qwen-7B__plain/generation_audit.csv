@@ -1,0 +1,2 @@
+model,dataset,variant,chat_regime,n,cot_frac,answered_frac,truncated_frac,gen_len_p10,gen_len_p50,gen_len_p90
+deepseek-ai/DeepSeek-R1-Distill-Qwen-7B,prontoqa_tree,original,plain,240,0.108,0.025,1.0,23,23,23

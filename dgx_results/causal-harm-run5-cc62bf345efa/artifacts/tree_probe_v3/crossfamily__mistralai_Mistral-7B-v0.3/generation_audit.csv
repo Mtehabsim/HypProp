@@ -1,0 +1,2 @@
+model,dataset,variant,chat_regime,n,cot_frac,answered_frac,truncated_frac,gen_len_p10,gen_len_p50,gen_len_p90
+mistralai/Mistral-7B-v0.3,prontoqa_tree,original,plain,240,0.863,0.0,1.0,15,15,15

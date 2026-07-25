@@ -1,0 +1,23 @@
+{
+  "stage": "composition_test",
+  "timestamp": "2026-07-25T15:29:31.150639",
+  "git": {
+    "commit": "3e5121f2f1d8dbd6f56f694d322ce7a0ca87e6f0",
+    "branch": "main",
+    "dirty": true
+  },
+  "python": "3.12.3",
+  "versions": {
+    "torch": "2.12.1+cu130",
+    "numpy": "1.26.4",
+    "scipy": "1.17.1",
+    "transformers": "4.46.3",
+    "hypll": null
+  },
+  "args": {
+    "activations": "results/activations_v3/Qwen_Qwen2.5-7B__prontoqa_tree_c",
+    "dataset": "prontoqa_tree",
+    "role": "premise"
+  },
+  "extra": {}
+}

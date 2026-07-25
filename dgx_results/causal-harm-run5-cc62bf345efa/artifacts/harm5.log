@@ -1,0 +1,23 @@
+[15:29:37] extracting 600 samples for Qwen/Qwen2.5-7B/harm_taxonomy
+[15:29:38] loading Qwen/Qwen2.5-7B (fp32) on cuda
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:06<00:20,  6.99s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:14<00:14,  7.26s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:20<00:06,  6.75s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:26<00:00,  6.56s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:26<00:00,  6.71s/it]
+[15:30:13]   Qwen/Qwen2.5-7B: chat_template=yes, chat_mode='plain' -> PLAIN prompt
+From v4.47 onwards, when a model cache is to be returned, `generate` will return a `Cache` instance instead by default (as opposed to the legacy tuple of tuples format). If you want to keep returning the legacy format, please set `return_legacy_cache=True`.
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/mnt/lab/Mo/hyperbolic1/HypProp/hypprobe/extract/hidden_state_extractor.py", line 226, in <module>
+    main()
+  File "/mnt/lab/Mo/hyperbolic1/HypProp/hypprobe/extract/hidden_state_extractor.py", line 219, in main
+    extract_model_dataset(args.model, ds, samples, args.out, logfile,
+  File "/mnt/lab/Mo/hyperbolic1/HypProp/hypprobe/extract/hidden_state_extractor.py", line 78, in extract_model_dataset
+    torch.save(rec, sample_path(out_dir, model_name, dataset, s["sample_id"]))
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/torch/serialization.py", line 1003, in save
+    with _open_zipfile_writer(f) as opened_zipfile:
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/torch/serialization.py", line 865, in _open_zipfile_writer
+    return container(name_or_buffer)  # type: ignore[arg-type]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/torch/serialization.py", line 829, in __init__
+    torch._C.PyTorchFileWriter(
+RuntimeError: Parent directory results/activations_v3/Qwen_Qwen2.5-7B__harm/Qwen_Qwen2.5-7B/harm_taxonomy/aegis_PhysicalHarm_Controlled does not exist.

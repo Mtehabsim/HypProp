@@ -1,0 +1,6 @@
+[15:23:25] prepared prontoqa_tree: 240 samples, 3 classes -> results/data_cache_v3/prontoqa_tree.jsonl
+Generating train split:   0%|          | 0/30007 [00:00<?, ? examples/s]Generating train split:  83%|████████▎ | 25007/30007 [00:00<00:00, 47079.54 examples/s]Generating train split: 100%|██████████| 30007/30007 [00:00<00:00, 48015.17 examples/s]
+Generating validation split:   0%|          | 0/1445 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 1445/1445 [00:00<00:00, 41611.87 examples/s]
+Generating test split:   0%|          | 0/1964 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 1964/1964 [00:00<00:00, 67124.18 examples/s]
+[harm_taxonomy] source=aegis2.0 rows=917
+[15:23:49] prepared harm_taxonomy: 917 samples, 2 classes -> results/data_cache_v3/harm_taxonomy.jsonl

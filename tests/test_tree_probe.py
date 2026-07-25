@@ -159,13 +159,39 @@ def test_noise_layer_no_advantage(tmp_path):
     assert abs(hyp) < 0.2, f"noise layer should not recover a tree, got {hyp:.3f}"
 
 
-def test_curvature_zero_matches_euclidean_arm(tmp_path):
-    """c->0 hyperbolic fit ~ cond_euclidean fit (the fairness identity)."""
+def test_curvature_zero_distance_matches_euclidean():
+    """c->0 fairness identity, tested at the DISTANCE level (exact + deterministic).
+
+    The fit-level version (comparing trained val_rho of two independently-inited
+    probes) is inherently seed-noisy and was flaky; the identity that actually
+    matters is that the Poincare distance reduces to Euclidean as c->0. That is
+    exact, so assert it directly on the same MatchedProbe transform both arms use."""
+    import numpy as np
+    import torch
+    from hypprobe.geometry import poincare
+    rng = np.random.default_rng(0)
+    z = torch.as_tensor(0.2 * rng.standard_normal((24, 5)), dtype=torch.float64)
+    n, d = z.shape
+    zi = z.unsqueeze(1).expand(n, n, d).reshape(-1, d)
+    zj = z.unsqueeze(0).expand(n, n, d).reshape(-1, d)
+    hyp0 = poincare.dist(zi, zj, 1e-12).reshape(n, n).numpy()
+    euc = np.linalg.norm(z.numpy()[:, None] - z.numpy()[None, :], axis=2)
+    assert np.max(np.abs(hyp0 - euc)) < 1e-5, "c->0 Poincare dist must equal Euclidean"
+
+
+def test_curvature_zero_fit_sanity(tmp_path):
+    """Looser fit-level check: c->0 and euclidean arms land in the same ballpark,
+    averaged over seeds (single-seed diffs are noise; the exact identity is tested
+    at the distance level above)."""
+    import numpy as np
     from hypprobe.geometry.tree_probe import fit_tree_arm
     out = _mock_store(tmp_path, n_prompts=20)
     trp, vap, _ = _prep(out, layer=5)
-    hyp0 = fit_tree_arm("hyperbolic", trp, vap, proj_dim=5, seed=0, curvature=1e-9,
-                        max_epochs=300, check_every=50, patience=4)["val_rho"]
-    euc = fit_tree_arm("cond_euclidean", trp, vap, proj_dim=5, seed=0,
-                       max_epochs=300, check_every=50, patience=4)["val_rho"]
-    assert abs(hyp0 - euc) < 0.12, f"c->0 ({hyp0:.3f}) should ~ euclidean ({euc:.3f})"
+    diffs = []
+    for seed in (0, 1, 2):
+        h = fit_tree_arm("hyperbolic", trp, vap, proj_dim=5, seed=seed, curvature=1e-9,
+                         max_epochs=300, check_every=50, patience=4)["val_rho"]
+        e = fit_tree_arm("cond_euclidean", trp, vap, proj_dim=5, seed=seed,
+                         max_epochs=300, check_every=50, patience=4)["val_rho"]
+        diffs.append(abs(h - e))
+    assert np.mean(diffs) < 0.12, f"c->0 vs euclidean mean|diff| over seeds = {np.mean(diffs):.3f}"

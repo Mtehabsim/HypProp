@@ -1,0 +1,5 @@
+host: dgx16
+started: 2026-07-25T15:40:23-04:00
+job: harm-run6 (8062ce6ae379)
+name, memory.total [MiB], memory.used [MiB]
+NVIDIA A100-SXM4-80GB, 81920 MiB, 0 MiB

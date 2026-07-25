@@ -1,0 +1,43 @@
+{
+  "stage": "matched_probe",
+  "timestamp": "2026-07-25T16:09:26.587293",
+  "git": {
+    "commit": "942ded15e87f7e96b8d525a0cb32a47ffdc21271",
+    "branch": "main",
+    "dirty": true
+  },
+  "python": "3.12.3",
+  "versions": {
+    "torch": "2.12.1+cu130",
+    "numpy": "1.26.4",
+    "scipy": "1.17.1",
+    "transformers": "4.46.3",
+    "hypll": null
+  },
+  "args": {
+    "activations": "results/activations_v3/Qwen_Qwen2.5-7B__harm",
+    "dataset": "harm_taxonomy",
+    "target": "depth",
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "whiten": true,
+    "proj_dim": 5,
+    "max_epochs": 3000
+  },
+  "extra": {
+    "hypll_check": {
+      "closed_form_max_abs_err": 2e-15,
+      "closed_form_ok": true,
+      "ok": true,
+      "hypll_best_convention": "c/2",
+      "hypll_max_abs_err": 0.017550076124475344,
+      "hypll_ok": false
+    }
+  }
+}

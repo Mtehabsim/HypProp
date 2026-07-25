@@ -1,10 +1,5 @@
-=== harm run6 on dgx16 ===
-169.226.65.170:/labs/alhussien_lab   10T  9.9T  157G  99% /mnt/lab
-torch 2.12.1+cu130 cuda True
-########## prepare harm_taxonomy ##########
 [harm_taxonomy] source=aegis2.0 rows=917
 [15:40:37] prepared harm_taxonomy: 917 samples, 2 classes -> results/data_cache_v3/harm_taxonomy.jsonl
-########## HARM: taxonomy vs binary ##########
 [15:40:40] extracting 600 samples for Qwen/Qwen2.5-7B/harm_taxonomy
 [15:40:40] loading Qwen/Qwen2.5-7B (fp32) on cuda
 Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:07<00:21,  7.05s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:13<00:13,  6.78s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:19<00:06,  6.41s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:26<00:00,  6.51s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:26<00:00,  6.57s/it]
@@ -63,5 +58,3 @@ From v4.47 onwards, when a model cache is to be returned, `generate` will return
 [16:09:26] Qwen/Qwen2.5-7B L28: bare=0.097 cond=0.055 hyp=0.046 | conditioning gap=-0.042 (p=0.156) geometry gap=-0.010 (p=0.562) -> inconclusive at this layer
 [16:09:37] Qwen/Qwen2.5-7B/harm_taxonomy/original [plain]: n=600 cot=0.0 answered=0.0 truncated=0.99 len_p50=7
 [16:09:37] WARNING: Qwen/Qwen2.5-7B/harm_taxonomy [plain]: 99% of generations truncated at the cap — 'last'-token analyses are contaminated; raise --max-new-tokens or split by the flag.
-free after HARM: 138G
-=== run6 (harm) complete; artifacts in dgx_results/harm-run6-8062ce6ae379/artifacts ===

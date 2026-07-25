@@ -1,0 +1,40 @@
+=== harm run6 on dgx16 ===
+169.226.65.170:/labs/alhussien_lab   10T  9.9T  157G  99% /mnt/lab
+torch 2.12.1+cu130 cuda True
+########## prepare harm_taxonomy ##########
+[harm_taxonomy] source=aegis2.0 rows=917
+[15:40:37] prepared harm_taxonomy: 917 samples, 2 classes -> results/data_cache_v3/harm_taxonomy.jsonl
+########## HARM: taxonomy vs binary ##########
+[15:40:40] extracting 600 samples for Qwen/Qwen2.5-7B/harm_taxonomy
+[15:40:40] loading Qwen/Qwen2.5-7B (fp32) on cuda
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:07<00:21,  7.05s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:13<00:13,  6.78s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:19<00:06,  6.41s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:26<00:00,  6.51s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:26<00:00,  6.57s/it]
+[15:41:15]   Qwen/Qwen2.5-7B: chat_template=yes, chat_mode='plain' -> PLAIN prompt
+From v4.47 onwards, when a model cache is to be returned, `generate` will return a `Cache` instance instead by default (as opposed to the legacy tuple of tuples format). If you want to keep returning the legacy format, please set `return_legacy_cache=True`.
+[15:41:22]   harm_taxonomy: 25/600 (last had 0 thinking tokens)
+[15:41:28]   harm_taxonomy: 50/600 (last had 0 thinking tokens)
+[15:41:34]   harm_taxonomy: 75/600 (last had 0 thinking tokens)
+[15:41:40]   harm_taxonomy: 100/600 (last had 0 thinking tokens)
+[15:41:46]   harm_taxonomy: 125/600 (last had 0 thinking tokens)
+[15:41:53]   harm_taxonomy: 150/600 (last had 0 thinking tokens)
+[15:41:59]   harm_taxonomy: 175/600 (last had 0 thinking tokens)
+[15:42:05]   harm_taxonomy: 200/600 (last had 0 thinking tokens)
+[15:42:11]   harm_taxonomy: 225/600 (last had 0 thinking tokens)
+[15:42:17]   harm_taxonomy: 250/600 (last had 0 thinking tokens)
+[15:42:24]   harm_taxonomy: 275/600 (last had 0 thinking tokens)
+[15:42:30]   harm_taxonomy: 300/600 (last had 0 thinking tokens)
+[15:42:37]   harm_taxonomy: 325/600 (last had 0 thinking tokens)
+[15:42:43]   harm_taxonomy: 350/600 (last had 0 thinking tokens)
+[15:42:50]   harm_taxonomy: 375/600 (last had 0 thinking tokens)
+[15:42:56]   harm_taxonomy: 400/600 (last had 0 thinking tokens)
+[15:43:02]   harm_taxonomy: 425/600 (last had 0 thinking tokens)
+[15:43:08]   harm_taxonomy: 450/600 (last had 0 thinking tokens)
+[15:43:14]   harm_taxonomy: 475/600 (last had 0 thinking tokens)
+[15:43:20]   harm_taxonomy: 500/600 (last had 0 thinking tokens)
+[15:43:26]   harm_taxonomy: 525/600 (last had 0 thinking tokens)
+[15:43:32]   harm_taxonomy: 550/600 (last had 0 thinking tokens)
+[15:43:38]   harm_taxonomy: 575/600 (last had 0 thinking tokens)
+[15:43:44]   harm_taxonomy: 600/600 (last had 0 thinking tokens)
+[15:43:44] done Qwen/Qwen2.5-7B/harm_taxonomy: wrote 600/600
+[15:43:48] Poincare distance matches the textbook closed form (max err 2.00e-15); HypLL: n/a
+[15:46:34] Qwen/Qwen2.5-7B/harm_taxonomy L0: 6 seeds x 3 arms done
+[15:48:57] Qwen/Qwen2.5-7B/harm_taxonomy L7: 6 seeds x 3 arms done

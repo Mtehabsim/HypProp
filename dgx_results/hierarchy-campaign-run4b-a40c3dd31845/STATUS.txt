@@ -1,0 +1,5 @@
+host: dgx16
+started: 2026-07-25T14:51:21-04:00
+job: hierarchy-campaign-run4b (a40c3dd31845)
+name, memory.total [MiB], memory.used [MiB]
+NVIDIA A100-SXM4-80GB, 81920 MiB, 0 MiB

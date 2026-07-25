@@ -1,0 +1,21 @@
+=== hierarchy campaign (run3) on dgx16 ===
+LIMIT=240 MAX_NEW_TOKENS=16 SEEDS='0 1 2 3 4 5'
+169.226.65.170:/labs/alhussien_lab   10T  9.9T  153G  99% /mnt/lab
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "/usr/local/lib/python3.12/dist-packages/torch/__init__.py", line 427, in <module>
+    from torch._C import *  # noqa: F403
+    ^^^^^^^^^^^^^^^^^^^^^^
+ImportError: libtorch_cuda.so: failed to map segment from shared object
+ModuleNotFoundError: No module named 'hypll'
+hypll absent (closed-form gate still runs)
+=== pre-flight: Poincare distance correctness gate ===
+Traceback (most recent call last):
+  File "<stdin>", line 2, in <module>
+  File "/mnt/lab/Mo/hyperbolic1/HypProp/hypprobe/geometry/matched_probe.py", line 44, in <module>
+    import torch
+  File "/usr/local/lib/python3.12/dist-packages/torch/__init__.py", line 427, in <module>
+    from torch._C import *  # noqa: F403
+    ^^^^^^^^^^^^^^^^^^^^^^
+ImportError: libtorch_python.so: failed to map segment from shared object
+geometry gate FAILED — abort

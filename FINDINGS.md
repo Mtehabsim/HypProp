@@ -12,7 +12,18 @@ One line per confirmed result. Newest at top. δ = hyperbolic advantage
   auto-skipped (too few concepts/prompt). Corrects earlier claim that 'last' loses —
   on the tree task it carries the hierarchy as well as premise tokens.
 
-## Reasoning-specific? SUGGESTED, NOT ESTABLISHED (5-whys caught a confound)
+## CROSS-FAMILY REPLICATES → 'not reasoning-specific' UP-GRADED (run3 finished locally, summary-verified)
+- Mistral-7B-v0.3 (independent arch/pretraining, NOT Qwen-derived): fictional Δ≈+0.18
+  mid-stack, real_b2 Δ≈+0.34 @L0, radial ρ=+0.73 — SAME fingerprint as Qwen/DeepSeek.
+  So the hierarchy is architecture-general, not Qwen-family shared-weights. This
+  resolves the confound below. (Llama-3.1 arm 401-gated, skipped.) Per-seed CSV not
+  yet shipped from DGX — verdict-level only; run5 ships it. Summary TRUSTED: it
+  reproduces run2's per-seed-verified numbers exactly (DeepSeek real L0=+0.381 ✓).
+- SCALE LADDER (Qwen 1.5B/3B/7B/14B): fingerprint holds at every size; 14B STRONGEST
+  (fic_b2 Δ=+0.22 vs 7B +0.18) and peak shifts DEEPER (L20, radial L36) — consistent
+  with depth→composition-hops (bigger model, more layers, later peak).
+
+## Reasoning-specific? [SUPERSEDED by cross-family above] SUGGESTED, NOT ESTABLISHED (5-whys caught a confound)
 - Qwen2.5-7B base ≈ DeepSeek-R1-distill on every signal (real ρ_hyp=0.92@L0; fictional
   −0.05@L0→+0.27@L8-12; dim-collapse; radial ρ≈0.69). BUT DeepSeek-R1-Distill-Qwen-7B
   IS Qwen2.5 fine-tuned — they SHARE a base, so this is largely shared ancestry, not

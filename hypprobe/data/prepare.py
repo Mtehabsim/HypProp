@@ -190,11 +190,18 @@ def build_relation_trees_dataset() -> list[dict]:
     return build_relation_trees()
 
 
+def build_harm_taxonomy_dataset() -> list[dict]:
+    """Harm detection with a hazard TAXONOMY (Aegis 2.0, BeaverTails fallback)."""
+    from .harm_taxonomy import build_harm_taxonomy
+    return build_harm_taxonomy()
+
+
 BUILDERS = {"wordnet_control": build_wordnet_control,
             "flat_control": build_flat_control,
             "prontoqa": build_prontoqa,
             "prontoqa_tree": build_prontoqa_tree_dataset,
-            "relation_trees": build_relation_trees_dataset}
+            "relation_trees": build_relation_trees_dataset,
+            "harm_taxonomy": build_harm_taxonomy_dataset}
 REAL = {"ailuminate", "aegis", "harmbench", "advbench", "wos"}
 
 

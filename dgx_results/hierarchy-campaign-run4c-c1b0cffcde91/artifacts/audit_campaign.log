@@ -1,0 +1,10 @@
+[15:32:20] Qwen/Qwen2.5-7B/relation_trees/original [plain]: n=240 cot=0.263 answered=0.142 truncated=1.0 len_p50=15
+[15:32:20] WARNING: Qwen/Qwen2.5-7B/relation_trees [plain]: 100% of generations truncated at the cap — 'last'-token analyses are contaminated; raise --max-new-tokens or split by the flag.
+[17:31:06] Qwen/Qwen2.5-1.5B/prontoqa_tree/original [plain]: n=240 cot=0.942 answered=0.004 truncated=1.0 len_p50=15
+[17:31:06] WARNING: Qwen/Qwen2.5-1.5B/prontoqa_tree [plain]: 100% of generations truncated at the cap — 'last'-token analyses are contaminated; raise --max-new-tokens or split by the flag.
+[19:53:31] Qwen/Qwen2.5-14B/prontoqa_tree/original [plain]: n=240 cot=1.0 answered=0.0 truncated=1.0 len_p50=15
+[19:53:31] WARNING: Qwen/Qwen2.5-14B/prontoqa_tree [plain]: 100% of generations truncated at the cap — 'last'-token analyses are contaminated; raise --max-new-tokens or split by the flag.
+[00:48:25] Qwen/Qwen2.5-3B/prontoqa_tree/original [plain]: n=240 cot=0.517 answered=0.025 truncated=1.0 len_p50=15
+[00:48:25] WARNING: Qwen/Qwen2.5-3B/prontoqa_tree [plain]: 100% of generations truncated at the cap — 'last'-token analyses are contaminated; raise --max-new-tokens or split by the flag.
+[03:42:13] mistralai/Mistral-7B-v0.3/prontoqa_tree/original [plain]: n=240 cot=0.863 answered=0.0 truncated=1.0 len_p50=15
+[03:42:13] WARNING: mistralai/Mistral-7B-v0.3/prontoqa_tree [plain]: 100% of generations truncated at the cap — 'last'-token analyses are contaminated; raise --max-new-tokens or split by the flag.

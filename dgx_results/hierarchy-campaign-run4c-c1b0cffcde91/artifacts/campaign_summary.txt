@@ -1,0 +1,82 @@
+
+### Qwen_Qwen2.5-7B__plain: 53 suitable positions
+  fictional_b1     last     bestL=12  m5 Δ=+0.098 slope=0.0787 shuffle=-0.023
+  fictional_b1     premise  bestL=12  m5 Δ=+0.088 slope=0.09 shuffle=+0.002
+  fictional_b2     last     bestL=16  m5 Δ=+0.193 slope=0.1489 shuffle=-0.031
+  fictional_b2     premise  bestL=20  m5 Δ=+0.184 slope=0.2065 shuffle=+0.005
+  fictional_b3     last     bestL=12  m5 Δ=+0.176 slope=0.0981 shuffle=-0.014
+  fictional_b3     premise  bestL=16  m5 Δ=+0.161 slope=0.0693 shuffle=+0.003
+  real_b2          last     bestL=0   m3 Δ=+0.358 slope=0.3625 shuffle=-0.027
+  real_b2          premise  bestL=0   m3 Δ=+0.328 slope=0.3326 shuffle=-0.024
+  radial last     L8   ρ=+0.639 pass=True
+  radial premise  L20  ρ=+0.686 pass=True
+
+### crossfamily__mistralai_Mistral-7B-v0.3: 62 suitable positions
+  fictional_b1     last     bestL=4   m5 Δ=+0.086 slope=0.032 shuffle=+0.004
+  fictional_b1     premise  bestL=28  m5 Δ=+0.084 slope=0.0503 shuffle=+0.004
+  fictional_b2     last     bestL=4   m5 Δ=+0.174 slope=0.1474 shuffle=-0.010
+  fictional_b2     premise  bestL=12  m5 Δ=+0.188 slope=0.1569 shuffle=-0.026
+  fictional_b3     last     bestL=24  m5 Δ=+0.163 slope=0.1482 shuffle=-0.041
+  fictional_b3     premise  bestL=12  m5 Δ=+0.185 slope=0.1142 shuffle=-0.016
+  real_b2          last     bestL=0   m3 Δ=+0.344 slope=0.3491 shuffle=-0.024
+  real_b2          premise  bestL=0   m3 Δ=+0.340 slope=0.3457 shuffle=-0.025
+  radial last     L20  ρ=+0.723 pass=True
+  radial premise  L20  ρ=+0.733 pass=True
+
+### deepseek-ai_DeepSeek-R1-Distill-Qwen-7B__plain: 49 suitable positions
+  fictional_b1     last     bestL=8   m5 Δ=+0.093 slope=0.076 shuffle=+0.001
+  fictional_b1     premise  bestL=8   m5 Δ=+0.094 slope=0.0697 shuffle=+0.015
+  fictional_b2     last     bestL=8   m5 Δ=+0.179 slope=0.0981 shuffle=-0.026
+  fictional_b2     premise  bestL=8   m5 Δ=+0.191 slope=0.1676 shuffle=-0.016
+  fictional_b3     last     bestL=8   m5 Δ=+0.166 slope=0.07 shuffle=-0.012
+  fictional_b3     premise  bestL=12  m5 Δ=+0.187 slope=0.0951 shuffle=-0.010
+  real_b2          last     bestL=0   m3 Δ=+0.361 slope=0.3665 shuffle=-0.025
+  real_b2          premise  bestL=0   m3 Δ=+0.381 slope=0.386 shuffle=-0.023
+  radial last     L12  ρ=+0.648 pass=True
+  radial premise  L12  ρ=+0.656 pass=True
+
+### relations__Qwen2.5-7B: 42 suitable positions
+  causes_b2        last     bestL=16  m5 Δ=+0.185 slope=0.1487 shuffle=-0.003
+  causes_b2        premise  bestL=16  m5 Δ=+0.174 slope=0.0932 shuffle=-0.007
+  is_a_b2          last     bestL=16  m5 Δ=+0.184 slope=0.0932 shuffle=-0.032
+  is_a_b2          premise  bestL=8   m5 Δ=+0.201 slope=0.1721 shuffle=-0.025
+  part_of_b2       last     bestL=16  m5 Δ=+0.191 slope=0.0795 shuffle=-0.019
+  part_of_b2       premise  bestL=12  m5 Δ=+0.191 slope=0.1224 shuffle=-0.005
+  radial last     L20  ρ=+0.640 pass=True
+  radial premise  L20  ρ=+0.680 pass=True
+
+### scaleladder__Qwen_Qwen2.5-1.5B: 52 suitable positions
+  fictional_b1     last     bestL=12  m5 Δ=+0.058 slope=0.1114 shuffle=+0.003
+  fictional_b1     premise  bestL=4   m5 Δ=+0.097 slope=0.0357 shuffle=-0.016
+  fictional_b2     last     bestL=4   m5 Δ=+0.174 slope=0.1208 shuffle=-0.001
+  fictional_b2     premise  bestL=8   m5 Δ=+0.177 slope=0.1749 shuffle=-0.015
+  fictional_b3     last     bestL=12  m5 Δ=+0.155 slope=0.1225 shuffle=-0.031
+  fictional_b3     premise  bestL=12  m5 Δ=+0.162 slope=0.0945 shuffle=-0.024
+  real_b2          last     bestL=0   m3 Δ=+0.350 slope=0.3545 shuffle=-0.029
+  real_b2          premise  bestL=0   m3 Δ=+0.327 slope=0.3293 shuffle=-0.026
+  radial last     L12  ρ=+0.654 pass=True
+  radial premise  L20  ρ=+0.694 pass=True
+
+### scaleladder__Qwen_Qwen2.5-14B: 92 suitable positions
+  fictional_b1     last     bestL=8   m5 Δ=+0.087 slope=0.0681 shuffle=-0.018
+  fictional_b1     premise  bestL=12  m5 Δ=+0.090 slope=0.1004 shuffle=+0.018
+  fictional_b2     last     bestL=20  m5 Δ=+0.225 slope=0.1672 shuffle=-0.007
+  fictional_b2     premise  bestL=20  m5 Δ=+0.221 slope=0.1687 shuffle=-0.019
+  fictional_b3     last     bestL=20  m5 Δ=+0.172 slope=0.0666 shuffle=-0.031
+  fictional_b3     premise  bestL=20  m5 Δ=+0.196 slope=0.1106 shuffle=-0.027
+  real_b2          last     bestL=4   m3 Δ=+0.316 slope=0.3216 shuffle=-0.026
+  real_b2          premise  bestL=0   m3 Δ=+0.329 slope=0.3339 shuffle=-0.024
+  radial last     L36  ρ=+0.707 pass=True
+  radial premise  L36  ρ=+0.728 pass=True
+
+### scaleladder__Qwen_Qwen2.5-3B: 63 suitable positions
+  fictional_b1     last     bestL=16  m5 Δ=+0.093 slope=0.0788 shuffle=-0.007
+  fictional_b1     premise  bestL=8   m5 Δ=+0.119 slope=0.0994 shuffle=-0.015
+  fictional_b2     last     bestL=20  m5 Δ=+0.187 slope=0.1092 shuffle=-0.010
+  fictional_b2     premise  bestL=20  m5 Δ=+0.180 slope=0.1218 shuffle=-0.029
+  fictional_b3     last     bestL=20  m5 Δ=+0.156 slope=0.0602 shuffle=-0.015
+  fictional_b3     premise  bestL=16  m5 Δ=+0.170 slope=0.1423 shuffle=-0.041
+  real_b2          last     bestL=0   m3 Δ=+0.352 slope=0.3547 shuffle=-0.029
+  real_b2          premise  bestL=0   m3 Δ=+0.338 slope=0.3423 shuffle=-0.025
+  radial last     L16  ρ=+0.683 pass=True
+  radial premise  L16  ρ=+0.693 pass=True

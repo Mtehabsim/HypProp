@@ -1,0 +1,183 @@
+=== hierarchy campaign (run3) on dgx16 ===
+LIMIT=240 MAX_NEW_TOKENS=16 SEEDS='0 1 2 3 4 5'
+169.226.65.170:/labs/alhussien_lab   10T  9.9T  148G  99% /mnt/lab
+torch 2.12.1+cu130 cuda True
+hypll import OK
+=== pre-flight: Poincare distance correctness gate ===
+closed-form gate: True err 2.00e-15
+=== preparing datasets ===
+[15:15:01] prepared prontoqa_tree: 240 samples, 3 classes -> results/data_cache_v3/prontoqa_tree.jsonl
+[15:15:01] prepared relation_trees: 240 samples, 4 classes -> results/data_cache_v3/relation_trees.jsonl
+=== resume: importing prior verdicts from dgx_results/hierarchy-campaign-run3-8122ad07fcef/artifacts/tree_probe_v3 ===
+########## PHASE B: RELATION TYPES (incl. flat_set negative control) ##########
+=== ARM relations__Qwen2.5-7B: verdict already present — SKIP (resume) ===
+########## PHASE A: SCALE LADDER (14B, 3B, then flaky 1.5B last) ##########
+=== ARM scaleladder__Qwen_Qwen2.5-14B: verdict already present — SKIP (resume) ===
+=== ARM scaleladder__Qwen_Qwen2.5-3B: verdict already present — SKIP (resume) ===
+=== ARM scaleladder__Qwen_Qwen2.5-1.5B: verdict already present — SKIP (resume) ===
+########## PHASE C: CROSS-FAMILY ##########
+=== ARM crossfamily__meta-llama_Llama-3.1-8B (meta-llama/Llama-3.1-8B on prontoqa_tree) | free 148G ===
+[15:15:05] extracting 240 samples for meta-llama/Llama-3.1-8B/prontoqa_tree
+[15:15:09] loading meta-llama/Llama-3.1-8B (fp32) on cuda
+Traceback (most recent call last):
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/huggingface_hub/utils/_http.py", line 403, in hf_raise_for_status
+    response.raise_for_status()
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/requests/models.py", line 1167, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 401 Client Error: Unauthorized for url: https://huggingface.co/meta-llama/Llama-3.1-8B/resolve/main/config.json
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/transformers/utils/hub.py", line 403, in cached_file
+    resolved_file = hf_hub_download(
+                    ^^^^^^^^^^^^^^^^
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/huggingface_hub/file_download.py", line 1014, in hf_hub_download
+    return _hf_hub_download_to_cache_dir(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/huggingface_hub/file_download.py", line 1121, in _hf_hub_download_to_cache_dir
+    _raise_on_head_call_error(head_call_error, force_download, local_files_only)
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/huggingface_hub/file_download.py", line 1662, in _raise_on_head_call_error
+    raise head_call_error
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/huggingface_hub/file_download.py", line 1550, in _get_metadata_or_catch_error
+    metadata = get_hf_file_metadata(
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/huggingface_hub/file_download.py", line 1467, in get_hf_file_metadata
+    r = _request_wrapper(
+        ^^^^^^^^^^^^^^^^^
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/huggingface_hub/file_download.py", line 283, in _request_wrapper
+    response = _request_wrapper(
+               ^^^^^^^^^^^^^^^^^
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/huggingface_hub/file_download.py", line 307, in _request_wrapper
+    hf_raise_for_status(response)
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/huggingface_hub/utils/_http.py", line 420, in hf_raise_for_status
+    raise _format(GatedRepoError, message, response) from e
+huggingface_hub.errors.GatedRepoError: 401 Client Error. (Request ID: Root=1-6a650b3d-5ec82c24219600525db7ab1f;feb80948-e5dc-4ae5-b702-d2496a5371c5)
+
+Cannot access gated repo for url https://huggingface.co/meta-llama/Llama-3.1-8B/resolve/main/config.json.
+Access to model meta-llama/Llama-3.1-8B is restricted. You must have access to it and be authenticated to access it. Please log in.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/mnt/lab/Mo/hyperbolic1/HypProp/hypprobe/extract/hidden_state_extractor.py", line 226, in <module>
+    main()
+  File "/mnt/lab/Mo/hyperbolic1/HypProp/hypprobe/extract/hidden_state_extractor.py", line 219, in main
+    extract_model_dataset(args.model, ds, samples, args.out, logfile,
+  File "/mnt/lab/Mo/hyperbolic1/HypProp/hypprobe/extract/hidden_state_extractor.py", line 45, in extract_model_dataset
+    tok = AutoTokenizer.from_pretrained(model_name)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/transformers/models/auto/tokenization_auto.py", line 877, in from_pretrained
+    config = AutoConfig.from_pretrained(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/transformers/models/auto/configuration_auto.py", line 1017, in from_pretrained
+    config_dict, unused_kwargs = PretrainedConfig.get_config_dict(pretrained_model_name_or_path, **kwargs)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/transformers/configuration_utils.py", line 574, in get_config_dict
+    config_dict, kwargs = cls._get_config_dict(pretrained_model_name_or_path, **kwargs)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/transformers/configuration_utils.py", line 633, in _get_config_dict
+    resolved_config_file = cached_file(
+                           ^^^^^^^^^^^^
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/transformers/utils/hub.py", line 421, in cached_file
+    raise EnvironmentError(
+OSError: You are trying to access a gated repo.
+Make sure to have access to it at https://huggingface.co/meta-llama/Llama-3.1-8B.
+401 Client Error. (Request ID: Root=1-6a650b3d-5ec82c24219600525db7ab1f;feb80948-e5dc-4ae5-b702-d2496a5371c5)
+
+Cannot access gated repo for url https://huggingface.co/meta-llama/Llama-3.1-8B/resolve/main/config.json.
+Access to model meta-llama/Llama-3.1-8B is restricted. You must have access to it and be authenticated to access it. Please log in.
+ARM crossfamily__meta-llama_Llama-3.1-8B: no activations (model absent/gated/timeout?) — SKIP
+=== ARM crossfamily__mistralai_Mistral-7B-v0.3: verdict already present — SKIP (resume) ===
+=== campaign summary ===
+
+### Qwen_Qwen2.5-7B__plain: 53 suitable positions
+  fictional_b1     last     bestL=12  m5 Δ=+0.098 slope=0.0787 shuffle=-0.023
+  fictional_b1     premise  bestL=12  m5 Δ=+0.088 slope=0.09 shuffle=+0.002
+  fictional_b2     last     bestL=16  m5 Δ=+0.193 slope=0.1489 shuffle=-0.031
+  fictional_b2     premise  bestL=20  m5 Δ=+0.184 slope=0.2065 shuffle=+0.005
+  fictional_b3     last     bestL=12  m5 Δ=+0.176 slope=0.0981 shuffle=-0.014
+  fictional_b3     premise  bestL=16  m5 Δ=+0.161 slope=0.0693 shuffle=+0.003
+  real_b2          last     bestL=0   m3 Δ=+0.358 slope=0.3625 shuffle=-0.027
+  real_b2          premise  bestL=0   m3 Δ=+0.328 slope=0.3326 shuffle=-0.024
+  radial last     L8   ρ=+0.639 pass=True
+  radial premise  L20  ρ=+0.686 pass=True
+
+### crossfamily__mistralai_Mistral-7B-v0.3: 62 suitable positions
+  fictional_b1     last     bestL=4   m5 Δ=+0.086 slope=0.032 shuffle=+0.004
+  fictional_b1     premise  bestL=28  m5 Δ=+0.084 slope=0.0503 shuffle=+0.004
+  fictional_b2     last     bestL=4   m5 Δ=+0.174 slope=0.1474 shuffle=-0.010
+  fictional_b2     premise  bestL=12  m5 Δ=+0.188 slope=0.1569 shuffle=-0.026
+  fictional_b3     last     bestL=24  m5 Δ=+0.163 slope=0.1482 shuffle=-0.041
+  fictional_b3     premise  bestL=12  m5 Δ=+0.185 slope=0.1142 shuffle=-0.016
+  real_b2          last     bestL=0   m3 Δ=+0.344 slope=0.3491 shuffle=-0.024
+  real_b2          premise  bestL=0   m3 Δ=+0.340 slope=0.3457 shuffle=-0.025
+  radial last     L20  ρ=+0.723 pass=True
+  radial premise  L20  ρ=+0.733 pass=True
+
+### deepseek-ai_DeepSeek-R1-Distill-Qwen-7B__plain: 49 suitable positions
+  fictional_b1     last     bestL=8   m5 Δ=+0.093 slope=0.076 shuffle=+0.001
+  fictional_b1     premise  bestL=8   m5 Δ=+0.094 slope=0.0697 shuffle=+0.015
+  fictional_b2     last     bestL=8   m5 Δ=+0.179 slope=0.0981 shuffle=-0.026
+  fictional_b2     premise  bestL=8   m5 Δ=+0.191 slope=0.1676 shuffle=-0.016
+  fictional_b3     last     bestL=8   m5 Δ=+0.166 slope=0.07 shuffle=-0.012
+  fictional_b3     premise  bestL=12  m5 Δ=+0.187 slope=0.0951 shuffle=-0.010
+  real_b2          last     bestL=0   m3 Δ=+0.361 slope=0.3665 shuffle=-0.025
+  real_b2          premise  bestL=0   m3 Δ=+0.381 slope=0.386 shuffle=-0.023
+  radial last     L12  ρ=+0.648 pass=True
+  radial premise  L12  ρ=+0.656 pass=True
+
+### relations__Qwen2.5-7B: 42 suitable positions
+  causes_b2        last     bestL=16  m5 Δ=+0.185 slope=0.1487 shuffle=-0.003
+  causes_b2        premise  bestL=16  m5 Δ=+0.174 slope=0.0932 shuffle=-0.007
+  is_a_b2          last     bestL=16  m5 Δ=+0.184 slope=0.0932 shuffle=-0.032
+  is_a_b2          premise  bestL=8   m5 Δ=+0.201 slope=0.1721 shuffle=-0.025
+  part_of_b2       last     bestL=16  m5 Δ=+0.191 slope=0.0795 shuffle=-0.019
+  part_of_b2       premise  bestL=12  m5 Δ=+0.191 slope=0.1224 shuffle=-0.005
+  radial last     L20  ρ=+0.640 pass=True
+  radial premise  L20  ρ=+0.680 pass=True
+
+### scaleladder__Qwen_Qwen2.5-1.5B: 52 suitable positions
+  fictional_b1     last     bestL=12  m5 Δ=+0.058 slope=0.1114 shuffle=+0.003
+  fictional_b1     premise  bestL=4   m5 Δ=+0.097 slope=0.0357 shuffle=-0.016
+  fictional_b2     last     bestL=4   m5 Δ=+0.174 slope=0.1208 shuffle=-0.001
+  fictional_b2     premise  bestL=8   m5 Δ=+0.177 slope=0.1749 shuffle=-0.015
+  fictional_b3     last     bestL=12  m5 Δ=+0.155 slope=0.1225 shuffle=-0.031
+  fictional_b3     premise  bestL=12  m5 Δ=+0.162 slope=0.0945 shuffle=-0.024
+  real_b2          last     bestL=0   m3 Δ=+0.350 slope=0.3545 shuffle=-0.029
+  real_b2          premise  bestL=0   m3 Δ=+0.327 slope=0.3293 shuffle=-0.026
+  radial last     L12  ρ=+0.654 pass=True
+  radial premise  L20  ρ=+0.694 pass=True
+
+### scaleladder__Qwen_Qwen2.5-14B: 92 suitable positions
+  fictional_b1     last     bestL=8   m5 Δ=+0.087 slope=0.0681 shuffle=-0.018
+  fictional_b1     premise  bestL=12  m5 Δ=+0.090 slope=0.1004 shuffle=+0.018
+  fictional_b2     last     bestL=20  m5 Δ=+0.225 slope=0.1672 shuffle=-0.007
+  fictional_b2     premise  bestL=20  m5 Δ=+0.221 slope=0.1687 shuffle=-0.019
+  fictional_b3     last     bestL=20  m5 Δ=+0.172 slope=0.0666 shuffle=-0.031
+  fictional_b3     premise  bestL=20  m5 Δ=+0.196 slope=0.1106 shuffle=-0.027
+  real_b2          last     bestL=4   m3 Δ=+0.316 slope=0.3216 shuffle=-0.026
+  real_b2          premise  bestL=0   m3 Δ=+0.329 slope=0.3339 shuffle=-0.024
+  radial last     L36  ρ=+0.707 pass=True
+  radial premise  L36  ρ=+0.728 pass=True
+
+### scaleladder__Qwen_Qwen2.5-3B: 63 suitable positions
+  fictional_b1     last     bestL=16  m5 Δ=+0.093 slope=0.0788 shuffle=-0.007
+  fictional_b1     premise  bestL=8   m5 Δ=+0.119 slope=0.0994 shuffle=-0.015
+  fictional_b2     last     bestL=20  m5 Δ=+0.187 slope=0.1092 shuffle=-0.010
+  fictional_b2     premise  bestL=20  m5 Δ=+0.180 slope=0.1218 shuffle=-0.029
+  fictional_b3     last     bestL=20  m5 Δ=+0.156 slope=0.0602 shuffle=-0.015
+  fictional_b3     premise  bestL=16  m5 Δ=+0.170 slope=0.1423 shuffle=-0.041
+  real_b2          last     bestL=0   m3 Δ=+0.352 slope=0.3547 shuffle=-0.029
+  real_b2          premise  bestL=0   m3 Δ=+0.338 slope=0.3423 shuffle=-0.025
+  radial last     L16  ρ=+0.683 pass=True
+  radial premise  L16  ρ=+0.693 pass=True
+=== campaign complete; artifacts in dgx_results/hierarchy-campaign-run4c-c1b0cffcde91/artifacts ===

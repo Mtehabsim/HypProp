@@ -1,0 +1,233 @@
+[15:29:07] extracting 240 samples for Qwen/Qwen2.5-7B/relation_trees
+[15:29:08] loading Qwen/Qwen2.5-7B (fp32) on cuda
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:07<00:22,  7.54s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:13<00:13,  6.68s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:19<00:06,  6.32s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:24<00:00,  5.95s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:24<00:00,  6.23s/it]
+[15:29:41]   Qwen/Qwen2.5-7B: chat_template=yes, chat_mode='plain' -> PLAIN prompt
+From v4.47 onwards, when a model cache is to be returned, `generate` will return a `Cache` instance instead by default (as opposed to the legacy tuple of tuples format). If you want to keep returning the legacy format, please set `return_legacy_cache=True`.
+[15:29:57]   relation_trees: 25/240 (last had 0 thinking tokens)
+[15:30:11]   relation_trees: 50/240 (last had 0 thinking tokens)
+[15:30:27]   relation_trees: 75/240 (last had 0 thinking tokens)
+[15:30:41]   relation_trees: 100/240 (last had 1 thinking tokens)
+[15:30:55]   relation_trees: 125/240 (last had 0 thinking tokens)
+[15:31:10]   relation_trees: 150/240 (last had 0 thinking tokens)
+[15:31:25]   relation_trees: 175/240 (last had 0 thinking tokens)
+[15:31:39]   relation_trees: 200/240 (last had 0 thinking tokens)
+[15:31:54]   relation_trees: 225/240 (last had 0 thinking tokens)
+[15:32:02] done Qwen/Qwen2.5-7B/relation_trees: wrote 240/240
+[17:28:44] extracting 240 samples for Qwen/Qwen2.5-1.5B/prontoqa_tree
+[17:28:44] loading Qwen/Qwen2.5-1.5B (fp32) on cuda
+[17:29:17]   Qwen/Qwen2.5-1.5B: chat_template=yes, chat_mode='plain' -> PLAIN prompt
+From v4.47 onwards, when a model cache is to be returned, `generate` will return a `Cache` instance instead by default (as opposed to the legacy tuple of tuples format). If you want to keep returning the legacy format, please set `return_legacy_cache=True`.
+[17:29:28]   prontoqa_tree: 25/240 (last had 0 thinking tokens)
+[17:29:39]   prontoqa_tree: 50/240 (last had 0 thinking tokens)
+[17:29:50]   prontoqa_tree: 75/240 (last had 0 thinking tokens)
+[17:30:01]   prontoqa_tree: 100/240 (last had 0 thinking tokens)
+[17:30:11]   prontoqa_tree: 125/240 (last had 0 thinking tokens)
+[17:30:22]   prontoqa_tree: 150/240 (last had 0 thinking tokens)
+[17:30:33]   prontoqa_tree: 175/240 (last had 0 thinking tokens)
+[17:30:43]   prontoqa_tree: 200/240 (last had 0 thinking tokens)
+[17:30:54]   prontoqa_tree: 225/240 (last had 0 thinking tokens)
+[17:31:01] done Qwen/Qwen2.5-1.5B/prontoqa_tree: wrote 240/240
+[19:45:13] extracting 240 samples for Qwen/Qwen2.5-14B/prontoqa_tree
+[19:45:13] loading Qwen/Qwen2.5-14B (fp32) on cuda
+Downloading shards:   0%|          | 0/8 [00:00<?, ?it/s]Downloading shards:  12%|█▎        | 1/8 [00:09<01:06,  9.45s/it]Downloading shards:  25%|██▌       | 2/8 [00:18<00:54,  9.04s/it]Downloading shards:  38%|███▊      | 3/8 [00:28<00:49,  9.80s/it]Downloading shards:  50%|█████     | 4/8 [00:38<00:38,  9.59s/it]Downloading shards:  62%|██████▎   | 5/8 [00:48<00:29,  9.73s/it]Downloading shards:  75%|███████▌  | 6/8 [00:58<00:19,  9.92s/it]Downloading shards:  88%|████████▊ | 7/8 [01:07<00:09,  9.76s/it]Downloading shards: 100%|██████████| 8/8 [01:14<00:00,  8.65s/it]Downloading shards: 100%|██████████| 8/8 [01:14<00:00,  9.27s/it]
+Loading checkpoint shards:   0%|          | 0/8 [00:00<?, ?it/s]Loading checkpoint shards:  12%|█▎        | 1/8 [00:13<01:32, 13.25s/it]Loading checkpoint shards:  25%|██▌       | 2/8 [00:25<01:15, 12.61s/it]Loading checkpoint shards:  38%|███▊      | 3/8 [00:37<01:02, 12.58s/it]Loading checkpoint shards:  50%|█████     | 4/8 [00:50<00:49, 12.45s/it]Loading checkpoint shards:  62%|██████▎   | 5/8 [01:02<00:36, 12.28s/it]Loading checkpoint shards:  75%|███████▌  | 6/8 [01:14<00:24, 12.34s/it]Loading checkpoint shards:  88%|████████▊ | 7/8 [01:26<00:12, 12.32s/it]Loading checkpoint shards: 100%|██████████| 8/8 [01:32<00:00, 10.12s/it]Loading checkpoint shards: 100%|██████████| 8/8 [01:32<00:00, 11.54s/it]
+[19:48:09]   Qwen/Qwen2.5-14B: chat_template=yes, chat_mode='plain' -> PLAIN prompt
+From v4.47 onwards, when a model cache is to be returned, `generate` will return a `Cache` instance instead by default (as opposed to the legacy tuple of tuples format). If you want to keep returning the legacy format, please set `return_legacy_cache=True`.
+[19:48:40]   prontoqa_tree: 25/240 (last had 0 thinking tokens)
+[19:49:10]   prontoqa_tree: 50/240 (last had 0 thinking tokens)
+[19:49:40]   prontoqa_tree: 75/240 (last had 0 thinking tokens)
+[19:50:11]   prontoqa_tree: 100/240 (last had 0 thinking tokens)
+[19:50:40]   prontoqa_tree: 125/240 (last had 0 thinking tokens)
+[19:51:11]   prontoqa_tree: 150/240 (last had 0 thinking tokens)
+[19:51:41]   prontoqa_tree: 175/240 (last had 0 thinking tokens)
+[19:52:11]   prontoqa_tree: 200/240 (last had 0 thinking tokens)
+[19:52:40]   prontoqa_tree: 225/240 (last had 0 thinking tokens)
+[19:52:58] done Qwen/Qwen2.5-14B/prontoqa_tree: wrote 240/240
+[00:45:03] extracting 240 samples for Qwen/Qwen2.5-3B/prontoqa_tree
+[00:45:04] loading Qwen/Qwen2.5-3B (fp32) on cuda
+Downloading shards:   0%|          | 0/2 [00:00<?, ?it/s]Downloading shards:  50%|█████     | 1/2 [00:08<00:08,  8.52s/it]Downloading shards: 100%|██████████| 2/2 [00:15<00:00,  7.71s/it]Downloading shards: 100%|██████████| 2/2 [00:15<00:00,  7.83s/it]
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:12<00:12, 12.19s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:19<00:00,  9.35s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:19<00:00,  9.77s/it]
+[00:45:48]   Qwen/Qwen2.5-3B: chat_template=yes, chat_mode='plain' -> PLAIN prompt
+From v4.47 onwards, when a model cache is to be returned, `generate` will return a `Cache` instance instead by default (as opposed to the legacy tuple of tuples format). If you want to keep returning the legacy format, please set `return_legacy_cache=True`.
+[00:46:04]   prontoqa_tree: 25/240 (last had 0 thinking tokens)
+[00:46:18]   prontoqa_tree: 50/240 (last had 1 thinking tokens)
+[00:46:33]   prontoqa_tree: 75/240 (last had 0 thinking tokens)
+[00:46:48]   prontoqa_tree: 100/240 (last had 0 thinking tokens)
+[00:47:03]   prontoqa_tree: 125/240 (last had 0 thinking tokens)
+[00:47:19]   prontoqa_tree: 150/240 (last had 0 thinking tokens)
+[00:47:34]   prontoqa_tree: 175/240 (last had 0 thinking tokens)
+[00:47:49]   prontoqa_tree: 200/240 (last had 0 thinking tokens)
+[00:48:04]   prontoqa_tree: 225/240 (last had 0 thinking tokens)
+[00:48:13] done Qwen/Qwen2.5-3B/prontoqa_tree: wrote 240/240
+[03:37:26] extracting 240 samples for meta-llama/Llama-3.1-8B/prontoqa_tree
+[03:37:27] loading meta-llama/Llama-3.1-8B (fp32) on cuda
+Traceback (most recent call last):
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/huggingface_hub/utils/_http.py", line 403, in hf_raise_for_status
+    response.raise_for_status()
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/requests/models.py", line 1167, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 401 Client Error: Unauthorized for url: https://huggingface.co/meta-llama/Llama-3.1-8B/resolve/main/config.json
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/transformers/utils/hub.py", line 403, in cached_file
+    resolved_file = hf_hub_download(
+                    ^^^^^^^^^^^^^^^^
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/huggingface_hub/file_download.py", line 1014, in hf_hub_download
+    return _hf_hub_download_to_cache_dir(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/huggingface_hub/file_download.py", line 1121, in _hf_hub_download_to_cache_dir
+    _raise_on_head_call_error(head_call_error, force_download, local_files_only)
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/huggingface_hub/file_download.py", line 1662, in _raise_on_head_call_error
+    raise head_call_error
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/huggingface_hub/file_download.py", line 1550, in _get_metadata_or_catch_error
+    metadata = get_hf_file_metadata(
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/huggingface_hub/file_download.py", line 1467, in get_hf_file_metadata
+    r = _request_wrapper(
+        ^^^^^^^^^^^^^^^^^
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/huggingface_hub/file_download.py", line 283, in _request_wrapper
+    response = _request_wrapper(
+               ^^^^^^^^^^^^^^^^^
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/huggingface_hub/file_download.py", line 307, in _request_wrapper
+    hf_raise_for_status(response)
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/huggingface_hub/utils/_http.py", line 420, in hf_raise_for_status
+    raise _format(GatedRepoError, message, response) from e
+huggingface_hub.errors.GatedRepoError: 401 Client Error. (Request ID: Root=1-6a5738b7-061af4833f12124d4e73c25a;a6883fd3-b0ea-45d5-a328-7d7116fce1fb)
+
+Cannot access gated repo for url https://huggingface.co/meta-llama/Llama-3.1-8B/resolve/main/config.json.
+Access to model meta-llama/Llama-3.1-8B is restricted. You must have access to it and be authenticated to access it. Please log in.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/mnt/lab/Mo/hyperbolic1/HypProp/hypprobe/extract/hidden_state_extractor.py", line 226, in <module>
+    main()
+  File "/mnt/lab/Mo/hyperbolic1/HypProp/hypprobe/extract/hidden_state_extractor.py", line 219, in main
+    extract_model_dataset(args.model, ds, samples, args.out, logfile,
+  File "/mnt/lab/Mo/hyperbolic1/HypProp/hypprobe/extract/hidden_state_extractor.py", line 45, in extract_model_dataset
+    tok = AutoTokenizer.from_pretrained(model_name)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/transformers/models/auto/tokenization_auto.py", line 877, in from_pretrained
+    config = AutoConfig.from_pretrained(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/transformers/models/auto/configuration_auto.py", line 1017, in from_pretrained
+    config_dict, unused_kwargs = PretrainedConfig.get_config_dict(pretrained_model_name_or_path, **kwargs)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/transformers/configuration_utils.py", line 574, in get_config_dict
+    config_dict, kwargs = cls._get_config_dict(pretrained_model_name_or_path, **kwargs)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/transformers/configuration_utils.py", line 633, in _get_config_dict
+    resolved_config_file = cached_file(
+                           ^^^^^^^^^^^^
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/transformers/utils/hub.py", line 421, in cached_file
+    raise EnvironmentError(
+OSError: You are trying to access a gated repo.
+Make sure to have access to it at https://huggingface.co/meta-llama/Llama-3.1-8B.
+401 Client Error. (Request ID: Root=1-6a5738b7-061af4833f12124d4e73c25a;a6883fd3-b0ea-45d5-a328-7d7116fce1fb)
+
+Cannot access gated repo for url https://huggingface.co/meta-llama/Llama-3.1-8B/resolve/main/config.json.
+Access to model meta-llama/Llama-3.1-8B is restricted. You must have access to it and be authenticated to access it. Please log in.
+[03:37:29] extracting 240 samples for mistralai/Mistral-7B-v0.3/prontoqa_tree
+[03:37:30] loading mistralai/Mistral-7B-v0.3 (fp32) on cuda
+Downloading shards:   0%|          | 0/3 [00:00<?, ?it/s]Downloading shards:  33%|███▎      | 1/3 [00:10<00:20, 10.26s/it]Downloading shards:  67%|██████▋   | 2/3 [00:20<00:09,  9.98s/it]Downloading shards: 100%|██████████| 3/3 [00:29<00:00,  9.76s/it]Downloading shards: 100%|██████████| 3/3 [00:29<00:00,  9.85s/it]
+Loading checkpoint shards:   0%|          | 0/3 [00:00<?, ?it/s]Loading checkpoint shards:  33%|███▎      | 1/3 [00:16<00:33, 16.79s/it]Loading checkpoint shards:  67%|██████▋   | 2/3 [00:31<00:15, 15.75s/it]Loading checkpoint shards: 100%|██████████| 3/3 [00:45<00:00, 14.76s/it]Loading checkpoint shards: 100%|██████████| 3/3 [00:45<00:00, 15.13s/it]
+[03:38:56]   mistralai/Mistral-7B-v0.3: chat_template=NO, chat_mode='plain' -> PLAIN prompt
+From v4.47 onwards, when a model cache is to be returned, `generate` will return a `Cache` instance instead by default (as opposed to the legacy tuple of tuples format). If you want to keep returning the legacy format, please set `return_legacy_cache=True`.
+[03:39:15]   prontoqa_tree: 25/240 (last had 0 thinking tokens)
+[03:39:33]   prontoqa_tree: 50/240 (last had 0 thinking tokens)
+[03:39:52]   prontoqa_tree: 75/240 (last had 0 thinking tokens)
+[03:40:10]   prontoqa_tree: 100/240 (last had 0 thinking tokens)
+[03:40:29]   prontoqa_tree: 125/240 (last had 0 thinking tokens)
+[03:40:47]   prontoqa_tree: 150/240 (last had 0 thinking tokens)
+[03:41:06]   prontoqa_tree: 175/240 (last had 0 thinking tokens)
+[03:41:24]   prontoqa_tree: 200/240 (last had 0 thinking tokens)
+[03:41:42]   prontoqa_tree: 225/240 (last had 0 thinking tokens)
+[03:41:53] done mistralai/Mistral-7B-v0.3/prontoqa_tree: wrote 240/240
+[15:15:05] extracting 240 samples for meta-llama/Llama-3.1-8B/prontoqa_tree
+[15:15:09] loading meta-llama/Llama-3.1-8B (fp32) on cuda
+Traceback (most recent call last):
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/huggingface_hub/utils/_http.py", line 403, in hf_raise_for_status
+    response.raise_for_status()
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/requests/models.py", line 1167, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 401 Client Error: Unauthorized for url: https://huggingface.co/meta-llama/Llama-3.1-8B/resolve/main/config.json
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/transformers/utils/hub.py", line 403, in cached_file
+    resolved_file = hf_hub_download(
+                    ^^^^^^^^^^^^^^^^
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/huggingface_hub/file_download.py", line 1014, in hf_hub_download
+    return _hf_hub_download_to_cache_dir(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/huggingface_hub/file_download.py", line 1121, in _hf_hub_download_to_cache_dir
+    _raise_on_head_call_error(head_call_error, force_download, local_files_only)
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/huggingface_hub/file_download.py", line 1662, in _raise_on_head_call_error
+    raise head_call_error
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/huggingface_hub/file_download.py", line 1550, in _get_metadata_or_catch_error
+    metadata = get_hf_file_metadata(
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/huggingface_hub/file_download.py", line 1467, in get_hf_file_metadata
+    r = _request_wrapper(
+        ^^^^^^^^^^^^^^^^^
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/huggingface_hub/file_download.py", line 283, in _request_wrapper
+    response = _request_wrapper(
+               ^^^^^^^^^^^^^^^^^
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/huggingface_hub/file_download.py", line 307, in _request_wrapper
+    hf_raise_for_status(response)
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/huggingface_hub/utils/_http.py", line 420, in hf_raise_for_status
+    raise _format(GatedRepoError, message, response) from e
+huggingface_hub.errors.GatedRepoError: 401 Client Error. (Request ID: Root=1-6a650b3d-5ec82c24219600525db7ab1f;feb80948-e5dc-4ae5-b702-d2496a5371c5)
+
+Cannot access gated repo for url https://huggingface.co/meta-llama/Llama-3.1-8B/resolve/main/config.json.
+Access to model meta-llama/Llama-3.1-8B is restricted. You must have access to it and be authenticated to access it. Please log in.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/mnt/lab/Mo/hyperbolic1/HypProp/hypprobe/extract/hidden_state_extractor.py", line 226, in <module>
+    main()
+  File "/mnt/lab/Mo/hyperbolic1/HypProp/hypprobe/extract/hidden_state_extractor.py", line 219, in main
+    extract_model_dataset(args.model, ds, samples, args.out, logfile,
+  File "/mnt/lab/Mo/hyperbolic1/HypProp/hypprobe/extract/hidden_state_extractor.py", line 45, in extract_model_dataset
+    tok = AutoTokenizer.from_pretrained(model_name)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/transformers/models/auto/tokenization_auto.py", line 877, in from_pretrained
+    config = AutoConfig.from_pretrained(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/transformers/models/auto/configuration_auto.py", line 1017, in from_pretrained
+    config_dict, unused_kwargs = PretrainedConfig.get_config_dict(pretrained_model_name_or_path, **kwargs)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/transformers/configuration_utils.py", line 574, in get_config_dict
+    config_dict, kwargs = cls._get_config_dict(pretrained_model_name_or_path, **kwargs)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/transformers/configuration_utils.py", line 633, in _get_config_dict
+    resolved_config_file = cached_file(
+                           ^^^^^^^^^^^^
+  File "/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/transformers/utils/hub.py", line 421, in cached_file
+    raise EnvironmentError(
+OSError: You are trying to access a gated repo.
+Make sure to have access to it at https://huggingface.co/meta-llama/Llama-3.1-8B.
+401 Client Error. (Request ID: Root=1-6a650b3d-5ec82c24219600525db7ab1f;feb80948-e5dc-4ae5-b702-d2496a5371c5)
+
+Cannot access gated repo for url https://huggingface.co/meta-llama/Llama-3.1-8B/resolve/main/config.json.
+Access to model meta-llama/Llama-3.1-8B is restricted. You must have access to it and be authenticated to access it. Please log in.

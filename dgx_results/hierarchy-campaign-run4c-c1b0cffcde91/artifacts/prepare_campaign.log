@@ -1,0 +1,4 @@
+[15:29:04] prepared prontoqa_tree: 240 samples, 3 classes -> results/data_cache_v3/prontoqa_tree.jsonl
+[15:29:04] prepared relation_trees: 240 samples, 4 classes -> results/data_cache_v3/relation_trees.jsonl
+[15:15:01] prepared prontoqa_tree: 240 samples, 3 classes -> results/data_cache_v3/prontoqa_tree.jsonl
+[15:15:01] prepared relation_trees: 240 samples, 4 classes -> results/data_cache_v3/relation_trees.jsonl

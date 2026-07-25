@@ -3,11 +3,21 @@
 One line per confirmed result. Newest at top. δ = hyperbolic advantage
 (ρ_hyp − ρ_cond_euclidean) on the ground-truth tree, matched capacity+conditioning.
 
-## Reasoning-specific? NO (run2 complete: DeepSeek-distill vs Qwen-base, verified per-seed)
-- Qwen2.5-7B **base** reproduces DeepSeek-R1-distill almost exactly: real ρ_hyp=0.92
-  from L0; fictional −0.05@L0 → +0.27@L8-12; dim-collapse (peak m5, negative by m16);
-  radial ρ≈0.69. ⇒ the hierarchy is a property of **representation, not reasoning**
-  (as v2 found for conditioning). Both fail the strict branching dose-response.
+## WHY middle layers — MECHANISM CONFIRMED (layers = composition hops)
+- Peak layer scales with tree DEPTH: fictional_b1 (depth-14 chain) peaks **L20**,
+  b2/b3 (depth-3) peak **L8** — same in DeepSeek AND Qwen. A depth-k relation needs
+  ~k sequential attention hops to assemble ⇒ deeper structure finishes later. Caveat:
+  b1 confounds depth(14) with branching(1); clean test = fix branching, vary depth.
+- WHICH TOKENS: premise-concept and LAST token recover equally (Δ≈0.15 both); query
+  auto-skipped (too few concepts/prompt). Corrects earlier claim that 'last' loses —
+  on the tree task it carries the hierarchy as well as premise tokens.
+
+## Reasoning-specific? SUGGESTED, NOT ESTABLISHED (5-whys caught a confound)
+- Qwen2.5-7B base ≈ DeepSeek-R1-distill on every signal (real ρ_hyp=0.92@L0; fictional
+  −0.05@L0→+0.27@L8-12; dim-collapse; radial ρ≈0.69). BUT DeepSeek-R1-Distill-Qwen-7B
+  IS Qwen2.5 fine-tuned — they SHARE a base, so this is largely shared ancestry, not
+  independent convergence. The cross-family run (Llama/Mistral, BLOCKED) is what would
+  actually establish 'not reasoning-specific'. Downgrade the claim until it runs.
 
 ## Headline (run2, DeepSeek-R1-Distill-Qwen-7B; confirmed on Qwen-7B base)
 - **WHERE**: hyperbolic beats matched Euclidean at **low dim (m=3–5)** on concept

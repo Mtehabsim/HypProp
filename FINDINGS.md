@@ -80,6 +80,21 @@ Note: [~] items are CONFIRMATORY (robustness). The load-bearing findings are don
   (star) Δ=+0.003, ρ_hyp=−0.007** — same prompt shape, no relation → no hierarchy.
   Clean discriminator on real data: the rig measures structure, not tokens.
 
+## Method caveats (found while building the causal-WHY tests — matter for the paper)
+- **MDR asymmetry**: the hyperbolic arm applies MDR (tanh norm cap) before expmap0;
+  cond_euclidean doesn't. At c→0 expmap0=identity but MDR still runs, so the c→0
+  hyperbolic FIT sits ~+0.05 rho above euclidean on the mock. Arms match on geometry
+  distance (exact) but hyp has one extra bounded nonlinearity → any hyperbolic Δ may
+  be ~0.05 inflated. Doesn't overturn the low-dim-collapse headline (Δ up to +0.19).
+- **c→0 contract**: poincare.dist special-cases EXACTLY c=0 → ‖x−y‖, but the analytic
+  c→0 limit of the ball distance is 2‖x−y‖. Euclidean arms pass exact 0.0 (verified),
+  so they're correct; a future swap to a small epsilon would silently 2× the euclidean
+  baseline. Now guarded by a test.
+- **Composition test**: only shrink_rho (edge norm↔depth) survived CPU validation on
+  known layouts; edge-cosine & centroid-reconstruction were confounded in high-dim
+  (random scored ~as high as additive) → dropped. shrink_rho ranks additive −0.52 <
+  cone −0.21 < random 0.00.
+
 ## Log
 - 2026-07-14: run2 launched (DeepSeek+Qwen 7B, prontoqa_tree). DeepSeek verdict above.
 - 2026-07-14: run3 campaign staged (relations + scale ladder + cross-family);

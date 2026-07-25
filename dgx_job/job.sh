@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
-# NAME: hierarchy-campaign-run4b
+# NAME: hierarchy-campaign-run4c
+# run4c = run4b re-triggered after an ENVIRONMENTAL failure (not a code bug):
+# run4b died at torch-import on dgx16 ("libtorch_cuda.so: failed to map segment")
+# because the agent launched with SYSTEM dist-packages torch instead of the lab
+# venv (/mnt/lab/Mo/hyperbolic1/.venv). Fix is on the DGX: activate that venv
+# before ./dgx_agent.sh. Bumping the NAME so the FAILED marker on run4b's hash
+# doesn't block the retry. Job code is unchanged from run4b.
 #
 # run4b = run4 + reordered scale ladder (14B, 3B, then the flaky 1.5B LAST) so the
 # informative rungs land before the rung that hung run3. Content hash differs from

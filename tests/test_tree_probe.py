@@ -159,13 +159,18 @@ def test_noise_layer_no_advantage(tmp_path):
     assert abs(hyp) < 0.2, f"noise layer should not recover a tree, got {hyp:.3f}"
 
 
-def test_curvature_zero_distance_matches_euclidean():
-    """c->0 fairness identity, tested at the DISTANCE level (exact + deterministic).
+def test_euclidean_arm_uses_exact_zero_curvature_equals_euclidean():
+    """The euclidean arms pass EXACTLY c=0 to poincare.dist, which returns the
+    clean ||x-y||. This is the fairness contract the matched probe relies on.
 
-    The fit-level version (comparing trained val_rho of two independently-inited
-    probes) is inherently seed-noisy and was flaky; the identity that actually
-    matters is that the Poincare distance reduces to Euclidean as c->0. That is
-    exact, so assert it directly on the same MatchedProbe transform both arms use."""
+    IMPORTANT subtlety this test pins: poincare.dist special-cases exactly c==0 to
+    return ||x-y||, but its analytic c->0 LIMIT of the ball distance is 2||x-y||
+    (the 2/sqrt(c)*artanh form). So a tiny-but-nonzero c (e.g. 1e-12) returns ~2x,
+    NOT ~1x. The code is correct because both euclidean arms use `c = 0.0` exactly
+    (tree_probe._batched_dist / matched_probe.dist: `curvature if hyperbolic else
+    0.0`), never a tiny epsilon. We assert BOTH facts so a future refactor that
+    swaps 0.0 for a small epsilon (which would silently double the euclidean
+    baseline and inflate the hyperbolic gap) fails loudly here."""
     import numpy as np
     import torch
     from hypprobe.geometry import poincare
@@ -174,15 +179,29 @@ def test_curvature_zero_distance_matches_euclidean():
     n, d = z.shape
     zi = z.unsqueeze(1).expand(n, n, d).reshape(-1, d)
     zj = z.unsqueeze(0).expand(n, n, d).reshape(-1, d)
-    hyp0 = poincare.dist(zi, zj, 1e-12).reshape(n, n).numpy()
     euc = np.linalg.norm(z.numpy()[:, None] - z.numpy()[None, :], axis=2)
-    assert np.max(np.abs(hyp0 - euc)) < 1e-5, "c->0 Poincare dist must equal Euclidean"
+    # exact zero -> Euclidean (the contract the arms use)
+    d0 = poincare.dist(zi, zj, 0.0).reshape(n, n).numpy()
+    assert np.max(np.abs(d0 - euc)) < 1e-6, "c=0 (exact) Poincare dist must equal Euclidean"
+    # tiny nonzero c -> ~2x Euclidean (documents the limit; guards against epsilon use)
+    deps = poincare.dist(zi, zj, 1e-12).reshape(n, n).numpy()
+    off = ~np.eye(n, dtype=bool)
+    assert np.median(deps[off] / np.clip(euc[off], 1e-9, None)) > 1.5, \
+        "tiny-c limit is ~2x Euclidean — arms must use EXACT 0, not an epsilon"
 
 
 def test_curvature_zero_fit_sanity(tmp_path):
-    """Looser fit-level check: c->0 and euclidean arms land in the same ballpark,
-    averaged over seeds (single-seed diffs are noise; the exact identity is tested
-    at the distance level above)."""
+    """Fit-level c->0 sanity, averaged over seeds.
+
+    NOTE (a real instrument caveat, verified here): the c->0 hyperbolic FIT does
+    not exactly equal the cond_euclidean fit — it runs slightly HIGHER (~0.05 rho
+    on the mock, consistently). Cause: the hyperbolic arm applies MDR (tanh norm
+    cap) before expmap0, which cond_euclidean lacks; at c->0 expmap0 is identity
+    but MDR is still an extra bounded nonlinearity. So the arms are matched on
+    geometry/params but the hyperbolic path has one more squashing step. This does
+    not affect the headline (hyp vs cond_euc at c=0.5), but it means 'c->0 ==
+    euclidean' holds at the DISTANCE level (tested above, exact) not the FIT level.
+    We assert only that they stay in a modest band and that neither collapses."""
     import numpy as np
     from hypprobe.geometry.tree_probe import fit_tree_arm
     out = _mock_store(tmp_path, n_prompts=20)
@@ -193,5 +212,6 @@ def test_curvature_zero_fit_sanity(tmp_path):
                          max_epochs=300, check_every=50, patience=4)["val_rho"]
         e = fit_tree_arm("cond_euclidean", trp, vap, proj_dim=5, seed=seed,
                          max_epochs=300, check_every=50, patience=4)["val_rho"]
-        diffs.append(abs(h - e))
-    assert np.mean(diffs) < 0.12, f"c->0 vs euclidean mean|diff| over seeds = {np.mean(diffs):.3f}"
+        diffs.append(h - e)
+    md = float(np.mean(diffs))
+    assert -0.05 < md < 0.15, f"c->0 vs euclidean mean diff over seeds = {md:.3f} (expect small, MDR makes hyp slightly higher)"

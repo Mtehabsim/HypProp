@@ -38,3 +38,15 @@ From v4.47 onwards, when a model cache is to be returned, `generate` will return
 [15:43:48] Poincare distance matches the textbook closed form (max err 2.00e-15); HypLL: n/a
 [15:46:34] Qwen/Qwen2.5-7B/harm_taxonomy L0: 6 seeds x 3 arms done
 [15:48:57] Qwen/Qwen2.5-7B/harm_taxonomy L7: 6 seeds x 3 arms done
+[15:51:09] Qwen/Qwen2.5-7B/harm_taxonomy L14: 6 seeds x 3 arms done
+[15:53:09] Qwen/Qwen2.5-7B/harm_taxonomy L21: 6 seeds x 3 arms done
+[15:55:20] Qwen/Qwen2.5-7B/harm_taxonomy L27: 6 seeds x 3 arms done
+[15:57:29] Qwen/Qwen2.5-7B/harm_taxonomy L28: 6 seeds x 3 arms done
+[15:57:37] Qwen/Qwen2.5-7B L0: bare=0.052 cond=0.038 hyp=0.079 | conditioning gap=-0.015 (p=0.438) geometry gap=+0.041 (p=0.031) -> inconclusive at this layer
+[15:57:37] Qwen/Qwen2.5-7B L7: bare=0.067 cond=0.068 hyp=0.126 | conditioning gap=+0.001 (p=0.844) geometry gap=+0.058 (p=0.031) -> GEOMETRY real
+[15:57:37] Qwen/Qwen2.5-7B L14: bare=0.171 cond=0.165 hyp=0.212 | conditioning gap=-0.006 (p=0.438) geometry gap=+0.047 (p=0.031) -> inconclusive at this layer
+[15:57:37] Qwen/Qwen2.5-7B L21: bare=0.147 cond=0.138 hyp=0.135 | conditioning gap=-0.009 (p=0.438) geometry gap=-0.004 (p=0.844) -> inconclusive at this layer
+[15:57:37] Qwen/Qwen2.5-7B L27: bare=0.134 cond=0.153 hyp=0.167 | conditioning gap=+0.019 (p=0.312) geometry gap=+0.014 (p=0.312) -> inconclusive at this layer
+[15:57:37] Qwen/Qwen2.5-7B L28: bare=0.143 cond=0.146 hyp=0.164 | conditioning gap=+0.003 (p=1.000) geometry gap=+0.018 (p=0.312) -> inconclusive at this layer
+[15:57:42] Poincare distance matches the textbook closed form (max err 2.00e-15); HypLL: n/a
+[15:59:40] Qwen/Qwen2.5-7B/harm_taxonomy L0: 6 seeds x 3 arms done

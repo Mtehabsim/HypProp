@@ -117,3 +117,7 @@ From v4.47 onwards, when a model cache is to be returned, `generate` will return
 [05:48:38] Qwen/Qwen2.5-7B L28: bare=0.244 cond=0.257 hyp=0.225 | conditioning gap=+0.013 (p=0.562) geometry gap=-0.032 (p=0.562) -> inconclusive at this layer
 [05:48:43] Poincare distance matches the textbook closed form (max err 2.00e-15); HypLL: n/a
 [05:50:32] Qwen/Qwen2.5-7B/harm_beavertails L0: 6 seeds x 3 arms done
+[05:52:21] Qwen/Qwen2.5-7B/harm_beavertails L7: 6 seeds x 3 arms done
+[05:56:22] Qwen/Qwen2.5-7B/harm_beavertails L14: 6 seeds x 3 arms done
+[05:59:03] Qwen/Qwen2.5-7B/harm_beavertails L21: 6 seeds x 3 arms done
+[06:01:52] Qwen/Qwen2.5-7B/harm_beavertails L27: 6 seeds x 3 arms done

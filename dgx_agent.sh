@@ -27,6 +27,13 @@
 set -u
 cd "$(dirname "$0")"
 
+# Raise the virtual-memory cap so torch can mmap its ~2GB of CUDA libs. A 500MB
+# `ulimit -v` (the shell default on some DGX sessions) is what killed run4b with
+# "libtorch_cuda.so: failed to map segment" and is the likely cause of repeated
+# agent deaths on naive restarts. Setting it here makes the agent self-sufficient
+# so a plain `./dgx_agent.sh` works regardless of the launching shell's limit.
+ulimit -v unlimited 2>/dev/null || ulimit -v 268435456 2>/dev/null || true
+
 POLL_SECS="${POLL_SECS:-60}"
 HEARTBEAT_SECS="${HEARTBEAT_SECS:-600}"
 MAX_FILE_MB="${MAX_FILE_MB:-50}"

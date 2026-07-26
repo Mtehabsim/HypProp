@@ -119,6 +119,16 @@ Note: [~] items are CONFIRMATORY (robustness). The load-bearing findings are don
 - USAGE: harm classifiers should probe the hazard TAXONOMY with a low-dim
   hyperbolic head at early-mid layers, not binary-classify the last layer.
 
+## ⚠️ AGENT DIED again mid-run7 (2026-07-26 ~12:05, 52min silent, 0 heartbeats)
+- Same signature as prior outage: START committed, then agent stopped (shell/host
+  drop or ulimit reset). run7 did nothing before dying (no arm completed).
+- DURABLE FIX pushed: dgx_agent.sh now sets `ulimit -v unlimited` itself, so a
+  plain `./dgx_agent.sh` restart no longer depends on the operator's shell limit
+  (the 500MB -v cap was the run4b killer and likely these deaths).
+- **ON RETURN, on the DGX:** `pkill -f dgx_agent; rm -f .dgx_agent.pid; git pull
+  --rebase --autostash; nohup ./dgx_agent.sh > agent.out 2>&1 &`  → auto-resumes
+  run7 (harm robustness), then run8 (deception, staged). No data lost.
+
 ## Causal-patch design finding (CPU validation, before any DGX time)
 - Subspace-ablation causal test is UNDERPOWERED: ablating the recovered k-dim
   "tree subspace" barely dents decodability (ρ 0.95→0.90, ≈ random's →0.94) because

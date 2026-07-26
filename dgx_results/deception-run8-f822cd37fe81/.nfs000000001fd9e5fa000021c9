@@ -62,3 +62,15 @@ From v4.47 onwards, when a model cache is to be returned, `generate` will return
 [16:36:33] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B [honest_b2] last L16: 6s x 5d done (80 prompts w/ >=4 concepts)
 [16:39:30] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B [honest_b2] last L20: 6s x 5d done (80 prompts w/ >=4 concepts)
 [16:42:20] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B [honest_b2] last L24: 6s x 5d done (80 prompts w/ >=4 concepts)
+[16:45:10] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B [honest_b2] last L28: 6s x 5d done (80 prompts w/ >=4 concepts)
+[16:48:07] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B [sandbag_b2] premise L0: 6s x 5d done (80 prompts w/ >=4 concepts)
+deepseek-ai_DeepSeek-R1-Distill-Qwen-7B tree_probe failed
+deepseek-ai_DeepSeek-R1-Distill-Qwen-7B done; free 102G
+=== DECEPTION Qwen_Qwen2.5-7B | free 102G ===
+/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/transformers/utils/hub.py:128: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+[16:51:01] extracting 240 samples for Qwen/Qwen2.5-7B/deception_trees
+[16:51:01] loading Qwen/Qwen2.5-7B (fp32) on cuda
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:14<00:43, 14.65s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:26<00:25, 12.91s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:38<00:12, 12.67s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:50<00:00, 12.18s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:50<00:00, 12.54s/it]
+[16:52:42]   Qwen/Qwen2.5-7B: chat_template=yes, chat_mode='plain' -> PLAIN prompt
+From v4.47 onwards, when a model cache is to be returned, `generate` will return a `Cache` instance instead by default (as opposed to the legacy tuple of tuples format). If you want to keep returning the legacy format, please set `return_legacy_cache=True`.

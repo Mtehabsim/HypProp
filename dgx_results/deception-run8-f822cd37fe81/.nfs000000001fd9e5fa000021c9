@@ -82,3 +82,14 @@ From v4.47 onwards, when a model cache is to be returned, `generate` will return
 [17:00:43]   deception_trees: 150/240 (last had 0 thinking tokens)
 [17:02:06]   deception_trees: 175/240 (last had 1 thinking tokens)
 [17:03:15]   deception_trees: 200/240 (last had 4 thinking tokens)
+[17:04:31]   deception_trees: 225/240 (last had 7 thinking tokens)
+[17:05:13] done Qwen/Qwen2.5-7B/deception_trees: wrote 240/240
+/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/transformers/utils/hub.py:128: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+[17:05:38] Qwen/Qwen2.5-7B/deception_trees/original [plain]: n=240 cot=0.662 answered=0.754 truncated=0.25 len_p50=113
+[17:05:38] audit clean: reasoning present, truncation low
+[17:05:40] Poincare distance matches the textbook closed form (max err 2.00e-15)
+[17:05:40] NOTE: HypLL differs under all tested conventions (best c/2: 1.76e-02); proceeding on the closed-form gate (our dist is proven correct vs the textbook form).
+[17:08:21] Qwen/Qwen2.5-7B [distractor_b2] premise L0: 6s x 5d done (80 prompts w/ >=4 concepts)
+[17:10:23] Qwen/Qwen2.5-7B [distractor_b2] premise L4: 6s x 5d done (80 prompts w/ >=4 concepts)
+[17:12:29] Qwen/Qwen2.5-7B [distractor_b2] premise L8: 6s x 5d done (80 prompts w/ >=4 concepts)

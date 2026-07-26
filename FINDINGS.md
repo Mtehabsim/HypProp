@@ -119,6 +119,18 @@ Note: [~] items are CONFIRMATORY (robustness). The load-bearing findings are don
 - USAGE: harm classifiers should probe the hazard TAXONOMY with a low-dim
   hyperbolic head at early-mid layers, not binary-classify the last layer.
 
+## Causal-patch design finding (CPU validation, before any DGX time)
+- Subspace-ablation causal test is UNDERPOWERED: ablating the recovered k-dim
+  "tree subspace" barely dents decodability (ρ 0.95→0.90, ≈ random's →0.94) because
+  tree info is REDUNDANTLY encoded across many directions — projecting out 5 dims
+  doesn't remove it. Also the tree subspace is NOT uniquely identified (recovery
+  overlap ~0.23 with a planted basis even at decode-ρ=1.0; many subspaces decode
+  equally). ⇒ subspace ablation would give a FALSE null. Abandoned it.
+- Correct causal design = activation PATCHING: replace layer-L reps of a True-tree
+  prompt with a different-tree prompt's, see if the answer flips (no subspace ID
+  needed). Deferred to a later run; ran the lower-risk harm-robustness + deception
+  jobs first so DGX isn't idle. Caught before wasting GPU hours.
+
 ## Method caveats (found while building the causal-WHY tests — matter for the paper)
 - **MDR asymmetry**: the hyperbolic arm applies MDR (tanh norm cap) before expmap0;
   cond_euclidean doesn't. At c→0 expmap0=identity but MDR still runs, so the c→0

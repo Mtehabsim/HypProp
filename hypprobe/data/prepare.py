@@ -196,12 +196,19 @@ def build_harm_taxonomy_dataset() -> list[dict]:
     return build_harm_taxonomy()
 
 
+def build_harm_beavertails_dataset() -> list[dict]:
+    """2nd harm dataset (BeaverTails forced) for cross-dataset robustness."""
+    from .harm_taxonomy import build_harm_beavertails
+    return build_harm_beavertails()
+
+
 BUILDERS = {"wordnet_control": build_wordnet_control,
             "flat_control": build_flat_control,
             "prontoqa": build_prontoqa,
             "prontoqa_tree": build_prontoqa_tree_dataset,
             "relation_trees": build_relation_trees_dataset,
-            "harm_taxonomy": build_harm_taxonomy_dataset}
+            "harm_taxonomy": build_harm_taxonomy_dataset,
+            "harm_beavertails": build_harm_beavertails_dataset}
 REAL = {"ailuminate", "aegis", "harmbench", "advbench", "wos"}
 
 

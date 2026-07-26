@@ -178,3 +178,10 @@ def build_harm_taxonomy(n_per_cat=40, seed=0) -> list[dict]:
         rows, src = _from_beavertails(n_per_cat=n_per_cat, seed=seed)
         print(f"[harm_taxonomy] source=beavertails rows={len(rows)}", flush=True)
         return rows
+
+
+def build_harm_beavertails(n_per_cat=50, seed=0) -> list[dict]:
+    """Force BeaverTails — the independent 2nd harm dataset for robustness."""
+    rows, _ = _from_beavertails(n_per_cat=n_per_cat, seed=seed)
+    print(f"[harm_beavertails] source=beavertails rows={len(rows)}", flush=True)
+    return rows

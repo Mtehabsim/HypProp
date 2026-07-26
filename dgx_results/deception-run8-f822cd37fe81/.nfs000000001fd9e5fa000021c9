@@ -1,0 +1,24 @@
+=== deception run8 on dgx16 ===
+169.226.65.170:/labs/alhussien_lab   10T  9.9T  150G  99% /mnt/lab
+torch 2.12.1+cu130 cuda True
+closed-form gate: True
+[14:43:40] prepared deception_trees: 240 samples, 1 classes -> results/data_cache_v3/deception_trees.jsonl
+=== DECEPTION deepseek-ai_DeepSeek-R1-Distill-Qwen-7B | free 150G ===
+/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/transformers/utils/hub.py:128: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+[14:43:42] extracting 240 samples for deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/deception_trees
+[14:43:43] loading deepseek-ai/DeepSeek-R1-Distill-Qwen-7B (fp32) on cuda
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:47<00:47, 47.42s/it]Loading checkpoint shards: 100%|██████████| 2/2 [01:21<00:00, 39.62s/it]Loading checkpoint shards: 100%|██████████| 2/2 [01:21<00:00, 40.79s/it]
+[14:45:13]   deepseek-ai/DeepSeek-R1-Distill-Qwen-7B: chat_template=yes, chat_mode='plain' -> PLAIN prompt
+/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/transformers/generation/configuration_utils.py:590: UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.6` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`.
+  warnings.warn(
+/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/transformers/generation/configuration_utils.py:595: UserWarning: `do_sample` is set to `False`. However, `top_p` is set to `0.95` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_p`.
+  warnings.warn(
+From v4.47 onwards, when a model cache is to be returned, `generate` will return a `Cache` instance instead by default (as opposed to the legacy tuple of tuples format). If you want to keep returning the legacy format, please set `return_legacy_cache=True`.
+[14:47:52]   deception_trees: 25/240 (last had 5 thinking tokens)
+[14:50:32]   deception_trees: 50/240 (last had 13 thinking tokens)
+[14:53:03]   deception_trees: 75/240 (last had 2 thinking tokens)
+[14:55:40]   deception_trees: 100/240 (last had 2 thinking tokens)
+[14:58:17]   deception_trees: 125/240 (last had 4 thinking tokens)
+[15:00:54]   deception_trees: 150/240 (last had 5 thinking tokens)
+[15:03:24]   deception_trees: 175/240 (last had 1 thinking tokens)

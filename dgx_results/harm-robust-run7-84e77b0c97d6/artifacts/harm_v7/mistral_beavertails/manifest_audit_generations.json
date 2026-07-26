@@ -1,0 +1,21 @@
+{
+  "stage": "audit_generations",
+  "timestamp": "2026-07-26T06:34:26.414062",
+  "git": {
+    "commit": "1466000c3d59fd50852eeb8a5d8faa3f6f7a3a9c",
+    "branch": "main",
+    "dirty": true
+  },
+  "python": "3.12.3",
+  "versions": {
+    "torch": "2.12.1+cu130",
+    "numpy": "1.26.4",
+    "scipy": "1.17.1",
+    "transformers": "4.46.3",
+    "hypll": null
+  },
+  "args": {
+    "activations": "results/activations_v3/mistral_beavertails"
+  },
+  "extra": {}
+}

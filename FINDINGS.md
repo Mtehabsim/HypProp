@@ -141,6 +141,19 @@ Note: [~] items are CONFIRMATORY (robustness). The load-bearing findings are don
   needed). Deferred to a later run; ran the lower-risk harm-robustness + deception
   jobs first so DGX isn't idle. Caught before wasting GPU hours.
 
+## run7 harm robustness (cross-model + cross-dataset, per-seed) — QUALIFIED replication
+- Change ONE factor: REPLICATES. mistral_aegis (cross-MODEL): taxonomy gap +0.050@L16
+  (6/6 seeds), binary ~0/noisy. qwen_beavertails (cross-DATASET): taxonomy +0.055@L7
+  (6/6 seeds), binary ~0. -> harm=hierarchy-dependent effect is not Qwen-specific
+  and not Aegis-specific.
+- Change BOTH: WEAKENS. mistral_beavertails: taxonomy best only +0.028 (4/6 seeds),
+  negative at several layers -> marginal. Two domain shifts compound; BeaverTails
+  labels are flatter (weaker hierarchy = less for curvature to exploit, as predicted).
+- HONEST verdict: harm result is real and replicates under single-factor shifts, but
+  is NOT bulletproof under compound shift. Absolute gaps small (~0.03-0.06). Lead
+  with run6 Aegis (6/6, p=.031) + these single-shift replications; report the
+  double-shift weakening plainly.
+
 ## Method caveats (found while building the causal-WHY tests — matter for the paper)
 - **MDR asymmetry**: the hyperbolic arm applies MDR (tanh norm cap) before expmap0;
   cond_euclidean doesn't. At c→0 expmap0=identity but MDR still runs, so the c→0

@@ -121,3 +121,50 @@ From v4.47 onwards, when a model cache is to be returned, `generate` will return
 [05:56:22] Qwen/Qwen2.5-7B/harm_beavertails L14: 6 seeds x 3 arms done
 [05:59:03] Qwen/Qwen2.5-7B/harm_beavertails L21: 6 seeds x 3 arms done
 [06:01:52] Qwen/Qwen2.5-7B/harm_beavertails L27: 6 seeds x 3 arms done
+[06:04:01] Qwen/Qwen2.5-7B/harm_beavertails L28: 6 seeds x 3 arms done
+[06:04:08] Qwen/Qwen2.5-7B L0: bare=0.085 cond=0.105 hyp=0.110 | conditioning gap=+0.020 (p=0.156) geometry gap=+0.004 (p=1.000) -> inconclusive at this layer
+[06:04:08] Qwen/Qwen2.5-7B L7: bare=0.129 cond=0.153 hyp=0.163 | conditioning gap=+0.024 (p=0.438) geometry gap=+0.010 (p=0.562) -> inconclusive at this layer
+[06:04:08] Qwen/Qwen2.5-7B L14: bare=0.244 cond=0.285 hyp=0.309 | conditioning gap=+0.040 (p=0.062) geometry gap=+0.024 (p=0.312) -> inconclusive at this layer
+[06:04:08] Qwen/Qwen2.5-7B L21: bare=0.210 cond=0.239 hyp=0.251 | conditioning gap=+0.030 (p=0.438) geometry gap=+0.012 (p=0.844) -> inconclusive at this layer
+[06:04:08] Qwen/Qwen2.5-7B L27: bare=0.211 cond=0.235 hyp=0.262 | conditioning gap=+0.024 (p=0.438) geometry gap=+0.027 (p=0.219) -> inconclusive at this layer
+[06:04:08] Qwen/Qwen2.5-7B L28: bare=0.170 cond=0.234 hyp=0.183 | conditioning gap=+0.064 (p=0.062) geometry gap=-0.050 (p=0.094) -> CONDITIONING explains Raj
+[06:04:14] Qwen/Qwen2.5-7B/harm_beavertails/original [plain]: n=700 cot=0.0 answered=0.0 truncated=0.983 len_p50=7
+[06:04:14] WARNING: Qwen/Qwen2.5-7B/harm_beavertails [plain]: 98% of generations truncated at the cap — 'last'-token analyses are contaminated; raise --max-new-tokens or split by the flag.
+qwen_beavertails done; free 143G
+=== HARM ARM mistral_beavertails (mistralai/Mistral-7B-v0.3 on harm_beavertails) | free 143G ===
+[06:04:19] extracting 700 samples for mistralai/Mistral-7B-v0.3/harm_beavertails
+[06:04:19] loading mistralai/Mistral-7B-v0.3 (fp32) on cuda
+Loading checkpoint shards:   0%|          | 0/3 [00:00<?, ?it/s]Loading checkpoint shards:  33%|███▎      | 1/3 [00:09<00:18,  9.34s/it]Loading checkpoint shards:  67%|██████▋   | 2/3 [00:17<00:08,  8.57s/it]Loading checkpoint shards: 100%|██████████| 3/3 [00:25<00:00,  8.52s/it]Loading checkpoint shards: 100%|██████████| 3/3 [00:25<00:00,  8.61s/it]
+[06:04:54]   mistralai/Mistral-7B-v0.3: chat_template=NO, chat_mode='plain' -> PLAIN prompt
+From v4.47 onwards, when a model cache is to be returned, `generate` will return a `Cache` instance instead by default (as opposed to the legacy tuple of tuples format). If you want to keep returning the legacy format, please set `return_legacy_cache=True`.
+[06:05:02]   harm_beavertails: 25/700 (last had 0 thinking tokens)
+[06:05:09]   harm_beavertails: 50/700 (last had 0 thinking tokens)
+[06:05:16]   harm_beavertails: 75/700 (last had 0 thinking tokens)
+[06:05:23]   harm_beavertails: 100/700 (last had 0 thinking tokens)
+[06:05:30]   harm_beavertails: 125/700 (last had 0 thinking tokens)
+[06:05:37]   harm_beavertails: 150/700 (last had 0 thinking tokens)
+[06:05:44]   harm_beavertails: 175/700 (last had 0 thinking tokens)
+[06:05:51]   harm_beavertails: 200/700 (last had 0 thinking tokens)
+[06:05:58]   harm_beavertails: 225/700 (last had 0 thinking tokens)
+[06:06:05]   harm_beavertails: 250/700 (last had 0 thinking tokens)
+[06:06:12]   harm_beavertails: 275/700 (last had 0 thinking tokens)
+[06:06:19]   harm_beavertails: 300/700 (last had 0 thinking tokens)
+[06:06:26]   harm_beavertails: 325/700 (last had 0 thinking tokens)
+[06:06:33]   harm_beavertails: 350/700 (last had 0 thinking tokens)
+[06:06:40]   harm_beavertails: 375/700 (last had 0 thinking tokens)
+[06:06:46]   harm_beavertails: 400/700 (last had 0 thinking tokens)
+[06:06:54]   harm_beavertails: 425/700 (last had 0 thinking tokens)
+[06:07:01]   harm_beavertails: 450/700 (last had 0 thinking tokens)
+[06:07:08]   harm_beavertails: 475/700 (last had 0 thinking tokens)
+[06:07:15]   harm_beavertails: 500/700 (last had 0 thinking tokens)
+[06:07:22]   harm_beavertails: 525/700 (last had 0 thinking tokens)
+[06:07:29]   harm_beavertails: 550/700 (last had 0 thinking tokens)
+[06:07:36]   harm_beavertails: 575/700 (last had 0 thinking tokens)
+[06:07:43]   harm_beavertails: 600/700 (last had 0 thinking tokens)
+[06:07:50]   harm_beavertails: 625/700 (last had 0 thinking tokens)
+[06:07:56]   harm_beavertails: 650/700 (last had 0 thinking tokens)
+[06:08:03]   harm_beavertails: 675/700 (last had 0 thinking tokens)
+[06:08:10]   harm_beavertails: 700/700 (last had 0 thinking tokens)
+[06:08:10] done mistralai/Mistral-7B-v0.3/harm_beavertails: wrote 700/700
+[06:08:14] Poincare distance matches the textbook closed form (max err 2.00e-15); HypLL: n/a
+[06:10:30] mistralai/Mistral-7B-v0.3/harm_beavertails L0: 6 seeds x 3 arms done

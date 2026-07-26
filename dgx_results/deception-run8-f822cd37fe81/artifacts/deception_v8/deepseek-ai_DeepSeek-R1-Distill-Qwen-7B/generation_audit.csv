@@ -1,2 +1,0 @@
-model,dataset,variant,chat_regime,n,cot_frac,answered_frac,truncated_frac,gen_len_p10,gen_len_p50,gen_len_p90
-deepseek-ai/DeepSeek-R1-Distill-Qwen-7B,deception_trees,original,plain,240,1.0,0.242,0.933,255,255,255

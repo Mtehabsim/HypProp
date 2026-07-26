@@ -74,3 +74,11 @@ deepseek-ai_DeepSeek-R1-Distill-Qwen-7B done; free 102G
 Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:14<00:43, 14.65s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:26<00:25, 12.91s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:38<00:12, 12.67s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:50<00:00, 12.18s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:50<00:00, 12.54s/it]
 [16:52:42]   Qwen/Qwen2.5-7B: chat_template=yes, chat_mode='plain' -> PLAIN prompt
 From v4.47 onwards, when a model cache is to be returned, `generate` will return a `Cache` instance instead by default (as opposed to the legacy tuple of tuples format). If you want to keep returning the legacy format, please set `return_legacy_cache=True`.
+[16:54:32]   deception_trees: 25/240 (last had 1 thinking tokens)
+[16:55:38]   deception_trees: 50/240 (last had 0 thinking tokens)
+[16:56:59]   deception_trees: 75/240 (last had 0 thinking tokens)
+[16:58:11]   deception_trees: 100/240 (last had 2 thinking tokens)
+[16:59:40]   deception_trees: 125/240 (last had 0 thinking tokens)
+[17:00:43]   deception_trees: 150/240 (last had 0 thinking tokens)
+[17:02:06]   deception_trees: 175/240 (last had 1 thinking tokens)
+[17:03:15]   deception_trees: 200/240 (last had 4 thinking tokens)

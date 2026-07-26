@@ -1,0 +1,5 @@
+host: dgx16
+started: 2026-07-26T14:43:31-04:00
+job: deception-run8 (f822cd37fe81)
+name, memory.total [MiB], memory.used [MiB]
+NVIDIA A100-SXM4-80GB, 81920 MiB, 4 MiB

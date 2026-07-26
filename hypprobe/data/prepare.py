@@ -202,13 +202,20 @@ def build_harm_beavertails_dataset() -> list[dict]:
     return build_harm_beavertails()
 
 
+def build_deception_trees_dataset() -> list[dict]:
+    """Deception probe: same trees under honest/sandbag/distractor instructions."""
+    from .deception_trees import build_deception_trees
+    return build_deception_trees()
+
+
 BUILDERS = {"wordnet_control": build_wordnet_control,
             "flat_control": build_flat_control,
             "prontoqa": build_prontoqa,
             "prontoqa_tree": build_prontoqa_tree_dataset,
             "relation_trees": build_relation_trees_dataset,
             "harm_taxonomy": build_harm_taxonomy_dataset,
-            "harm_beavertails": build_harm_beavertails_dataset}
+            "harm_beavertails": build_harm_beavertails_dataset,
+            "deception_trees": build_deception_trees_dataset}
 REAL = {"ailuminate", "aegis", "harmbench", "advbench", "wos"}
 
 

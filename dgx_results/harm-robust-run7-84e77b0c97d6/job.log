@@ -105,3 +105,15 @@ From v4.47 onwards, when a model cache is to be returned, `generate` will return
 [05:35:59] Poincare distance matches the textbook closed form (max err 2.00e-15); HypLL: n/a
 [05:38:21] Qwen/Qwen2.5-7B/harm_beavertails L0: 6 seeds x 3 arms done
 [05:40:48] Qwen/Qwen2.5-7B/harm_beavertails L7: 6 seeds x 3 arms done
+[05:43:05] Qwen/Qwen2.5-7B/harm_beavertails L14: 6 seeds x 3 arms done
+[05:44:56] Qwen/Qwen2.5-7B/harm_beavertails L21: 6 seeds x 3 arms done
+[05:46:45] Qwen/Qwen2.5-7B/harm_beavertails L27: 6 seeds x 3 arms done
+[05:48:32] Qwen/Qwen2.5-7B/harm_beavertails L28: 6 seeds x 3 arms done
+[05:48:38] Qwen/Qwen2.5-7B L0: bare=0.114 cond=0.088 hyp=0.103 | conditioning gap=-0.026 (p=0.688) geometry gap=+0.015 (p=0.438) -> inconclusive at this layer
+[05:48:38] Qwen/Qwen2.5-7B L7: bare=0.094 cond=0.104 hyp=0.159 | conditioning gap=+0.010 (p=0.688) geometry gap=+0.055 (p=0.031) -> GEOMETRY real
+[05:48:38] Qwen/Qwen2.5-7B L14: bare=0.266 cond=0.277 hyp=0.278 | conditioning gap=+0.011 (p=0.844) geometry gap=+0.001 (p=0.844) -> inconclusive at this layer
+[05:48:38] Qwen/Qwen2.5-7B L21: bare=0.240 cond=0.291 hyp=0.227 | conditioning gap=+0.051 (p=0.062) geometry gap=-0.064 (p=0.031) -> CONDITIONING explains Raj
+[05:48:38] Qwen/Qwen2.5-7B L27: bare=0.236 cond=0.278 hyp=0.247 | conditioning gap=+0.042 (p=0.031) geometry gap=-0.031 (p=0.312) -> inconclusive at this layer
+[05:48:38] Qwen/Qwen2.5-7B L28: bare=0.244 cond=0.257 hyp=0.225 | conditioning gap=+0.013 (p=0.562) geometry gap=-0.032 (p=0.562) -> inconclusive at this layer
+[05:48:43] Poincare distance matches the textbook closed form (max err 2.00e-15); HypLL: n/a
+[05:50:32] Qwen/Qwen2.5-7B/harm_beavertails L0: 6 seeds x 3 arms done

@@ -141,6 +141,17 @@ Note: [~] items are CONFIRMATORY (robustness). The load-bearing findings are don
   needed). Deferred to a later run; ran the lower-risk harm-robustness + deception
   jobs first so DGX isn't idle. Caught before wasting GPU hours.
 
+## run8 deception — DeepSeek extraction HUNG (self-recovering via timeout)
+- DeepSeek-R1 extraction stalled at ~sample 76/240 (~40min silent after steady
+  cadence). Cause: reasoning model + max_new_tokens=256 + sandbag 'answer OPPOSITE'
+  instruction -> a degenerate non-terminating generation on some prompt. The
+  EXTRACT_TIMEOUT=3600 wrapper will kill it ~15:47 and the job proceeds to Qwen
+  (self-recovery — the run3 hardening working). No intervention needed.
+- Design note for any re-run: deception reads PROMPT-SIDE concept tokens (premise
+  role, present regardless of generation); the 256-token generation is only for the
+  audit. Drop to max_new_tokens~=32 to avoid reasoning-model runaway. DeepSeek arm
+  may be lost this run; Qwen arm should complete.
+
 ## run7 harm robustness (cross-model + cross-dataset, per-seed) — QUALIFIED replication
 - Change ONE factor: REPLICATES. mistral_aegis (cross-MODEL): taxonomy gap +0.050@L16
   (6/6 seeds), binary ~0/noisy. qwen_beavertails (cross-DATASET): taxonomy +0.055@L7

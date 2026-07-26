@@ -46,3 +46,15 @@ From v4.47 onwards, when a model cache is to be returned, `generate` will return
 [05:20:06] mistralai/Mistral-7B-v0.3 L31: bare=0.162 cond=0.159 hyp=0.196 | conditioning gap=-0.003 (p=0.844) geometry gap=+0.036 (p=0.156) -> inconclusive at this layer
 [05:20:06] mistralai/Mistral-7B-v0.3 L32: bare=0.181 cond=0.186 hyp=0.202 | conditioning gap=+0.005 (p=1.000) geometry gap=+0.016 (p=0.688) -> inconclusive at this layer
 [05:20:11] Poincare distance matches the textbook closed form (max err 2.00e-15); HypLL: n/a
+[05:22:52] mistralai/Mistral-7B-v0.3/harm_taxonomy L0: 6 seeds x 3 arms done
+[05:24:34] mistralai/Mistral-7B-v0.3/harm_taxonomy L8: 6 seeds x 3 arms done
+[05:26:21] mistralai/Mistral-7B-v0.3/harm_taxonomy L16: 6 seeds x 3 arms done
+[05:28:28] mistralai/Mistral-7B-v0.3/harm_taxonomy L24: 6 seeds x 3 arms done
+[05:30:11] mistralai/Mistral-7B-v0.3/harm_taxonomy L31: 6 seeds x 3 arms done
+[05:31:47] mistralai/Mistral-7B-v0.3/harm_taxonomy L32: 6 seeds x 3 arms done
+[05:31:54] mistralai/Mistral-7B-v0.3 L0: bare=0.039 cond=0.048 hyp=0.041 | conditioning gap=+0.009 (p=0.688) geometry gap=-0.007 (p=0.562) -> inconclusive at this layer
+[05:31:54] mistralai/Mistral-7B-v0.3 L8: bare=0.048 cond=0.019 hyp=0.031 | conditioning gap=-0.028 (p=0.219) geometry gap=+0.011 (p=0.562) -> inconclusive at this layer
+[05:31:54] mistralai/Mistral-7B-v0.3 L16: bare=0.022 cond=0.044 hyp=0.028 | conditioning gap=+0.022 (p=0.312) geometry gap=-0.016 (p=0.312) -> inconclusive at this layer
+[05:31:54] mistralai/Mistral-7B-v0.3 L24: bare=0.059 cond=0.019 hyp=0.048 | conditioning gap=-0.040 (p=0.219) geometry gap=+0.029 (p=0.312) -> inconclusive at this layer
+[05:31:54] mistralai/Mistral-7B-v0.3 L31: bare=0.073 cond=0.032 hyp=0.054 | conditioning gap=-0.041 (p=0.156) geometry gap=+0.022 (p=0.219) -> inconclusive at this layer
+[05:31:54] mistralai/Mistral-7B-v0.3 L32: bare=0.053 cond=0.041 hyp=0.059 | conditioning gap=-0.012 (p=0.688) geometry gap=+0.019 (p=0.438) -> inconclusive at this layer

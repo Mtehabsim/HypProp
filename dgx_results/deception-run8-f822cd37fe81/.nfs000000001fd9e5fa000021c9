@@ -45,3 +45,6 @@ From v4.47 onwards, when a model cache is to be returned, `generate` will return
 [15:46:54] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B [distractor_b2] last L12: 6s x 5d done (80 prompts w/ >=4 concepts)
 [15:49:45] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B [distractor_b2] last L16: 6s x 5d done (80 prompts w/ >=4 concepts)
 [15:52:39] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B [distractor_b2] last L20: 6s x 5d done (80 prompts w/ >=4 concepts)
+[15:55:33] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B [distractor_b2] last L24: 6s x 5d done (80 prompts w/ >=4 concepts)
+[15:58:27] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B [distractor_b2] last L28: 6s x 5d done (80 prompts w/ >=4 concepts)
+[16:01:35] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B [honest_b2] premise L0: 6s x 5d done (80 prompts w/ >=4 concepts)

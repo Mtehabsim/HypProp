@@ -1,0 +1,43 @@
+{
+  "stage": "matched_probe",
+  "timestamp": "2026-07-26T05:20:06.761310",
+  "git": {
+    "commit": "861a0c09c01d9a95e19494da87a85722d1a1058d",
+    "branch": "main",
+    "dirty": true
+  },
+  "python": "3.12.3",
+  "versions": {
+    "torch": "2.12.1+cu130",
+    "numpy": "1.26.4",
+    "scipy": "1.17.1",
+    "transformers": "4.46.3",
+    "hypll": null
+  },
+  "args": {
+    "activations": "results/activations_v3/mistral_aegis",
+    "dataset": "harm_taxonomy",
+    "target": "taxonomy",
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "whiten": true,
+    "proj_dim": 5,
+    "max_epochs": 3000
+  },
+  "extra": {
+    "hypll_check": {
+      "closed_form_max_abs_err": 2e-15,
+      "closed_form_ok": true,
+      "ok": true,
+      "hypll_best_convention": "c/2",
+      "hypll_max_abs_err": 0.017550076124475344,
+      "hypll_ok": false
+    }
+  }
+}

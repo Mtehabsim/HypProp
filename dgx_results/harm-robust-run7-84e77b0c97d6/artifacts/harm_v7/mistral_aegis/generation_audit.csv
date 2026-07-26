@@ -1,0 +1,2 @@
+model,dataset,variant,chat_regime,n,cot_frac,answered_frac,truncated_frac,gen_len_p10,gen_len_p50,gen_len_p90
+mistralai/Mistral-7B-v0.3,harm_taxonomy,original,plain,600,0.0,0.0,0.995,7,7,7

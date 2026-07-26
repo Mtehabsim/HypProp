@@ -58,3 +58,50 @@ From v4.47 onwards, when a model cache is to be returned, `generate` will return
 [05:31:54] mistralai/Mistral-7B-v0.3 L24: bare=0.059 cond=0.019 hyp=0.048 | conditioning gap=-0.040 (p=0.219) geometry gap=+0.029 (p=0.312) -> inconclusive at this layer
 [05:31:54] mistralai/Mistral-7B-v0.3 L31: bare=0.073 cond=0.032 hyp=0.054 | conditioning gap=-0.041 (p=0.156) geometry gap=+0.022 (p=0.219) -> inconclusive at this layer
 [05:31:54] mistralai/Mistral-7B-v0.3 L32: bare=0.053 cond=0.041 hyp=0.059 | conditioning gap=-0.012 (p=0.688) geometry gap=+0.019 (p=0.438) -> inconclusive at this layer
+[05:32:09] mistralai/Mistral-7B-v0.3/harm_taxonomy/original [plain]: n=600 cot=0.0 answered=0.0 truncated=0.995 len_p50=7
+[05:32:09] WARNING: mistralai/Mistral-7B-v0.3/harm_taxonomy [plain]: 100% of generations truncated at the cap — 'last'-token analyses are contaminated; raise --max-new-tokens or split by the flag.
+mistral_aegis done; free 119G
+=== HARM ARM qwen_beavertails (Qwen/Qwen2.5-7B on harm_beavertails) | free 119G ===
+Generating 330k_train split:   0%|          | 0/300567 [00:00<?, ? examples/s]Generating 330k_train split:   4%|▎         | 10683/300567 [00:00<00:05, 51540.31 examples/s]Generating 330k_train split:   7%|▋         | 21333/300567 [00:00<00:04, 58587.24 examples/s]Generating 330k_train split:  11%|█         | 31947/300567 [00:00<00:04, 61699.77 examples/s]Generating 330k_train split:  14%|█▍        | 42574/300567 [00:00<00:04, 63933.64 examples/s]Generating 330k_train split:  18%|█▊        | 53199/300567 [00:00<00:03, 65560.25 examples/s]Generating 330k_train split:  21%|██        | 63839/300567 [00:00<00:03, 66636.74 examples/s]Generating 330k_train split:  25%|██▍       | 74471/300567 [00:01<00:03, 67572.71 examples/s]Generating 330k_train split:  28%|██▊       | 85134/300567 [00:01<00:03, 70019.80 examples/s]Generating 330k_train split:  32%|███▏      | 95777/300567 [00:01<00:03, 67273.13 examples/s]Generating 330k_train split:  35%|███▌      | 106416/300567 [00:01<00:02, 67738.78 examples/s]Generating 330k_train split:  39%|███▉      | 117058/300567 [00:01<00:02, 66792.55 examples/s]Generating 330k_train split:  42%|████▏     | 127724/300567 [00:01<00:02, 66079.22 examples/s]Generating 330k_train split:  46%|████▌     | 138387/300567 [00:02<00:02, 64829.05 examples/s]Generating 330k_train split:  50%|████▉     | 149012/300567 [00:02<00:02, 66641.40 examples/s]Generating 330k_train split:  53%|█████▎    | 159668/300567 [00:02<00:02, 67647.68 examples/s]Generating 330k_train split:  57%|█████▋    | 170271/300567 [00:02<00:01, 68236.89 examples/s]Generating 330k_train split:  60%|██████    | 180935/300567 [00:02<00:01, 66222.74 examples/s]Generating 330k_train split:  64%|██████▎   | 191535/300567 [00:02<00:01, 67787.67 examples/s]Generating 330k_train split:  67%|██████▋   | 202152/300567 [00:03<00:01, 65321.53 examples/s]Generating 330k_train split:  71%|███████   | 212812/300567 [00:03<00:01, 66328.11 examples/s]Generating 330k_train split:  74%|███████▍  | 223456/300567 [00:03<00:01, 69488.81 examples/s]Generating 330k_train split:  78%|███████▊  | 234106/300567 [00:03<00:00, 75949.34 examples/s]Generating 330k_train split:  81%|████████▏ | 244741/300567 [00:03<00:00, 74290.87 examples/s]Generating 330k_train split:  85%|████████▍ | 255377/300567 [00:03<00:00, 73339.10 examples/s]Generating 330k_train split:  89%|████████▊ | 266066/300567 [00:03<00:00, 72174.93 examples/s]Generating 330k_train split:  92%|█████████▏| 276729/300567 [00:04<00:00, 72089.45 examples/s]Generating 330k_train split:  96%|█████████▌| 287372/300567 [00:04<00:00, 71079.12 examples/s]Generating 330k_train split:  99%|█████████▉| 297990/300567 [00:04<00:00, 70139.24 examples/s]Generating 330k_train split: 100%|██████████| 300567/300567 [00:04<00:00, 66632.99 examples/s]
+Generating 330k_test split:   0%|          | 0/33396 [00:00<?, ? examples/s]Generating 330k_test split:  32%|███▏      | 10673/33396 [00:00<00:00, 66656.45 examples/s]Generating 330k_test split:  64%|██████▍   | 21331/33396 [00:00<00:00, 80548.46 examples/s]Generating 330k_test split:  96%|█████████▌| 32005/33396 [00:00<00:00, 75145.37 examples/s]Generating 330k_test split: 100%|██████████| 33396/33396 [00:00<00:00, 72568.96 examples/s]
+Generating 30k_train split:   0%|          | 0/27186 [00:00<?, ? examples/s]Generating 30k_train split:  39%|███▉      | 10570/27186 [00:00<00:00, 57634.66 examples/s]Generating 30k_train split:  78%|███████▊  | 21132/27186 [00:00<00:00, 64239.22 examples/s]Generating 30k_train split: 100%|██████████| 27186/27186 [00:00<00:00, 64041.18 examples/s]
+Generating 30k_test split:   0%|          | 0/3021 [00:00<?, ? examples/s]Generating 30k_test split: 100%|██████████| 3021/3021 [00:00<00:00, 58770.84 examples/s]
+[harm_beavertails] source=beavertails rows=750
+[05:32:47] prepared harm_beavertails: 750 samples, 2 classes -> results/data_cache_v3/harm_beavertails.jsonl
+[05:32:49] extracting 700 samples for Qwen/Qwen2.5-7B/harm_beavertails
+[05:32:50] loading Qwen/Qwen2.5-7B (fp32) on cuda
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:07<00:21,  7.05s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:12<00:12,  6.32s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:18<00:06,  6.11s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:24<00:00,  5.87s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:24<00:00,  6.06s/it]
+[05:33:22]   Qwen/Qwen2.5-7B: chat_template=yes, chat_mode='plain' -> PLAIN prompt
+From v4.47 onwards, when a model cache is to be returned, `generate` will return a `Cache` instance instead by default (as opposed to the legacy tuple of tuples format). If you want to keep returning the legacy format, please set `return_legacy_cache=True`.
+[05:33:28]   harm_beavertails: 25/700 (last had 0 thinking tokens)
+[05:33:34]   harm_beavertails: 50/700 (last had 0 thinking tokens)
+[05:33:39]   harm_beavertails: 75/700 (last had 0 thinking tokens)
+[05:33:44]   harm_beavertails: 100/700 (last had 0 thinking tokens)
+[05:33:50]   harm_beavertails: 125/700 (last had 0 thinking tokens)
+[05:33:55]   harm_beavertails: 150/700 (last had 0 thinking tokens)
+[05:34:01]   harm_beavertails: 175/700 (last had 0 thinking tokens)
+[05:34:06]   harm_beavertails: 200/700 (last had 0 thinking tokens)
+[05:34:11]   harm_beavertails: 225/700 (last had 0 thinking tokens)
+[05:34:17]   harm_beavertails: 250/700 (last had 0 thinking tokens)
+[05:34:22]   harm_beavertails: 275/700 (last had 0 thinking tokens)
+[05:34:28]   harm_beavertails: 300/700 (last had 0 thinking tokens)
+[05:34:34]   harm_beavertails: 325/700 (last had 0 thinking tokens)
+[05:34:39]   harm_beavertails: 350/700 (last had 0 thinking tokens)
+[05:34:45]   harm_beavertails: 375/700 (last had 0 thinking tokens)
+[05:34:50]   harm_beavertails: 400/700 (last had 0 thinking tokens)
+[05:34:56]   harm_beavertails: 425/700 (last had 0 thinking tokens)
+[05:35:01]   harm_beavertails: 450/700 (last had 0 thinking tokens)
+[05:35:06]   harm_beavertails: 475/700 (last had 0 thinking tokens)
+[05:35:12]   harm_beavertails: 500/700 (last had 0 thinking tokens)
+[05:35:17]   harm_beavertails: 525/700 (last had 0 thinking tokens)
+[05:35:23]   harm_beavertails: 550/700 (last had 0 thinking tokens)
+[05:35:28]   harm_beavertails: 575/700 (last had 1 thinking tokens)
+[05:35:34]   harm_beavertails: 600/700 (last had 0 thinking tokens)
+[05:35:39]   harm_beavertails: 625/700 (last had 0 thinking tokens)
+[05:35:45]   harm_beavertails: 650/700 (last had 0 thinking tokens)
+[05:35:50]   harm_beavertails: 675/700 (last had 0 thinking tokens)
+[05:35:56]   harm_beavertails: 700/700 (last had 0 thinking tokens)
+[05:35:56] done Qwen/Qwen2.5-7B/harm_beavertails: wrote 700/700
+[05:35:59] Poincare distance matches the textbook closed form (max err 2.00e-15); HypLL: n/a
+[05:38:21] Qwen/Qwen2.5-7B/harm_beavertails L0: 6 seeds x 3 arms done
+[05:40:48] Qwen/Qwen2.5-7B/harm_beavertails L7: 6 seeds x 3 arms done

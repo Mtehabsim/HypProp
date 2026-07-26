@@ -141,6 +141,17 @@ Note: [~] items are CONFIRMATORY (robustness). The load-bearing findings are don
   needed). Deferred to a later run; ran the lower-risk harm-robustness + deception
   jobs first so DGX isn't idle. Caught before wasting GPU hours.
 
+## ⚠️ AGENT DIED during run8 (DeepSeek reasoning-runaway OOM, ~15:33 last heartbeat)
+- run8 DeepSeek extraction hung (256 tok + sandbag) then took the AGENT down too
+  (~31min no heartbeat; process-group OOM before EXTRACT_TIMEOUT could fire). This
+  is why the timeout didn't self-recover — the agent, not just the child, died.
+- FIX pushed: run8b = max_new_tokens 256->32 (deception reads prompt-side tokens;
+  long gen was only for audit, never needed). Fresh run, DeepSeek won't run away.
+- **ON RETURN, DGX:** pkill -f dgx_agent; pkill -f hidden_state_extractor; rm -f
+  .dgx_agent.pid; git pull --rebase --autostash; ulimit -v unlimited; nohup
+  ./dgx_agent.sh > agent.out 2>&1 &  -> runs run8b (deception) then run9 (openq).
+- Nothing lost: run8 completed no arms. Banked findings safe.
+
 ## run8 deception — DeepSeek extraction HUNG (self-recovering via timeout)
 - DeepSeek-R1 extraction stalled at ~sample 76/240 (~40min silent after steady
   cadence). Cause: reasoning model + max_new_tokens=256 + sandbag 'answer OPPOSITE'

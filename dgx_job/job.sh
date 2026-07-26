@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
-# NAME: deception-run8
+# NAME: deception-run8b
+# run8b = run8 with max_new_tokens 256->32. run8's DeepSeek extraction HUNG on a
+# reasoning-model runaway generation (256 tok + sandbag 'answer OPPOSITE'), which
+# also killed the agent (~OOM/process-group death). Deception reads PROMPT-SIDE
+# concept tokens (premise role) — long generation was only for the audit and was
+# never needed — so 32 tokens is plenty and avoids the runaway. Fresh run.
 #
 # Deception probe: does inducing a WRONG answer distort the mid-stack tree?
 # Same branching trees under honest / sandbag / distractor instructions (shared
@@ -39,7 +44,7 @@ for M in "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B" "Qwen/Qwen2.5-7B"; do
   echo "=== DECEPTION $msafe | free $(disk_free_gb)G ==="
   timeout "$EXTRACT_TIMEOUT" python -m hypprobe.extract.hidden_state_extractor --model "$M" \
     --datasets deception_trees --dtype fp32 --device cuda --limit 240 --chat-mode plain \
-    --max-new-tokens 256 --cache "$CACHE" --out "$ACT" 2>&1 | tee -a results/logs/decep8.log
+    --max-new-tokens 32 --cache "$CACHE" --out "$ACT" 2>&1 | tee -a results/logs/decep8.log
   if [ -z "$(find "$ACT" -name '*.pt' 2>/dev/null|head -1)" ]; then echo "$msafe: no acts — SKIP"; rm -rf "$ACT"; continue; fi
   # audit records EMITTED answer per condition (honest vs sandbag behaviour)
   python -m hypprobe.extract.audit_generations --activations "$ACT" --out "$GEO" 2>&1 | tee -a results/logs/decep8.log || true

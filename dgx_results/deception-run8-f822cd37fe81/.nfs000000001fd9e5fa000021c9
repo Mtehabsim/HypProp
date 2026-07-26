@@ -121,3 +121,7 @@ From v4.47 onwards, when a model cache is to be returned, `generate` will return
 [18:09:03] Qwen/Qwen2.5-7B [honest_b2] last L16: 6s x 5d done (80 prompts w/ >=4 concepts)
 [18:11:18] Qwen/Qwen2.5-7B [honest_b2] last L20: 6s x 5d done (80 prompts w/ >=4 concepts)
 [18:13:34] Qwen/Qwen2.5-7B [honest_b2] last L24: 6s x 5d done (80 prompts w/ >=4 concepts)
+[18:15:48] Qwen/Qwen2.5-7B [honest_b2] last L28: 6s x 5d done (80 prompts w/ >=4 concepts)
+[18:17:50] Qwen/Qwen2.5-7B [sandbag_b2] premise L0: 6s x 5d done (80 prompts w/ >=4 concepts)
+[18:20:05] Qwen/Qwen2.5-7B [sandbag_b2] premise L4: 6s x 5d done (80 prompts w/ >=4 concepts)
+[18:22:25] Qwen/Qwen2.5-7B [sandbag_b2] premise L8: 6s x 5d done (80 prompts w/ >=4 concepts)

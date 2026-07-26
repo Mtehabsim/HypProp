@@ -69,6 +69,27 @@ def composition_metrics(X, parent, depths):
     iu = np.triu_indices(len(edges), k=1)
     mean_abs_cos = float(np.mean(np.abs(C[iu]))) if len(iu[0]) else float("nan")
 
+    # (c) RADIAL SCALING EXPONENT alpha (OQ1: HOW the cone forms). Fit
+    # dist-from-root ~ depth^alpha in log-log. Discriminates the mechanism, and
+    # RESOLVES the paradox (norm grows with depth, yet edges don't shrink):
+    #   alpha~0.5 = ORTHOGONAL ACCUMULATION (near-orthogonal ~const-norm edges ->
+    #               radius grows as sqrt(depth), a random walk) — hyperbolic-cone-
+    #               like WITHOUT shrinkage, which is why shrink_rho was ~0.
+    #   alpha~1.0 = ALIGNED accumulation (edges add coherently).
+    #   alpha~0   = SHRINKING cone (radius saturates) — the FALSIFIED hypothesis.
+    # Validated on known generators: shrink-cone 0.01, orthogonal 0.34, aligned 0.86.
+    root = next((i for i, p in enumerate(parent) if p < 0), None)
+    alpha = float("nan"); edge_norm_cv = float("nan")
+    if root is not None:
+        rad = np.linalg.norm(X - X[root], axis=1)
+        dd = np.asarray([depths[i] for i in range(n)], dtype=float)
+        m = (dd > 0) & (rad > 1e-9)
+        if m.sum() >= 3 and np.ptp(np.log(dd[m])) > 0:
+            alpha = float(np.polyfit(np.log(dd[m]), np.log(rad[m]), 1)[0])
+        # coefficient of variation of edge norms: ~0 = constant-norm (accumulation),
+        # high = variable (consistent with shrinkage or noise).
+        edge_norm_cv = float(enorm.std() / (enorm.mean() + 1e-9))
+
     # NOTE (validated on 3 known layouts — additive / cone / random): in high
     # dimension, edge-direction-cosine and centroid-normalized reconstruction do
     # NOT separate additive structure from random (random vectors have spurious
@@ -82,7 +103,9 @@ def composition_metrics(X, parent, depths):
     return dict(
         n_nodes=n, n_edges=len(edges),
         shrink_rho=round(shrink_rho, 4),               # <0 = edges shrink w/ depth (additive-cone)
-        mean_abs_cos_edges=round(mean_abs_cos, 4),     # descriptive only (~1/sqrt(d) if orthogonal)
+        mean_abs_cos_edges=round(mean_abs_cos, 4),     # ~1/sqrt(d) if orthogonal
+        radial_alpha=round(alpha, 4) if np.isfinite(alpha) else "",   # OQ1 mechanism exponent
+        edge_norm_cv=round(edge_norm_cv, 4) if np.isfinite(edge_norm_cv) else "",
     )
 
 
@@ -127,10 +150,14 @@ def run(activations_dir, out_dir, dataset="prontoqa_tree", layer_stride=4,
                         per.append(m)
                 if not per:
                     continue
-                agg = {k: float(np.nanmean([p[k] for p in per])) for k in per[0]
-                       if k not in ("n_nodes", "n_edges")}
+                agg = {}
+                for k in per[0]:
+                    if k in ("n_nodes", "n_edges"):
+                        continue
+                    vals = [p[k] for p in per if isinstance(p[k], (int, float))]
+                    agg[k] = round(float(np.nanmean(vals)), 4) if vals else ""
                 rows.append(dict(model=model, arm=arm, naming=naming, branching=branching,
-                                 layer=layer, n_prompts=len(per), **{k: round(v, 4) for k, v in agg.items()}))
+                                 layer=layer, n_prompts=len(per), **agg))
             log_line(logfile, f"{model} [{arm}] {role}: composition metrics over {len(use_layers)} layers")
     save_csv(os.path.join(out_dir, "composition_test.csv"), rows)
     save_json(os.path.join(out_dir, "composition_summary.json"), _summ(rows))

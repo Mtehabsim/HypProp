@@ -1,0 +1,67 @@
+=== openq run9 on dgx16 ===
+169.226.65.170:/labs/alhussien_lab   10T  9.9T  134G  99% /mnt/lab
+torch 2.12.1+cu130 True
+sklearn 1.9.0
+########## OQ1: composition mechanism (radial alpha) ##########
+/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/transformers/utils/hub.py:128: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+[04:46:44] extracting 240 samples for Qwen/Qwen2.5-7B/prontoqa_tree
+[04:46:47] loading Qwen/Qwen2.5-7B (fp32) on cuda
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:07<00:23,  7.81s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:14<00:14,  7.40s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:21<00:07,  7.04s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:28<00:00,  7.10s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:28<00:00,  7.18s/it]
+[04:47:27]   Qwen/Qwen2.5-7B: chat_template=yes, chat_mode='plain' -> PLAIN prompt
+From v4.47 onwards, when a model cache is to be returned, `generate` will return a `Cache` instance instead by default (as opposed to the legacy tuple of tuples format). If you want to keep returning the legacy format, please set `return_legacy_cache=True`.
+[04:47:42]   prontoqa_tree: 25/240 (last had 0 thinking tokens)
+[04:47:56]   prontoqa_tree: 50/240 (last had 0 thinking tokens)
+[04:48:10]   prontoqa_tree: 75/240 (last had 0 thinking tokens)
+[04:48:24]   prontoqa_tree: 100/240 (last had 0 thinking tokens)
+[04:48:38]   prontoqa_tree: 125/240 (last had 0 thinking tokens)
+[04:48:52]   prontoqa_tree: 150/240 (last had 0 thinking tokens)
+[04:49:06]   prontoqa_tree: 175/240 (last had 0 thinking tokens)
+[04:49:20]   prontoqa_tree: 200/240 (last had 1 thinking tokens)
+[04:49:34]   prontoqa_tree: 225/240 (last had 0 thinking tokens)
+[04:49:42] done Qwen/Qwen2.5-7B/prontoqa_tree: wrote 240/240
+[04:50:27] Qwen/Qwen2.5-7B [fictional_b1] premise: composition metrics over 9 layers
+[04:50:46] Qwen/Qwen2.5-7B [fictional_b2] premise: composition metrics over 9 layers
+[04:51:05] Qwen/Qwen2.5-7B [fictional_b3] premise: composition metrics over 9 layers
+[04:51:22] Qwen/Qwen2.5-7B [real_b2] premise: composition metrics over 9 layers
+/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/transformers/utils/hub.py:128: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+free after OQ1: 118G
+########## OQ3: harm router ##########
+=== ROUTER qwen_aegis (Qwen/Qwen2.5-7B on harm_taxonomy) | free 118G ===
+/mnt/lab/Mo/hyperbolic1/.venv/lib/python3.12/site-packages/transformers/utils/hub.py:128: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+[04:51:31] extracting 700 samples for Qwen/Qwen2.5-7B/harm_taxonomy
+[04:51:31] loading Qwen/Qwen2.5-7B (fp32) on cuda
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:07<00:21,  7.25s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:14<00:14,  7.29s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:21<00:07,  7.17s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:28<00:00,  7.06s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:28<00:00,  7.12s/it]
+[04:52:09]   Qwen/Qwen2.5-7B: chat_template=yes, chat_mode='plain' -> PLAIN prompt
+From v4.47 onwards, when a model cache is to be returned, `generate` will return a `Cache` instance instead by default (as opposed to the legacy tuple of tuples format). If you want to keep returning the legacy format, please set `return_legacy_cache=True`.
+[04:52:16]   harm_taxonomy: 25/700 (last had 0 thinking tokens)
+[04:52:22]   harm_taxonomy: 50/700 (last had 0 thinking tokens)
+[04:52:28]   harm_taxonomy: 75/700 (last had 0 thinking tokens)
+[04:52:34]   harm_taxonomy: 100/700 (last had 0 thinking tokens)
+[04:52:40]   harm_taxonomy: 125/700 (last had 0 thinking tokens)
+[04:52:47]   harm_taxonomy: 150/700 (last had 0 thinking tokens)
+[04:52:53]   harm_taxonomy: 175/700 (last had 0 thinking tokens)
+[04:52:59]   harm_taxonomy: 200/700 (last had 0 thinking tokens)
+[04:53:05]   harm_taxonomy: 225/700 (last had 0 thinking tokens)
+[04:53:12]   harm_taxonomy: 250/700 (last had 0 thinking tokens)
+[04:53:18]   harm_taxonomy: 275/700 (last had 0 thinking tokens)
+[04:53:25]   harm_taxonomy: 300/700 (last had 0 thinking tokens)
+[04:53:31]   harm_taxonomy: 325/700 (last had 0 thinking tokens)
+[04:53:38]   harm_taxonomy: 350/700 (last had 0 thinking tokens)
+[04:53:44]   harm_taxonomy: 375/700 (last had 0 thinking tokens)
+[04:53:50]   harm_taxonomy: 400/700 (last had 0 thinking tokens)
+[04:53:57]   harm_taxonomy: 425/700 (last had 0 thinking tokens)
+[04:54:02]   harm_taxonomy: 450/700 (last had 0 thinking tokens)
+[04:54:08]   harm_taxonomy: 475/700 (last had 0 thinking tokens)
+[04:54:14]   harm_taxonomy: 500/700 (last had 0 thinking tokens)
+[04:54:20]   harm_taxonomy: 525/700 (last had 0 thinking tokens)
+[04:54:26]   harm_taxonomy: 550/700 (last had 0 thinking tokens)
+[04:54:32]   harm_taxonomy: 575/700 (last had 0 thinking tokens)
+[04:54:38]   harm_taxonomy: 600/700 (last had 0 thinking tokens)
+[04:54:44]   harm_taxonomy: 625/700 (last had 0 thinking tokens)
+[04:54:50]   harm_taxonomy: 650/700 (last had 0 thinking tokens)
+[04:54:57]   harm_taxonomy: 675/700 (last had 0 thinking tokens)
+[04:55:03]   harm_taxonomy: 700/700 (last had 0 thinking tokens)
+[04:55:03] done Qwen/Qwen2.5-7B/harm_taxonomy: wrote 700/700

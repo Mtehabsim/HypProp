@@ -175,6 +175,22 @@ Note: [~] items are CONFIRMATORY (robustness). The load-bearing findings are don
   audit. Drop to max_new_tokens~=32 to avoid reasoning-model runaway. DeepSeek arm
   may be lost this run; Qwen arm should complete.
 
+## OQ1 ANSWERED (run9, Qwen-7B) — HOW the cone forms: it's a PROJECTED structure, not raw geometry
+- Radial exponent alpha (dist-from-root ~ depth^alpha) = +0.08..+0.10 all arms
+  (mid-stack ~0.07), NOT ~0.5. shrink_rho = +0.15..+0.21 (edges slightly GROW, not
+  shrink). So BOTH raw-geometry hypotheses are FALSIFIED: not additive-shrinking-cone
+  (edges don't shrink) AND not orthogonal-accumulation (radius ~flat with depth, not
+  sqrt). In the RAW residual stream the concepts do NOT form a radial cone.
+- RESOLUTION (the honest answer): the strong tree signal (decoder Δ, radial-norm↔depth
+  ρ≈0.65) lives in the WHITENED / learned-projection space, not in raw edge geometry.
+  The raw stream is dominated by high-variance nuisance directions; the hierarchy is a
+  LOW-VARIANCE structure that only becomes cleanly hyperbolic-cone-like AFTER the
+  probe's projection. => 'how it forms' = the model writes tree position into a
+  low-variance subspace the readout recovers, NOT into the dominant raw geometry.
+  This explains why every raw-edge mechanism failed yet decoder+whitened-radial work.
+- Caveat: alpha measured on raw whitened concept reps; a subspace-restricted alpha
+  (within the decoded tree directions) would test the resolution directly — next.
+
 ## run7 harm robustness (cross-model + cross-dataset, per-seed) — QUALIFIED replication
 - Change ONE factor: REPLICATES. mistral_aegis (cross-MODEL): taxonomy gap +0.050@L16
   (6/6 seeds), binary ~0/noisy. qwen_beavertails (cross-DATASET): taxonomy +0.055@L7

@@ -175,6 +175,20 @@ Note: [~] items are CONFIRMATORY (robustness). The load-bearing findings are don
   audit. Drop to max_new_tokens~=32 to avoid reasoning-model runaway. DeepSeek arm
   may be lost this run; Qwen arm should complete.
 
+## ⚠️ AGENT DIED AGAIN (4th time) during run9 OQ3 (~11:56+0300, only 10m heartbeat fired)
+- Died ~10-15min into run9, during qwen_aegis harm-router extraction (700 prompts,
+  biggest fp32 extraction). Per-sample writes = no RAM leak (70MB/sample), so this
+  is recurring HOST INSTABILITY (external reaper), not our code — can't fix via git.
+- SAFE: OQ1 (mechanism) COMPLETED + shipped + analyzed before death (answer recorded
+  above: alpha~0.08, tree is a projected low-variance structure). Only OQ3 (harm
+  router) interrupted; its CSVs hadn't shipped.
+- RESUME is clean: job.sh hash = run9 dir hash (05a6b042e169), no DONE/FAILED marker,
+  so restart RE-ENTERS run9, skips shipped OQ1, resumes at OQ3 harm router. Only the
+  interrupted qwen_aegis arm is redone.
+- **ON RETURN, DGX:** pkill -f dgx_agent; pkill -f hidden_state_extractor; rm -f
+  .dgx_agent.pid; git pull --rebase --autostash; ulimit -v unlimited; nohup
+  ./dgx_agent.sh > agent.out 2>&1 &   -> resumes run9 OQ3 -> then run10 deception.
+
 ## OQ1 ANSWERED (run9, Qwen-7B) — HOW the cone forms: it's a PROJECTED structure, not raw geometry
 - Radial exponent alpha (dist-from-root ~ depth^alpha) = +0.08..+0.10 all arms
   (mid-stack ~0.07), NOT ~0.5. shrink_rho = +0.15..+0.21 (edges slightly GROW, not

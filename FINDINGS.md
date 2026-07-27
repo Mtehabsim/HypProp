@@ -141,6 +141,18 @@ Note: [~] items are CONFIRMATORY (robustness). The load-bearing findings are don
   needed). Deferred to a later run; ran the lower-risk harm-robustness + deception
   jobs first so DGX isn't idle. Caught before wasting GPU hours.
 
+## run8b deception — COMPROMISED (tree_probe crashed unsaved + 32 tok too short to answer)
+- tree_probe computed honest(all) + sandbag(through L16) then a late cell threw and
+  the OLD code discarded ALL cells (no incremental save) -> no decodability CSV.
+  FIXED: tree_probe now per-cell try/except + saves CSV after every layer + verdict
+  is best-effort (data can't be lost that way again).
+- BEHAVIORAL axis also weak: at max_new_tokens=32, Qwen answered only 33%, DeepSeek
+  8% (reasoning model spends the budget 'thinking', never concludes). The 256->32
+  fix stopped the runaway hang but cut generations before an answer -> can't compare
+  tree-implied vs emitted answer. Deception needs a RE-RUN: ~80 tok, Qwen-only (skip
+  the DeepSeek runaway), to get both decodability (now saves) AND compliance.
+- Deception verdict: NOT YET OBTAINED. Queued as run10 after run9 (openq).
+
 ## ⚠️ AGENT DIED during run8 (DeepSeek reasoning-runaway OOM, ~15:33 last heartbeat)
 - run8 DeepSeek extraction hung (256 tok + sandbag) then took the AGENT down too
   (~31min no heartbeat; process-group OOM before EXTRACT_TIMEOUT could fire). This

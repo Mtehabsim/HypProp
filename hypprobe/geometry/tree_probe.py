@@ -318,58 +318,75 @@ def run(activations_dir, out_dir, dataset="prontoqa_tree", roles=("premise", "qu
                     depths = [g[3] for g in gathered]
 
                     for seed in seeds:
-                        rng = np.random.default_rng(seed)
-                        perm = rng.permutation(len(Xs))
-                        ntr = int(0.7 * len(Xs))
-                        tr, va = perm[:ntr], perm[ntr:]
-                        # whiten on TRAIN concept reps only (leakage fix)
-                        Xtr_cat = np.concatenate([Xs[i] for i in tr], axis=0)
-                        wf = _whiten_fit(Xtr_cat)
-                        train_p = [(wf(Xs[i]), Ds[i]) for i in tr]
-                        val_p = [(wf(Xs[i]), Ds[i]) for i in va]
+                        # PER-CELL GUARD: one bad (seed,layer,dim) cell must not kill
+                        # the whole run and discard all completed cells (run8b lost
+                        # 209min this way — a late cell threw before the CSV saved).
+                        try:
+                            rng = np.random.default_rng(seed)
+                            perm = rng.permutation(len(Xs))
+                            ntr = int(0.7 * len(Xs))
+                            tr, va = perm[:ntr], perm[ntr:]
+                            # whiten on TRAIN concept reps only (leakage fix)
+                            Xtr_cat = np.concatenate([Xs[i] for i in tr], axis=0)
+                            wf = _whiten_fit(Xtr_cat)
+                            train_p = [(wf(Xs[i]), Ds[i]) for i in tr]
+                            val_p = [(wf(Xs[i]), Ds[i]) for i in va]
 
-                        # radial fingerprint (training-free): on RAW (unwhitened)
-                        # val features — whitening erases the norm<->depth signal.
-                        if seed == seeds[0]:
-                            rp = [(Xs[i], depths[i]) for i in va]
-                            r_signed, r_abs, r_n = radial_depth_correlation(rp)
-                            radial_rows.append(dict(
-                                model=model, arm=arm_label, naming=naming,
-                                branching=branching, role=role, layer=layer,
-                                radial_depth_rho=round(r_signed, 4),
-                                radial_depth_absrho=round(r_abs, 4), n_prompts=r_n))
+                            # radial fingerprint (training-free): on RAW (unwhitened)
+                            # val features — whitening erases the norm<->depth signal.
+                            if seed == seeds[0]:
+                                rp = [(Xs[i], depths[i]) for i in va]
+                                r_signed, r_abs, r_n = radial_depth_correlation(rp)
+                                radial_rows.append(dict(
+                                    model=model, arm=arm_label, naming=naming,
+                                    branching=branching, role=role, layer=layer,
+                                    radial_depth_rho=round(r_signed, 4),
+                                    radial_depth_absrho=round(r_abs, 4), n_prompts=r_n))
 
-                        for m in dims:
-                            fits = {}
-                            for arm in ("cond_euclidean", "hyperbolic"):
-                                res = fit_tree_arm(arm, train_p, val_p, proj_dim=m,
-                                                   seed=seed, curvature=curvature,
-                                                   max_epochs=max_epochs)
-                                fits[arm] = res
-                            # shuffled-tree null at this dim (permutation test on the
-                            # trained hyperbolic decoder)
-                            shuf = _per_prompt_rho(
-                                fits["hyperbolic"]["model"], val_p,
-                                shuffle_rng=np.random.default_rng(1000 + seed))
-                            rows.append(dict(
-                                model=model, arm=arm_label, naming=naming,
-                                branching=branching, role=role, layer=layer,
-                                dim=m, seed=seed,
-                                rho_cond_euc=round(fits["cond_euclidean"]["val_rho"], 4),
-                                rho_hyp=round(fits["hyperbolic"]["val_rho"], 4),
-                                delta=round(fits["hyperbolic"]["val_rho"]
-                                            - fits["cond_euclidean"]["val_rho"], 4),
-                                shuffle_rho_hyp=round(shuf, 4),
-                                n_train=len(train_p), n_val=len(val_p)))
+                            for m in dims:
+                                fits = {}
+                                for arm in ("cond_euclidean", "hyperbolic"):
+                                    res = fit_tree_arm(arm, train_p, val_p, proj_dim=m,
+                                                       seed=seed, curvature=curvature,
+                                                       max_epochs=max_epochs)
+                                    fits[arm] = res
+                                shuf = _per_prompt_rho(
+                                    fits["hyperbolic"]["model"], val_p,
+                                    shuffle_rng=np.random.default_rng(1000 + seed))
+                                rows.append(dict(
+                                    model=model, arm=arm_label, naming=naming,
+                                    branching=branching, role=role, layer=layer,
+                                    dim=m, seed=seed,
+                                    rho_cond_euc=round(fits["cond_euclidean"]["val_rho"], 4),
+                                    rho_hyp=round(fits["hyperbolic"]["val_rho"], 4),
+                                    delta=round(fits["hyperbolic"]["val_rho"]
+                                                - fits["cond_euclidean"]["val_rho"], 4),
+                                    shuffle_rho_hyp=round(shuf, 4),
+                                    n_train=len(train_p), n_val=len(val_p)))
+                        except Exception as exc:
+                            log_line(logfile, f"  SKIP cell {arm_label} {role} L{layer} "
+                                              f"seed{seed}: {type(exc).__name__}: {exc}")
+                            continue
                     log_line(logfile, f"{model} [{arm_label}] {role} L{layer}: "
                                       f"{len(seeds)}s x {len(dims)}d done "
                                       f"({len(gathered)} prompts w/ >=4 concepts)")
+                    # INCREMENTAL SAVE after each layer so a later crash never
+                    # discards completed work (the run8b failure mode).
+                    save_csv(os.path.join(out_dir, "tree_probe.csv"), rows)
+                    save_csv(os.path.join(out_dir, "tree_probe_radial.csv"), radial_rows)
 
     save_csv(os.path.join(out_dir, "tree_probe.csv"), rows)
     save_csv(os.path.join(out_dir, "tree_probe_radial.csv"), radial_rows)
-    verdict = _verdict(rows, radial_rows, logfile)
-    save_json(os.path.join(out_dir, "tree_probe_verdict.json"), verdict)
-    _write_verdict_md(os.path.join(out_dir, "tree_probe_verdict.md"), verdict, check)
+    # Verdict is best-effort: the CSVs above are the real data and are already
+    # saved, so a verdict bug can never again destroy a completed run's results.
+    verdict = {}
+    try:
+        verdict = _verdict(rows, radial_rows, logfile)
+        save_json(os.path.join(out_dir, "tree_probe_verdict.json"), verdict)
+        _write_verdict_md(os.path.join(out_dir, "tree_probe_verdict.md"), verdict, check)
+    except Exception as exc:
+        log_line(logfile, f"VERDICT step failed ({type(exc).__name__}: {exc}); "
+                          f"CSVs are saved — verdict can be recomputed offline")
     write_manifest(out_dir, "tree_probe",
                    args=dict(activations=activations_dir, dataset=dataset,
                              roles=list(roles), dims=list(dims),

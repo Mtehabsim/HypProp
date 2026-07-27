@@ -1,0 +1,5 @@
+host: dgx16
+started: 2026-07-27T04:46:22-04:00
+job: openq-run9 (05a6b042e169)
+name, memory.total [MiB], memory.used [MiB]
+NVIDIA A100-SXM4-80GB, 81920 MiB, 4 MiB
